@@ -7,17 +7,32 @@
   "files": [
     "index.ts",
     "tool_runner.py",
+    "openclaw.plugin.json",
     "config/",
     "plugins/",
     "src/",
     "README.md",
     "README_EN.md",
     "SKILL.md",
-    "package.json"
+    "package.json",
+    "LICENSE"
   ],
   "license": "MIT",
   "peerDependencies": {
     "openclaw": "*"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2",
+      "minGatewayVersion": "2026.3.24-beta.2"
+    },
+    "build": {
+      "openclawVersion": "2026.3.24-beta.2",
+      "pluginSdkVersion": "2026.3.24-beta.2"
+    }
   }
 }
 

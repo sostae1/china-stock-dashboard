@@ -1,0 +1,26 @@
+# Ignore local artifacts & caches during ClawHub packaging
+data/
+logs/
+
+# Disk caches / artifacts (parquet/jsonl/sql)
+*.parquet
+*.jsonl
+*.db
+*.sqlite3
+
+# Python environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node
+node_modules/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+

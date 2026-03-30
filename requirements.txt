@@ -1,0 +1,16 @@
+# Core dependencies for tool_runner and core data tools.
+# Versions are intentionally left unpinned to reduce install friction across environments.
+
+pydantic
+PyYAML
+requests
+numpy
+pytz
+pandas
+pyarrow
+
+# Data providers (used by data_collection tools)
+akshare
+tushare
+yfinance
+

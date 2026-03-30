@@ -22,6 +22,42 @@ The plugin is designed to run independently (no dependency on any other reposito
 - It does not inject `~/.openclaw/.env`.
 - It supports plugin-specific cache/data paths (configured inside the plugin).
 
+## Why it helps retail users
+
+- Unified cross-asset entry (`tool_fetch_market_data`) to reduce “tool switching” friction.
+- Multi-source provider priority + automatic fallback to avoid single-provider outages breaking your workflow.
+- Default read-only disk cache semantics (`data_cache.enabled=false`) to minimize local data pollution risk.
+
+## Typical usage
+
+Example: fetch A-share index daily historical data:
+
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: index
+      view: historical
+      asset_code: "000001"
+      period: daily
+      start_date: "20260201"
+      end_date: "20260228"
+```
+
+Example: fetch ETF 5-minute bars:
+
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: etf
+      view: minute
+      asset_code: "510300"
+      period: "5"
+      start_date: "20260201"
+      end_date: "20260228"
+```
+
 ## Cache policy
 
 - Default: `data_cache.enabled=false`

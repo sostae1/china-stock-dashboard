@@ -1,0 +1,28 @@
+{
+  "id": "openclaw-data-china-stock",
+  "name": "OpenClaw Data China Stock",
+  "description": "A-share/ETF/Option market data collection plugin for OpenClaw.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiBaseUrl": {
+        "type": "string",
+        "description": "可选外部服务 API 基础地址（仅部分兼容接口可能需要）"
+      },
+      "apiKey": {
+        "type": "string",
+        "description": "API Key（可选）"
+      },
+      "scriptPath": {
+        "type": "string",
+        "description": "tool_runner.py 绝对路径（可选；不填则使用插件内的默认路径）"
+      },
+      "manifestPath": {
+        "type": "string",
+        "description": "工具清单 JSON 路径（可选），不填则使用插件内 config/tools_manifest.json"
+      }
+    }
+  }
+}
+

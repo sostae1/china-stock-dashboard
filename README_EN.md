@@ -2,6 +2,58 @@
 
 `openclaw-data-china-stock` is an open-source, free-to-use OpenClaw/ClawHub data collection plugin for retail investors. It provides a unified set of `tool_*` interfaces to fetch A-share index, ETF, stocks, and listed options—covering realtime, historical, and minute-level data, plus option contract lookup. The plugin supports multiple data sources with automatic priority and fallback, and disables disk cache writes by default (`data_cache.enabled=false`) to reduce data pollution risk.
 
+## Installation
+
+You can install it directly inside OpenClaw:
+
+```bash
+openclaw plugins install @shaoxing-xie/openclaw-data-china-stock
+```
+
+## Quick Start (3 minutes)
+
+1. In OpenClaw plugin settings, ensure `scriptPath` points to this repo’s `tool_runner.py` (or keep the default if your setup already mounts it correctly).
+2. In your Agent/Workflow, call `tool_fetch_market_data` as the primary cross-asset unified entry.
+3. For more stable/offline scenarios, use `tool_read_market_data` / `tool_read_index_*` / `tool_read_etf_*` / `tool_read_option_*`.
+
+Example calls:
+
+- Index (daily historical):
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: index
+      view: historical
+      asset_code: "000001"
+      period: daily
+      start_date: "20260201"
+      end_date: "20260228"
+```
+
+- ETF (5-minute):
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: etf
+      view: minute
+      asset_code: "510300"
+      period: "5"
+      start_date: "20260201"
+      end_date: "20260228"
+```
+
+- Option (Greeks):
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: option
+      view: greeks
+      contract_code: "10010910"
+```
+
 ## What you get
 
 - Index / ETF / **Stock** / Option market data (realtime, historical, minute, opening, Greeks).

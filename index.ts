@@ -26,7 +26,6 @@ function getManifestPath(): string {
 function loadToolsManifest(): { tools: Array<{ id: string; label: string; description: string; parameters: object }> } {
   const manifestPath =
     process.env.OPENCLAW_DATA_CHINA_STOCK_MANIFEST_PATH ||
-    process.env.OPTION_TRADING_ASSISTANT_MANIFEST_PATH ||
     getManifestPath();
   try {
     const raw = readFileSync(manifestPath, "utf-8");
