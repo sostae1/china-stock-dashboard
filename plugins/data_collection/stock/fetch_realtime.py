@@ -13,6 +13,7 @@ from datetime import datetime
 import logging
 import os
 import sys
+from contextlib import nullcontext
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,15 @@ try:
     AKSHARE_AVAILABLE = True
 except ImportError:
     AKSHARE_AVAILABLE = False
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
 
 
 def _ensure_utils_import():
@@ -158,7 +168,8 @@ def _fetch_realtime_mootdx(codes: List[str]) -> Optional[List[Dict[str, Any]]]:
             )
 
         return results if results else None
-    except Exception:
+    except Exception as e:
+        logger.warning("mootdx realtime failed: %s", e)
         return None
 
 
@@ -195,7 +206,8 @@ def _fetch_realtime_tencent(codes: List[str]) -> Optional[List[Dict[str, Any]]]:
                 text = raw.decode("gbk", errors="replace")
             except Exception:
                 text = raw.decode("utf-8", errors="replace")
-    except (urllib.error.URLError, OSError, Exception):
+    except (urllib.error.URLError, OSError, Exception) as e:
+        logger.warning("tencent realtime failed: %s", e)
         return None
 
     results: List[Dict[str, Any]] = []
@@ -251,7 +263,9 @@ def _fetch_realtime_akshare(codes: List[str]) -> Optional[List[Dict[str, Any]]]:
     if not AKSHARE_AVAILABLE:
         return None
     try:
-        df = ak.stock_zh_a_spot()
+        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+        with ctx:
+            df = ak.stock_zh_a_spot()
         if df is None or df.empty:
             return None
 
@@ -376,7 +390,8 @@ def _fetch_realtime_akshare(codes: List[str]) -> Optional[List[Dict[str, Any]]]:
             )
 
         return results if results else None
-    except Exception:
+    except Exception as e:
+        logger.warning("akshare stock_zh_a_spot failed: %s", e)
         return None
 
 
@@ -463,22 +478,32 @@ def run_stock_realtime_chain(
     results = _fetch_realtime_mootdx(codes)
     if results:
         return results, "mootdx", debug
+    if not MOOTDX_AVAILABLE:
+        debug["notes"].append("mootdx not installed/importable")
+    else:
+        debug["notes"].append("mootdx returned empty")
 
     if include_depth and len(codes) == 1 and AKSHARE_AVAILABLE:
         debug["attempted"].append("eastmoney_bid_ask")
         depth = _fetch_bid_ask_em_single(codes[0])
         if depth:
             return depth, "eastmoney_bid_ask", debug
+        debug["notes"].append("eastmoney_bid_ask returned empty")
 
     debug["attempted"].append("qt.gtimg.cn")
     results = _fetch_realtime_tencent(codes)
     if results:
         return results, "qt.gtimg.cn", debug
+    debug["notes"].append("qt.gtimg.cn returned empty")
 
     debug["attempted"].append("stock_zh_a_spot")
     results = _fetch_realtime_akshare(codes)
     if results:
         return results, "stock_zh_a_spot", debug
+    if not AKSHARE_AVAILABLE:
+        debug["notes"].append("akshare not installed/importable")
+    else:
+        debug["notes"].append("akshare returned empty")
 
     debug["notes"].append("所有实时 Provider 均未返回数据")
     return None, None, debug

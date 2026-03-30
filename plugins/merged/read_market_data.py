@@ -84,11 +84,17 @@ def tool_read_market_data(
                     end_date=effective_end,
                 )
             else:
+                effective_start = start_date
+                effective_end = end_date
+                if not effective_start and not effective_end and not date:
+                    today = datetime.now()
+                    effective_end = today.strftime("%Y%m%d")
+                    effective_start = (today - timedelta(days=30)).strftime("%Y%m%d")
                 out = read_cache_data(
                     data_type=dt,
                     symbol=sym,
-                    start_date=start_date,
-                    end_date=end_date
+                    start_date=effective_start,
+                    end_date=effective_end
                 )
         if out.get("success"):
             results[dt] = out

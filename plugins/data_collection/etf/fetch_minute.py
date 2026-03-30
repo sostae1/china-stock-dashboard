@@ -14,6 +14,7 @@ from pathlib import Path
 import pytz
 import os
 import sys
+import random
 
 # 导入交易日判断工具
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +43,17 @@ try:
     MOOTDX_AVAILABLE = True
 except Exception:  # noqa: BLE001
     MOOTDX_AVAILABLE = False
+
+
+_SINA_USER_AGENT_POOL = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+]
+
+
+def _pick_sina_user_agent() -> str:
+    return random.choice(_SINA_USER_AGENT_POOL)
 
 # 尝试导入缓存与配置模块（优先使用当前环境下的本地 src 包）
 try:
@@ -350,7 +362,7 @@ def _fetch_etf_minute_sina(
         
         headers = {
             "Referer": "http://finance.sina.com.cn",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            "User-Agent": _pick_sina_user_agent(),
         }
         
         response = requests.get(url, params=params, headers=headers, timeout=10)

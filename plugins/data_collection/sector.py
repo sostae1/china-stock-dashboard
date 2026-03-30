@@ -10,8 +10,18 @@ import pandas as pd
 from datetime import datetime
 from typing import Dict, List, Optional
 import logging
+from contextlib import nullcontext
 
 logger = logging.getLogger(__name__)
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
 
 
 def tool_fetch_sector_data(sector_type: str = "industry", period: str = "today") -> Dict:
@@ -59,20 +69,14 @@ def _fetch_sector_data_from_eastmoney(sector_type: str, period: str) -> Optional
     """从东方财富 JSONP 接口获取板块数据，返回 DataFrame 或 None。"""
     # 根据类型选择不同的接口
     if sector_type == "industry":
-        # 申万一级行业接口
-        url = "http://data.eastmoney.com/DataCenter_V3/Industry/GetIndustry.ashx"
-        params = {
-            "code": "SW",
-            "type": 1,
-            "sty": "sw",
-            "js": "var data={pages:(pc),data:[(x)]}",
-        }
+        # 行业板块：DataCenter_V3 经常返回跳转 HTML；改为直连 push2 行业板块列表（与 AkShare stock_board_industry_name_em 同源）
+        return _fetch_sector_data_from_eastmoney_push2_industry()
     else:  # concept
         # 概念板块接口
         url = "http://data.eastmoney.com/DataCenter_V3/Concept/GetConcept.ashx"
         params = {
             "code": "all",
-            "type": "today",
+            "type": period or "today",
             "sty": "f14",
             "js": "var data={pages:(pc),data:[(x)]}",
         }
@@ -82,7 +86,9 @@ def _fetch_sector_data_from_eastmoney(sector_type: str, period: str) -> Optional
         "Referer": "http://data.eastmoney.com/bkzj/",
     }
 
-    response = requests.get(url, params=params, headers=headers, timeout=10)
+    ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+    with ctx:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
     response.encoding = "utf-8"
 
     text = response.text.strip()
@@ -92,14 +98,38 @@ def _fetch_sector_data_from_eastmoney(sector_type: str, period: str) -> Optional
         text = text.replace("var data=", "", 1)
     # 兼容 UTF-8 BOM
     text = text.lstrip("\ufeff")
+    # 常见尾部分号/多余空白
+    text = text.strip().rstrip(";").strip()
 
-    data = json.loads(text)
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        # 兜底：从文本中抽取 JSON 对象片段
+        start = text.find("{")
+        end = text.rfind("}")
+        if start >= 0 and end > start:
+            data = json.loads(text[start : end + 1])
+        else:
+            raise
     if not data or "data" not in data:
         raise ValueError("东方财富板块数据为空")
 
     records = []
-    for item in data["data"]:
-        if len(item) < 10:
+    items = data.get("data") or []
+    for item in items:
+        # 兼容两种格式：list 与 dict
+        if isinstance(item, dict):
+            name_val = str(item.get("sector_name") or item.get("name") or item.get("f14") or "").strip()
+            if not name_val:
+                continue
+            try:
+                change = float(item.get("change_percent") or item.get("pct") or item.get("f3") or 0)
+            except Exception:
+                change = 0.0
+            records.append({"sector_name": name_val, "change_percent": change, "net_inflow": 0.0})
+            continue
+
+        if not isinstance(item, (list, tuple)) or len(item) < 4:
             continue
         try:
             records.append(
@@ -117,7 +147,7 @@ def _fetch_sector_data_from_eastmoney(sector_type: str, period: str) -> Optional
                     "fall_count": int(item[12]) if len(item) > 12 else 0,
                 }
             )
-        except (ValueError, IndexError):
+        except (ValueError, IndexError, TypeError):
             continue
 
     if not records:
@@ -128,6 +158,67 @@ def _fetch_sector_data_from_eastmoney(sector_type: str, period: str) -> Optional
     if df.empty:
         raise ValueError("东方财富无有效板块数据")
     return df
+
+
+def _fetch_sector_data_from_eastmoney_push2_industry() -> Optional[pd.DataFrame]:
+    """
+    东方财富行业板块列表（push2 clist/get）。
+    返回标准化 DataFrame：sector_name, change_percent, net_inflow(可缺省为 0)。
+    """
+    hosts = ["17.push2.eastmoney.com", "82.push2.eastmoney.com", "88.push2.eastmoney.com"]
+    params = {
+        "pn": "1",
+        "pz": "100",
+        "po": "1",
+        "np": "1",
+        "ut": "bd1d9ddb04089700cf9c27f6f7426281",
+        "fltt": "2",
+        "invt": "2",
+        "fid": "f3",
+        "fs": "m:90 t:2 f:!50",
+        # 最小字段：f14 名称，f3 涨跌幅；f62 主力净流入（若不存在则为空）
+        "fields": "f14,f3,f62",
+    }
+    headers = {"User-Agent": "Mozilla/5.0", "Referer": "https://quote.eastmoney.com/center/boardlist.html#industry_board"}
+
+    last_err: Optional[Exception] = None
+    for h in hosts:
+        url = f"https://{h}/api/qt/clist/get"
+        try:
+            ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+            with ctx:
+                resp = requests.get(url, params=params, headers=headers, timeout=15)
+            resp.raise_for_status()
+            j = resp.json()
+            diff = (((j or {}).get("data") or {}).get("diff")) or []
+            if not diff:
+                continue
+            rows: List[Dict[str, Any]] = []
+            for it in diff:
+                if not isinstance(it, dict):
+                    continue
+                name = str(it.get("f14") or "").strip()
+                if not name:
+                    continue
+                try:
+                    chg = float(it.get("f3") or 0.0)
+                except Exception:
+                    chg = 0.0
+                try:
+                    net = float(it.get("f62") or 0.0)
+                except Exception:
+                    net = 0.0
+                rows.append({"sector_name": name, "change_percent": chg, "net_inflow": net})
+            if not rows:
+                continue
+            return pd.DataFrame(rows)
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            continue
+
+    if last_err:
+        logger.warning("eastmoney push2 industry board failed: %s", last_err)
+    return None
 
 
 def _fetch_sector_data_from_akshare(sector_type: str) -> Optional[pd.DataFrame]:
@@ -146,7 +237,9 @@ def _fetch_sector_data_from_akshare(sector_type: str) -> Optional[pd.DataFrame]:
         return None
 
     try:
-        df_raw = ak.stock_board_industry_name_em()
+        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+        with ctx:
+            df_raw = ak.stock_board_industry_name_em()
     except Exception as e:  # noqa: BLE001
         logger.error(f"AkShare 行业板块接口失败: {e}")
         return None

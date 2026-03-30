@@ -209,6 +209,14 @@ def load_system_config(config_path: str = "config.yaml", use_cache: bool = True)
         
         # 合并配置
         config = merge_config(default_config, user_config)
+
+        # Tushare 配置校验：如果已启用，但 token 仍为空（${TUSHARE_TOKEN} 解析失败）
+        tushare_cfg = config.get("tushare", {}) if isinstance(config.get("tushare", {}), dict) else {}
+        if tushare_cfg.get("enabled") and not tushare_cfg.get("token"):
+            logger.warning(
+                "Tushare 已启用但 token 未配置。请设置环境变量 `TUSHARE_TOKEN` "
+                "或在 `config.yaml` 的 `tushare.token` 中填写（占位符 ${TUSHARE_TOKEN} 解析为空会导致不可用）。"
+            )
         
         # 调试：检查 option_contracts.underlyings 是否正确加载
         if 'option_contracts' in config:

@@ -12,6 +12,8 @@ import os
 import sys
 import time
 from threading import Lock
+import random
+import requests
 
 # 导入重试工具
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -101,6 +103,73 @@ except Exception:
             yield
 
         return _noop()
+
+
+def _pick_ua() -> str:
+    pool = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+    ]
+    return random.choice(pool)
+
+
+def _fund_etf_spot_em_direct() -> Optional[pd.DataFrame]:
+    """
+    直连东方财富 push2 接口获取 ETF 实时列表（包含 IOPV 与折价率）。
+    作为 `ak.fund_etf_spot_em()` 的备用路径，避免 akshare 内部请求异常导致工具不可用。
+    """
+    hosts = ["88.push2.eastmoney.com", "82.push2.eastmoney.com", "17.push2.eastmoney.com"]
+    params = {
+        "pn": "1",
+        "pz": "100",
+        "po": "1",
+        "np": "1",
+        "ut": "bd1d9ddb04089700cf9c27f6f7426281",
+        "fltt": "2",
+        "invt": "2",
+        "wbp2u": "|0|0|0|web",
+        "fid": "f12",
+        "fs": "b:MK0021,b:MK0022,b:MK0023,b:MK0024,b:MK0827",
+        "fields": "f12,f14,f2,f441,f402",
+    }
+    headers = {"User-Agent": _pick_ua(), "Referer": "https://quote.eastmoney.com/center/gridlist.html#fund_etf"}
+    last_err: Optional[Exception] = None
+    for h in hosts:
+        url = f"https://{h}/api/qt/clist/get"
+        for _ in range(2):
+            try:
+                with without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext():
+                    r = requests.get(url, params=params, headers=headers, timeout=15)
+                r.raise_for_status()
+                j = r.json()
+                last_err = None
+                break
+            except Exception as e:  # noqa: BLE001
+                last_err = e
+                # 换 UA 再试一次
+                headers["User-Agent"] = _pick_ua()
+                continue
+        if last_err is None:
+            break
+    if last_err is not None:
+        raise last_err
+    diff = (((j or {}).get("data") or {}).get("diff")) or []
+    if not diff:
+        return None
+    df = pd.DataFrame(diff)
+    if df.empty or "f12" not in df.columns:
+        return None
+    df = df.rename(
+        columns={
+            "f12": "代码",
+            "f14": "名称",
+            "f2": "最新价",
+            "f441": "IOPV实时估值",
+            "f402": "基金折价率",
+        }
+    )
+    return df
 
 def fetch_etf_realtime(
     etf_code: str = "510300",  # 支持单个或多个（用逗号分隔）
@@ -622,14 +691,28 @@ def fetch_etf_iopv_snapshot(
             "data": None,
             "source": "fund_etf_spot_em",
         }
+    spot_df = None
+    # 1) 首选：AkShare
     try:
         ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
         with ctx:
             spot_df = ak.fund_etf_spot_em()
     except Exception as e:
+        spot_df = None
+        last_err = e
+
+    # 2) 备用：直连 push2（避免 akshare 请求链路偶发断开）
+    if spot_df is None or getattr(spot_df, "empty", True) or "代码" not in getattr(spot_df, "columns", []):
+        try:
+            spot_df = _fund_etf_spot_em_direct()
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            spot_df = None
+
+    if spot_df is None:
         return {
             "success": False,
-            "message": f"fund_etf_spot_em failed: {e}",
+            "message": f"fund_etf_spot_em failed: {last_err}",
             "data": None,
             "source": "fund_etf_spot_em",
         }

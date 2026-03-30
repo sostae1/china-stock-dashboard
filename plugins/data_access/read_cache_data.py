@@ -12,10 +12,13 @@ We implement it here as a thin wrapper over `src/data_cache.py`, so
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
+import logging
 
 import pandas as pd
 
 from src.data_cache import get_cache_file_path, load_cached_data, parse_date_range
+
+logger = logging.getLogger(__name__)
 
 
 def _normalize_dates(
@@ -54,6 +57,15 @@ def read_cache_data(
 
     dates = _normalize_dates(date=date, start_date=start_date, end_date=end_date)
     if not dates:
+        logger.debug(
+            "cache_read invalid args: data_type=%s symbol=%s period=%s date=%s start_date=%s end_date=%s",
+            data_type,
+            symbol,
+            period,
+            date,
+            start_date,
+            end_date,
+        )
         return {
             "success": False,
             "message": "缺少 date 或 start_date/end_date",
@@ -78,6 +90,14 @@ def read_cache_data(
         dfs.append(df)
 
     if not dfs:
+        logger.debug(
+            "cache_miss: data_type=%s symbol=%s period=%s missing_dates=%d dates=%s",
+            data_type,
+            symbol,
+            period,
+            len(missing_dates),
+            dates,
+        )
         return {
             "success": False,
             "message": "cache_miss",
@@ -89,6 +109,20 @@ def read_cache_data(
     records = df_all.to_dict(orient="records")
 
     partial = len(missing_dates) > 0
+    total = len(dates)
+    hit_cnt = total - len(missing_dates)
+    hit_ratio = (hit_cnt / total) if total else 0.0
+    logger.debug(
+        "cache_read result: data_type=%s symbol=%s period=%s cache_hit=%s partial=%s hit_ratio=%.3f hit_cnt=%d miss_cnt=%d",
+        data_type,
+        symbol,
+        period,
+        True,
+        partial,
+        hit_ratio,
+        hit_cnt,
+        len(missing_dates),
+    )
     return {
         "success": True,
         "message": "ok" if not partial else "partial_cache_hit",

@@ -10,11 +10,21 @@
 openclaw plugins install @shaoxing-xie/openclaw-data-china-stock
 ```
 
+## 本地安装（可选）
+如果你希望在本地（非 OpenClaw 内）复现/调试工具调用，可以先安装依赖：
+
+```bash
+pip install -r requirements.txt
+```
+
 ## 快速开始（3 分钟）
 
 1. 在 OpenClaw 的插件配置中确认工具执行器路径 `scriptPath` 指向本仓库的 `tool_runner.py`（通常可保持默认）。
 2. 在 Agent/Workflow 中优先调用统一入口工具：`tool_fetch_market_data`。
 3. 若你在离线/降配网络场景希望尽量稳定：使用 `tool_read_market_data`（或 `tool_read_index_* / tool_read_etf_* / tool_read_option_*`）。
+
+### Tushare 备份配置
+部分数据源会以 Tushare 作为可选兜底：请设置环境变量 `TUSHARE_TOKEN`（或在 `config.yaml` 的 `tushare.token` 中配置）。
 
 ### 典型调用示例
 

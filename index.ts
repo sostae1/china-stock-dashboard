@@ -2,19 +2,25 @@ import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 const execFileAsync = promisify(execFile);
 
 const HOME = process.env.HOME || "";
+const THIS_DIR = dirname(fileURLToPath(import.meta.url));
 
 function getDefaultScriptPath(): string {
+  // Prefer locating `tool_runner.py` inside the installed plugin package directory.
+  const candidate = join(THIS_DIR, "tool_runner.py");
+  if (existsSync(candidate)) return candidate;
+  // Fallback: keep backward compatibility with older installations.
   return HOME ? `${HOME}/openclaw-data-china-stock/tool_runner.py` : "";
 }
 
 function getManifestPath(): string {
   const candidates = [
-    join(__dirname, "config", "tools_manifest.json"),
+    join(THIS_DIR, "config", "tools_manifest.json"),
     join(process.cwd(), "config", "tools_manifest.json"),
   ];
   for (const p of candidates) {

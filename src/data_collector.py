@@ -8,14 +8,23 @@ import pandas as pd
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, cast
 import time
+import random
 import pytz
 import requests
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 
 from src.logger_config import get_module_logger, log_function_call, log_function_result, log_error_with_context
 from src.config_loader import load_system_config
+from src.http_utils import get_random_user_agent
 
 logger = get_module_logger(__name__)
+
+# 用于网络请求重试间隔的抖动（与 `plugins.utils.retry` 保持一致的 ±20% 范围）
+def _apply_delay_jitter(delay_seconds: float, jitter_ratio: float = 0.2) -> float:
+    if delay_seconds <= 0:
+        return 0.0
+    jitter_amount = delay_seconds * jitter_ratio * (random.random() * 2 - 1)  # -20% ~ +20%
+    return max(0.0, delay_seconds + jitter_amount)
 
 # =========================
 # 数据源熔断与健康状态管理
@@ -303,7 +312,7 @@ def fetch_index_minute_em(
         try:
             if attempt > 0:
                 # 指数退避：延迟时间 = 基础延迟 * (2 ^ (attempt-1))，最大30秒
-                delay = min(retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
                 logger.debug(f"重试获取指数分钟数据: symbol={symbol}, period={period}, 第{attempt+1}次尝试, 等待{delay:.1f}秒")
                 time.sleep(delay)
             
@@ -1143,7 +1152,7 @@ def fetch_etf_minute_em(
     for attempt in range(max_retries):
         try:
             if attempt > 0:
-                delay = min(retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
                 logger.debug(f"重试获取ETF分钟数据: symbol={symbol}, period={period}, 第{attempt+1}次尝试, 等待{delay:.1f}秒")
                 time.sleep(delay)
             
@@ -1508,7 +1517,10 @@ def fetch_etf_minute_sina(
     
     headers = {
         "Referer": sina_config.get('referer', 'http://finance.sina.com.cn'),
-        "User-Agent": sina_config.get('user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+        "User-Agent": get_random_user_agent(
+            sina_config,
+            default_ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        )
     }
     
     # ========== 重试机制 ==========
@@ -1516,7 +1528,7 @@ def fetch_etf_minute_sina(
     for attempt in range(max_retries):
         try:
             if attempt > 0:
-                delay = min(retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
                 logger.debug(f"重试获取ETF分钟数据（新浪）: symbol={symbol}, period={period}, 第{attempt+1}次尝试, 等待{delay:.1f}秒")
                 time.sleep(delay)
             
@@ -2073,7 +2085,10 @@ def fetch_index_minute_sina(
     
     headers = {
         "Referer": sina_config.get('referer', 'http://finance.sina.com.cn'),
-        "User-Agent": sina_config.get('user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+        "User-Agent": get_random_user_agent(
+            sina_config,
+            default_ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        )
     }
     
     # ========== 重试机制 ==========
@@ -2081,7 +2096,7 @@ def fetch_index_minute_sina(
     for attempt in range(max_retries):
         try:
             if attempt > 0:
-                delay = min(retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
                 logger.debug(f"重试获取指数分钟数据（新浪）: symbol={symbol}, period={period}, 第{attempt+1}次尝试, 等待{delay:.1f}秒")
                 time.sleep(delay)
             
@@ -3632,7 +3647,10 @@ def fetch_a50_daily_sina(
     
     headers = {
         "Referer": sina_config.get('referer', 'http://finance.sina.com.cn'),
-        "User-Agent": sina_config.get('user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+        "User-Agent": get_random_user_agent(
+            sina_config,
+            default_ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        )
     }
     
     # ========== 重试机制 ==========
@@ -3640,7 +3658,7 @@ def fetch_a50_daily_sina(
     for attempt in range(max_retries):
         try:
             if attempt > 0:
-                delay = min(retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
                 logger.debug(f"重试获取A50期指日线数据（新浪）: symbol={symbol}, 第{attempt+1}次尝试, 等待{delay:.1f}秒")
                 time.sleep(delay)
             
@@ -3882,7 +3900,10 @@ def fetch_a50_minute_sina(
     
     headers = {
         "Referer": sina_config.get('referer', 'http://finance.sina.com.cn'),
-        "User-Agent": sina_config.get('user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+        "User-Agent": get_random_user_agent(
+            sina_config,
+            default_ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        )
     }
     
     # ========== 重试机制 ==========
@@ -3890,7 +3911,7 @@ def fetch_a50_minute_sina(
     for attempt in range(max_retries):
         try:
             if attempt > 0:
-                delay = min(retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
                 logger.debug(f"重试获取A50期指分钟数据（新浪）: symbol={symbol}, period={period}, 第{attempt+1}次尝试, 等待{delay:.1f}秒")
                 time.sleep(delay)
             

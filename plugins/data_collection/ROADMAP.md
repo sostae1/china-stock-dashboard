@@ -105,3 +105,18 @@ Pydantic 模型在 Provider 代码落地（Phase B）时与工具入参一并引
 ## 附录 E：IOPV / 折溢价
 
 已实现轻量工具：`etf/fetch_realtime.fetch_etf_iopv_snapshot` / `tool_fetch_etf_iopv_snapshot`（`fund_etf_spot_em`，含 IOPV 与折价率字段）。亦可结合 ETF 日线 + 指数日线间接估算，见 `etf/README.md`。
+
+## 进度与下一步（Repo 工程化清单）
+
+### 已完成（v0.1 起步阶段）
+- 补齐 `requirements.txt` 的核心依赖，并在 `README`/`README_EN` 提供本地安装说明。
+- 为 `fetch_*_data_with_fallback` 的多源优先级与熔断跳过逻辑新增单元测试（mock provider，避免网络依赖）。
+- 新增 GitHub Actions 工作流：自动运行 `python -m unittest discover`。
+- 增强 Sina 相关网络请求的鲁棒性：`User-Agent` 随机轮换 + 重试间隔抖动（jitter，避免同频请求）。
+- 缓存读取工具新增命中率/部分命中等诊断日志（便于定位“为何读不到缓存”）。
+
+### 下一步（建议优先级）
+1. 扩展 provider 级别的可观测性：在 unified入口返回中明确 `provider`、`fallback_route`、`attempt_counts`。
+2. 为剩余 HTTP 直连 provider 统一加入“指数退避 + jitter + UA 轮换”（减少重复指纹与拥塞）。
+3. 增加更多离线可测用例：缓存合并/partial 命中、异常字段兼容（DTO 规范）。
+4. 若对外开放更多 market/资产类型，补齐 DTO 校验模型（pydantic）与 schema 文档。

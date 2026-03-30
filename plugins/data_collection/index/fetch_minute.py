@@ -14,6 +14,7 @@ import os
 import sys
 import json
 import time
+import random
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 from urllib.error import HTTPError
@@ -46,6 +47,25 @@ try:
     MOOTDX_AVAILABLE = True
 except Exception:  # noqa: BLE001
     MOOTDX_AVAILABLE = False
+
+
+_SINA_USER_AGENT_POOL = [
+    # A small pool to reduce request fingerprint similarity.
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+]
+
+
+def _pick_sina_user_agent() -> str:
+    return random.choice(_SINA_USER_AGENT_POOL)
+
+
+def _apply_delay_jitter(delay_seconds: float, jitter_ratio: float = 0.2) -> float:
+    if delay_seconds <= 0:
+        return 0.0
+    jitter_amount = delay_seconds * jitter_ratio * (random.random() * 2 - 1)
+    return max(0.0, delay_seconds + jitter_amount)
 
 # 尝试导入原系统的缓存模块（优先使用当前环境下的 /home/xie/src，其次回退到 Windows 路径）
 try:
@@ -189,7 +209,7 @@ def fetch_index_minute_sina_direct(
     }
     headers = {
         "Referer": "http://finance.sina.com.cn",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent": _pick_sina_user_agent(),
     }
 
     last_error: Optional[str] = None
@@ -197,7 +217,11 @@ def fetch_index_minute_sina_direct(
     for attempt in range(max_retries):
         try:
             if attempt > 0:
-                time.sleep(min(retry_delay * (2 ** (attempt - 1)), 30.0))
+                delay = _apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 30.0))
+                time.sleep(delay)
+
+            # 随机化 UA，减少请求指纹重复
+            headers["User-Agent"] = _pick_sina_user_agent()
 
             full_url = f"{url}?{urlencode(params)}"
             req = Request(full_url, headers=headers)

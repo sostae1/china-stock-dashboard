@@ -10,11 +10,21 @@ You can install it directly inside OpenClaw:
 openclaw plugins install @shaoxing-xie/openclaw-data-china-stock
 ```
 
+## Local install (optional)
+If you want to run/debug tools locally (outside OpenClaw), install dependencies first:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Quick Start (3 minutes)
 
 1. In OpenClaw plugin settings, ensure `scriptPath` points to this repo’s `tool_runner.py` (or keep the default if your setup already mounts it correctly).
 2. In your Agent/Workflow, call `tool_fetch_market_data` as the primary cross-asset unified entry.
 3. For more stable/offline scenarios, use `tool_read_market_data` / `tool_read_index_*` / `tool_read_etf_*` / `tool_read_option_*`.
+
+### Tushare Backup Configuration
+Some fallback routes may use Tushare: please set the environment variable `TUSHARE_TOKEN` (or configure `tushare.token` in `config.yaml`).
 
 Example calls:
 

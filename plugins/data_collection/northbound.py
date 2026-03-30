@@ -10,8 +10,18 @@ import pandas as pd
 from datetime import datetime
 from typing import Dict, Optional
 import logging
+from contextlib import nullcontext
 
 logger = logging.getLogger(__name__)
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
 
 
 def tool_fetch_northbound_flow(date: str = None, lookback_days: int = 1) -> Dict:
@@ -50,13 +60,17 @@ def tool_fetch_northbound_flow(date: str = None, lookback_days: int = 1) -> Dict
             "Referer": "http://data.eastmoney.com/hsgt/"
         }
         
-        response = requests.get(url, params=params, headers=headers, timeout=10)
+        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+        with ctx:
+            response = requests.get(url, params=params, headers=headers, timeout=10)
         response.encoding = "utf-8"
         
         # 解析JSONP响应
-        text = response.text
+        text = (response.text or "").strip()
         if text.startswith("var t="):
             text = text.replace("var t=", "")
+        # 兼容 UTF-8 BOM 与尾部分号
+        text = text.lstrip("\ufeff").strip().rstrip(";").strip()
         
         data = json.loads(text)
         
