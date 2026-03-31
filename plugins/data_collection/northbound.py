@@ -15,6 +15,12 @@ from contextlib import nullcontext
 logger = logging.getLogger(__name__)
 
 try:
+    import akshare as ak  # type: ignore[import]
+    AKSHARE_AVAILABLE = True
+except Exception:
+    AKSHARE_AVAILABLE = False
+
+try:
     from plugins.utils.proxy_env import without_proxy_env
     PROXY_ENV_AVAILABLE = True
 except Exception:
@@ -39,6 +45,47 @@ def tool_fetch_northbound_flow(date: str = None, lookback_days: int = 1) -> Dict
         # 默认今天
         if not date:
             date = datetime.now().strftime("%Y-%m-%d")
+
+        # 优先：AkShare（更稳定，避免 DataCenter_V3 返回 HTML/BOM/空响应）
+        if AKSHARE_AVAILABLE:
+            try:
+                ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+                with ctx:
+                    df = ak.stock_hsgt_fund_flow_summary_em()
+                if df is not None and not df.empty:
+                    # 仅取北向：沪股通/深股通
+                    df2 = df.copy()
+                    # 标准化列名（AkShare 可能字段略有不同，但核心列稳定）
+                    # 目标：sh_net/sz_net/total_net（单位：亿）
+                    sh = df2[(df2.get("板块") == "沪股通") & (df2.get("资金方向") == "北向")]
+                    sz = df2[(df2.get("板块") == "深股通") & (df2.get("资金方向") == "北向")]
+                    sh_net = float(sh["成交净买额"].iloc[0]) if not sh.empty else 0.0
+                    sz_net = float(sz["成交净买额"].iloc[0]) if not sz.empty else 0.0
+                    total = sh_net + sz_net
+                    return {
+                        "status": "success",
+                        "date": str(df2.get("交易日").iloc[0]) if "交易日" in df2.columns and not df2.empty else date,
+                        "data": {
+                            "sh_net": sh_net,
+                            "sz_net": sz_net,
+                            "total_net": total,
+                            "sh_buy": None,
+                            "sh_sell": None,
+                            "sz_buy": None,
+                            "sz_sell": None,
+                        },
+                        "statistics": {
+                            "avg_5d": None,
+                            "avg_20d": None,
+                            "consecutive_days": None,
+                            "trend": "流入" if total > 0 else "流出" if total < 0 else "持平",
+                        },
+                        "signal": _generate_signal({"total_net": total}, None, 1),
+                        "history": [],
+                        "source": "akshare.stock_hsgt_fund_flow_summary_em",
+                    }
+            except Exception as e:  # noqa: BLE001
+                logger.warning("AkShare northbound summary failed, fallback to legacy: %s", e)
         
         # 东方财富北向资金接口
         url = "http://data.eastmoney.com/DataCenter_V3/Trade2014/HsgtFlow.ashx"

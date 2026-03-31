@@ -302,18 +302,8 @@ def tool_stock_monitor(
             allowed: bool
             reason: str = ""
 
-        # 通知模块在某些发行版/精简安装中可能不存在：允许工具继续执行监控逻辑，只是跳过发送。
-        try:
-            from plugins.notification.notification_cooldown import should_send, record_send  # type: ignore
-            NOTIFY_AVAILABLE = True
-        except Exception:
-            NOTIFY_AVAILABLE = False
-
-            def should_send(*args, **kwargs):  # type: ignore[no-redef]
-                return _Decision(allowed=False, reason="notification module not installed")
-
-            def record_send(*args, **kwargs):  # type: ignore[no-redef]
-                return None
+        # 本工具只负责数据采集/触发判断，不进行任何飞书/钉钉等外部通知发送。
+        # 通知发送交由上层调用者根据本工具返回的 `notifications[*].text` 自行决定。
 
         if state_path is None:
             state_path = os.path.expanduser("~/.openclaw/workspace/stock_monitor_state.json")
@@ -477,62 +467,25 @@ def tool_stock_monitor(
                             }
                         )
 
-        # ---- 通知发送（仅飞书工具支持）----
+        # ---- 通知交由上层发送 ----
         notifications: List[Dict[str, Any]] = []
         if fired:
-            # 组织一条消息（简单）
             lines = [f"股票监控触发 ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"]
             for e in fired:
-                lines.append(f"- {e['symbol']} | {e['type']} | value={e.get('value')} | rule={e.get('pct') or e.get('ratio') or e.get('level')}")
+                lines.append(
+                    f"- {e['symbol']} | {e['type']} | value={e.get('value')} | rule={e.get('pct') or e.get('ratio') or e.get('level')}"
+                )
             msg = "\n".join(lines)
 
-            if str(output_channel).lower() in {"feishu", "flk", "feishu_card", "feishu_message"}:
-                # cooldown 去重：按全部触发 key
-                key = f"stock_monitor:{','.join([str(x.get('symbol')) for x in fired])}:{len(fired)}"
-                decision = should_send(key=key, cooldown_minutes=int(cooldown_minutes))
-                if not NOTIFY_AVAILABLE:
-                    notifications.append({"channel": "feishu", "skipped": True, "reason": "notification module not installed"})
-                elif decision.allowed:
-                    try:
-                        from plugins.notification.send_feishu_message import tool_send_feishu_message  # type: ignore
-
-                        send_res = tool_send_feishu_message(message=msg, title="Stock Monitor")
-                        if send_res.get("success"):
-                            record_send(key=key)
-                        notifications.append({"channel": "feishu", "send_result": send_res})
-                    except Exception as e:  # noqa: BLE001
-                        notifications.append({"channel": "feishu", "skipped": True, "reason": f"send_feishu_message unavailable: {e}"})
-                else:
-                    notifications.append({"channel": "feishu", "skipped": True, "reason": getattr(decision, "reason", "")})
-            elif str(output_channel).lower() in {"dingtalk", "ding", "钉钉"}:
-                key = f"stock_monitor:{','.join([str(x.get('symbol')) for x in fired])}:{len(fired)}"
-                decision = should_send(key=key, cooldown_minutes=int(cooldown_minutes))
-                if not NOTIFY_AVAILABLE:
-                    notifications.append({"channel": "dingtalk", "skipped": True, "reason": "notification module not installed"})
-                elif decision.allowed:
-                    try:
-                        from plugins.notification.send_dingtalk_message import tool_send_dingtalk_message  # type: ignore
-
-                        send_res = tool_send_dingtalk_message(
-                            message=msg,
-                            title="Stock Monitor",
-                            mode=mode,
-                        )
-                        if send_res.get("success") and not send_res.get("skipped"):
-                            record_send(key=key)
-                        notifications.append({"channel": "dingtalk", "send_result": send_res})
-                    except Exception as e:  # noqa: BLE001
-                        notifications.append({"channel": "dingtalk", "skipped": True, "reason": f"send_dingtalk_message unavailable: {e}"})
-                else:
-                    notifications.append({"channel": "dingtalk", "skipped": True, "reason": getattr(decision, "reason", "")})
-            else:
-                notifications.append(
-                    {
-                        "channel": output_channel,
-                        "skipped": True,
-                        "reason": "dingtalk send tool not found; returning fired events only",
-                    }
-                )
+            notifications.append(
+                {
+                    "channel": output_channel,
+                    "skipped": True,
+                    "reason": "collection tool no longer sends external notifications; caller should call tool_send_feishu_notification/tool_send_dingtalk_message",
+                    "cooldown_minutes": cooldown_minutes,
+                    "text": msg,
+                }
+            )
 
         return {
             "success": True,

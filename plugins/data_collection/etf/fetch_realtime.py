@@ -171,6 +171,64 @@ def _fund_etf_spot_em_direct() -> Optional[pd.DataFrame]:
     )
     return df
 
+
+def _fund_etf_iopv_single_direct(code: str) -> Optional[Dict[str, Any]]:
+    """
+    直连 push2 的 stock/get 拉取单只 ETF 的 IOPV/折价率（更轻量，避免全量列表偶发断连）。
+    """
+    c = str(code).strip().upper().replace(".SH", "").replace(".SZ", "")
+    if c.lower().startswith(("sh", "sz")) and len(c) > 2:
+        c = c[2:]
+    if not c:
+        return None
+    market_id = 1 if c.startswith(("5", "6")) else 0
+
+    hosts = ["91.push2.eastmoney.com", "88.push2.eastmoney.com", "82.push2.eastmoney.com", "17.push2.eastmoney.com"]
+    params = {
+        "secid": f"{market_id}.{c}",
+        "fields": "f14,f43,f441,f402",
+        "mpi": "1000",
+        "invt": "2",
+        "fltt": "2",
+    }
+    headers = {"User-Agent": _pick_ua(), "Referer": f"https://quote.eastmoney.com/{'sh' if market_id==1 else 'sz'}{c}.html"}
+
+    for h in hosts:
+        url = f"https://{h}/api/qt/stock/get"
+        for _ in range(2):
+            try:
+                with without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext():
+                    r = requests.get(url, params=params, headers=headers, timeout=15)
+                r.raise_for_status()
+                j = r.json()
+                data = (j or {}).get("data") or {}
+                if not isinstance(data, dict) or not data:
+                    raise ValueError("empty data")
+                name = str(data.get("f14") or "").strip()
+                try:
+                    latest_price = float(data.get("f43") or 0.0) / 100.0
+                except Exception:
+                    latest_price = 0.0
+                try:
+                    iopv = float(data.get("f441") or 0.0) / 1000.0
+                except Exception:
+                    iopv = None
+                try:
+                    discount = float(data.get("f402") or 0.0) / 100.0
+                except Exception:
+                    discount = None
+                return {
+                    "code": c,
+                    "name": name,
+                    "latest_price": latest_price,
+                    "iopv": iopv,
+                    "discount_pct": discount,
+                }
+            except Exception:  # noqa: BLE001
+                headers["User-Agent"] = _pick_ua()
+                continue
+    return None
+
 def fetch_etf_realtime(
     etf_code: str = "510300",  # 支持单个或多个（用逗号分隔）
     mode: str = "production",
@@ -673,7 +731,9 @@ def fetch_etf_iopv_snapshot(
     etf_code: str = "510300",
 ) -> Dict[str, Any]:
     """
-    从东方财富 ETF 列表拉取 IOPV 实时估值与基金折价率（AkShare fund_etf_spot_em）。
+    主源：同花顺 ETF 列表（AkShare fund_etf_spot_ths）。
+    备源：新浪 ETF 列表（AkShare fund_etf_category_sina, symbol=ETF基金）。
+    说明：上述两源通常不提供 IOPV/折价率字段，返回中保留 iopv/discount_pct=None。
     失败时返回 success=False，不抛异常。
     """
     if not AKSHARE_AVAILABLE:
@@ -681,7 +741,7 @@ def fetch_etf_iopv_snapshot(
             "success": False,
             "message": "akshare not installed",
             "data": None,
-            "source": "fund_etf_spot_em",
+            "source": "fund_etf_spot_ths",
         }
     codes = [c.strip() for c in str(etf_code).split(",") if c.strip()]
     if not codes:
@@ -689,96 +749,130 @@ def fetch_etf_iopv_snapshot(
             "success": False,
             "message": "未提供有效的 ETF 代码",
             "data": None,
-            "source": "fund_etf_spot_em",
+            "source": "fund_etf_spot_ths",
         }
-    spot_df = None
-    # 1) 首选：AkShare
+
+    def _normalize_code(v: Any) -> str:
+        s = str(v or "").strip()
+        s = s.upper().replace(".SH", "").replace(".SZ", "")
+        if s.lower().startswith(("sh", "sz")) and len(s) > 2:
+            s = s[2:]
+        return s
+
+    code_set = {_normalize_code(c) for c in codes if _normalize_code(c)}
+
+    spot_df: Optional[pd.DataFrame] = None
+    source = "fund_etf_spot_ths"
+    last_err: Optional[Exception] = None
+
+    # 1) 主源：同花顺 ETF 实时列表
     try:
         ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
         with ctx:
-            spot_df = ak.fund_etf_spot_em()
+            spot_df = ak.fund_etf_spot_ths(date="")
     except Exception as e:
         spot_df = None
         last_err = e
 
-    # 2) 备用：直连 push2（避免 akshare 请求链路偶发断开）
-    if spot_df is None or getattr(spot_df, "empty", True) or "代码" not in getattr(spot_df, "columns", []):
+    # 2) 备源：新浪 ETF 分类列表
+    if spot_df is None or getattr(spot_df, "empty", True):
         try:
-            spot_df = _fund_etf_spot_em_direct()
-        except Exception as e:  # noqa: BLE001
+            spot_df = _get_fund_etf_category_sina_cached(category_symbol="ETF基金")
+            source = "fund_etf_category_sina"
+        except Exception as e:
             last_err = e
             spot_df = None
 
     if spot_df is None:
         return {
             "success": False,
-            "message": f"fund_etf_spot_em failed: {last_err}",
+            "message": f"fund_etf_spot_ths/fund_etf_category_sina failed: {last_err}",
             "data": None,
-            "source": "fund_etf_spot_em",
+            "source": source,
         }
-    if spot_df is None or spot_df.empty or "代码" not in spot_df.columns:
+
+    if spot_df.empty:
         return {
             "success": False,
-            "message": "东财 ETF 列表为空或格式变更",
+            "message": "ETF 列表为空或格式变更",
             "data": None,
-            "source": "fund_etf_spot_em",
+            "source": source,
         }
+
+    code_col = None
+    for cand in ("基金代码", "代码", "code", "symbol"):
+        if cand in spot_df.columns:
+            code_col = cand
+            break
+    if not code_col:
+        return {
+            "success": False,
+            "message": "ETF 列表缺少代码列（基金代码/代码）",
+            "data": None,
+            "source": source,
+        }
+
+    name_col = None
+    for cand in ("基金名称", "名称", "name"):
+        if cand in spot_df.columns:
+            name_col = cand
+            break
+
+    price_cols = ("最新价", "当前-单位净值", "最新-单位净值", "单位净值", "close", "price")
+    prev_cols = ("前一日-单位净值", "昨收", "pre_close")
+
+    df = spot_df.copy()
+    df["_norm_code"] = df[code_col].astype(str).map(_normalize_code)
+    df = df[df["_norm_code"].isin(code_set)]
 
     rows: List[Dict[str, Any]] = []
     for raw in codes:
-        c = raw.upper().replace(".SH", "").replace(".SZ", "")
-        if c.lower().startswith(("sh", "sz")) and len(c) > 2:
-            c = c[2:]
-        m = spot_df[spot_df["代码"].astype(str) == c]
+        c = _normalize_code(raw)
+        m = df[df["_norm_code"] == c]
         if m.empty:
             rows.append(
                 {
                     "code": c,
                     "found": False,
-                    "message": "未在东财 ETF 列表中匹配",
+                    "message": f"未在 {source} 列表中匹配",
                 }
             )
             continue
         r = m.iloc[0]
-        iopv = None
-        discount = None
-        for col in spot_df.columns:
-            if "IOPV" in str(col):
-                try:
-                    iopv = float(r[col])
-                except (TypeError, ValueError):
-                    pass
-            if "折价" in str(col):
-                try:
-                    discount = float(r[col])
-                except (TypeError, ValueError):
-                    pass
-        name_val = ""
-        if "名称" in r.index:
-            name_val = str(r["名称"])
-        px = 0.0
-        if "最新价" in r.index:
-            try:
-                px = float(r["最新价"])
-            except (TypeError, ValueError):
-                px = 0.0
+
+        def _safe_float(cols: tuple[str, ...]) -> Optional[float]:
+            for col in cols:
+                if col in r.index:
+                    try:
+                        v = float(r[col])
+                        if pd.notna(v):
+                            return v
+                    except (TypeError, ValueError):
+                        continue
+            return None
+
+        name_val = str(r[name_col]) if name_col and name_col in r.index else ""
+        latest_price = _safe_float(price_cols)
+        prev_close = _safe_float(prev_cols)
+
         rows.append(
             {
                 "code": c,
                 "found": True,
                 "name": name_val,
-                "latest_price": px,
-                "iopv": iopv,
-                "discount_pct": discount,
+                "latest_price": latest_price if latest_price is not None else 0.0,
+                "prev_close": prev_close if prev_close is not None else 0.0,
+                "iopv": None,
+                "discount_pct": None,
             }
         )
 
     data_out: Any = rows[0] if len(rows) == 1 else rows
     return {
         "success": True,
-        "message": "Successfully fetched ETF IOPV / discount metadata",
+        "message": "Successfully fetched ETF snapshot (ths primary, sina fallback)",
         "data": data_out,
-        "source": "fund_etf_spot_em",
+        "source": source,
         "count": len(rows),
     }
 
@@ -786,5 +880,5 @@ def fetch_etf_iopv_snapshot(
 def tool_fetch_etf_iopv_snapshot(
     etf_code: str = "510300",
 ) -> Dict[str, Any]:
-    """OpenClaw 工具：ETF IOPV / 折价率（东财列表）"""
+    """OpenClaw 工具：ETF 快照（同花顺主源 / 新浪备源）"""
     return fetch_etf_iopv_snapshot(etf_code=etf_code)

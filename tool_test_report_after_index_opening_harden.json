@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T03:31:46.687405+00:00",
+  "generated_at": "2026-03-31T02:10:38.384446+00:00",
   "manifest": "/home/xie/openclaw-data-china-stock/config/tools_manifest.json",
   "tool_runner": "/home/xie/openclaw-data-china-stock/tool_runner.py",
   "disable_network": false,
@@ -13,7 +13,7 @@
       "tool_id": "tool_fetch_index_realtime",
       "ok": true,
       "rc": 0,
-      "duration_ms": 4835,
+      "duration_ms": 7541,
       "args": {
         "index_code": "000001"
       },
@@ -24,16 +24,16 @@
         "data": {
           "code": "000001",
           "name": "上证指数",
-          "current_price": 3906.4402,
-          "change": -16.847,
-          "change_percent": -0.429,
+          "current_price": 3939.984,
+          "change": 16.697,
+          "change_percent": 0.426,
           "open": 3924.067,
           "high": 3948.8107,
-          "low": 3904.3745,
+          "low": 3924.067,
           "prev_close": 3923.2869,
-          "volume": 401677349.0,
-          "amount": 590138890385.0,
-          "timestamp": "2026-03-31 11:29:30"
+          "volume": 225672789.0,
+          "amount": 326938710733.0,
+          "timestamp": "2026-03-31 10:07:02"
         },
         "source": "stock_zh_index_spot_sina",
         "count": 1
@@ -43,7 +43,7 @@
       "tool_id": "tool_fetch_index_historical",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3517,
+      "duration_ms": 4644,
       "args": {
         "period": "daily",
         "index_code": "000001"
@@ -710,23 +710,563 @@
       "tool_id": "tool_fetch_index_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2569,
+      "duration_ms": 6087,
       "args": {
         "period": "5",
         "lookback_days": 5,
         "index_code": "000001"
       },
-      "error_message": "Successfully fetched 298 records",
+      "error_message": "Successfully fetched 350 records",
       "result": {
         "success": true,
-        "message": "Successfully fetched 298 records",
+        "message": "Successfully fetched 350 records",
         "data": {
           "index_code": "000001",
           "name": "上证指数",
           "period": "5",
-          "total_count": 298,
-          "returned_count": 298,
+          "total_count": 633,
+          "returned_count": 350,
           "klines": [
+            {
+              "time": "2026-03-19 14:35:00",
+              "open": 4006.402,
+              "close": 4004.119,
+              "high": 4008.988,
+              "low": 4002.854,
+              "volume": 1155226600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-19 14:40:00",
+              "open": 4003.963,
+              "close": 4004.089,
+              "high": 4004.695,
+              "low": 4000.763,
+              "volume": 1360462000,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-19 14:45:00",
+              "open": 4003.895,
+              "close": 3996.056,
+              "high": 4005.395,
+              "low": 3996.056,
+              "volume": 1513249700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-19 14:50:00",
+              "open": 3996.408,
+              "close": 3994.67,
+              "high": 3998.229,
+              "low": 3994.641,
+              "volume": 1817058700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-19 14:55:00",
+              "open": 3994.739,
+              "close": 4004.287,
+              "high": 4004.287,
+              "low": 3994.165,
+              "volume": 2013282800,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-19 15:00:00",
+              "open": 4004.817,
+              "close": 4006.552,
+              "high": 4007.387,
+              "low": 4004.269,
+              "volume": 1620437600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 09:35:00",
+              "open": 4004.573,
+              "close": 4012.371,
+              "high": 4012.531,
+              "low": 4004.573,
+              "volume": 6970438700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 09:40:00",
+              "open": 4012.183,
+              "close": 4016.904,
+              "high": 4019.568,
+              "low": 4011.526,
+              "volume": 3877884800,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 09:45:00",
+              "open": 4016.708,
+              "close": 4017.79,
+              "high": 4019.627,
+              "low": 4013.707,
+              "volume": 2790876400,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 09:50:00",
+              "open": 4017.858,
+              "close": 4014.998,
+              "high": 4022.703,
+              "low": 4014.27,
+              "volume": 2528887400,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 09:55:00",
+              "open": 4014.375,
+              "close": 4000.496,
+              "high": 4014.606,
+              "low": 4000.496,
+              "volume": 2872749800,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:00:00",
+              "open": 4000.35,
+              "close": 4004.704,
+              "high": 4005.661,
+              "low": 3995.013,
+              "volume": 2680585300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:05:00",
+              "open": 4004.449,
+              "close": 3998.148,
+              "high": 4005.47,
+              "low": 3998.148,
+              "volume": 2150775500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:10:00",
+              "open": 3997.441,
+              "close": 4001.541,
+              "high": 4002.414,
+              "low": 3996.704,
+              "volume": 1733505800,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:15:00",
+              "open": 4002.112,
+              "close": 3994.863,
+              "high": 4002.419,
+              "low": 3994.863,
+              "volume": 1480671500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:20:00",
+              "open": 3994.508,
+              "close": 3999.749,
+              "high": 4000.702,
+              "low": 3990.949,
+              "volume": 1704906200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:25:00",
+              "open": 3999.911,
+              "close": 3997.123,
+              "high": 4001.785,
+              "low": 3996.2,
+              "volume": 999823500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:30:00",
+              "open": 3997.409,
+              "close": 3996.551,
+              "high": 3998.314,
+              "low": 3994.203,
+              "volume": 888985200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:35:00",
+              "open": 3996.409,
+              "close": 3998.861,
+              "high": 3999.147,
+              "low": 3992.114,
+              "volume": 1021536200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:40:00",
+              "open": 3999.081,
+              "close": 3990.861,
+              "high": 3999.203,
+              "low": 3990.709,
+              "volume": 974239400,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:45:00",
+              "open": 3990.573,
+              "close": 3989.323,
+              "high": 3992.422,
+              "low": 3986.737,
+              "volume": 1166827200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:50:00",
+              "open": 3989.517,
+              "close": 3995.174,
+              "high": 3995.375,
+              "low": 3988.604,
+              "volume": 849237600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 10:55:00",
+              "open": 3995.28,
+              "close": 3994.368,
+              "high": 3995.891,
+              "low": 3992.677,
+              "volume": 749244200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:00:00",
+              "open": 3994.192,
+              "close": 3987.79,
+              "high": 3994.192,
+              "low": 3987.394,
+              "volume": 854585200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:05:00",
+              "open": 3987.782,
+              "close": 3986.599,
+              "high": 3988.569,
+              "low": 3984.003,
+              "volume": 922678400,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:10:00",
+              "open": 3986.621,
+              "close": 3997.359,
+              "high": 3999.126,
+              "low": 3986.621,
+              "volume": 1129981200,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:15:00",
+              "open": 3997.199,
+              "close": 4004.159,
+              "high": 4004.336,
+              "low": 3996.932,
+              "volume": 1009541300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:20:00",
+              "open": 4004.404,
+              "close": 4012.104,
+              "high": 4013.081,
+              "low": 4004.404,
+              "volume": 1326641500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:25:00",
+              "open": 4011.765,
+              "close": 4012.756,
+              "high": 4013.335,
+              "low": 4008.391,
+              "volume": 898002100,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 11:30:00",
+              "open": 4012.619,
+              "close": 4013.159,
+              "high": 4013.346,
+              "low": 4008.876,
+              "volume": 785814300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:05:00",
+              "open": 4014.144,
+              "close": 4010.102,
+              "high": 4014.978,
+              "low": 4009.791,
+              "volume": 1748937700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:10:00",
+              "open": 4010.178,
+              "close": 4008.543,
+              "high": 4010.873,
+              "low": 4008.368,
+              "volume": 917281600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:15:00",
+              "open": 4008.525,
+              "close": 4000.397,
+              "high": 4008.721,
+              "low": 4000.397,
+              "volume": 914107500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:20:00",
+              "open": 4000.323,
+              "close": 3996.643,
+              "high": 4000.394,
+              "low": 3994.97,
+              "volume": 866593500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:25:00",
+              "open": 3996.732,
+              "close": 3995.985,
+              "high": 3997.552,
+              "low": 3992.409,
+              "volume": 752251300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:30:00",
+              "open": 3995.417,
+              "close": 3995.942,
+              "high": 3997.251,
+              "low": 3993.936,
+              "volume": 584574600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:35:00",
+              "open": 3995.873,
+              "close": 3994.968,
+              "high": 3996.619,
+              "low": 3993.597,
+              "volume": 608706300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:40:00",
+              "open": 3995.104,
+              "close": 3992.589,
+              "high": 3997.286,
+              "low": 3991.257,
+              "volume": 608624700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:45:00",
+              "open": 3992.331,
+              "close": 3992.17,
+              "high": 3993.589,
+              "low": 3991.076,
+              "volume": 610028700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:50:00",
+              "open": 3992.018,
+              "close": 3992.014,
+              "high": 3992.334,
+              "low": 3989.914,
+              "volume": 660721300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 13:55:00",
+              "open": 3991.847,
+              "close": 3987.185,
+              "high": 3992.67,
+              "low": 3986.58,
+              "volume": 702637100,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:00:00",
+              "open": 3986.787,
+              "close": 3986.091,
+              "high": 3988.009,
+              "low": 3986.042,
+              "volume": 588738400,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:05:00",
+              "open": 3985.973,
+              "close": 3988.1,
+              "high": 3988.661,
+              "low": 3984.92,
+              "volume": 708058500,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:10:00",
+              "open": 3987.907,
+              "close": 3984.749,
+              "high": 3993.076,
+              "low": 3984.629,
+              "volume": 892523700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:15:00",
+              "open": 3984.586,
+              "close": 3982.426,
+              "high": 3984.586,
+              "low": 3982.017,
+              "volume": 793911300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:20:00",
+              "open": 3982.465,
+              "close": 3982.03,
+              "high": 3983.104,
+              "low": 3978.433,
+              "volume": 883028800,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:25:00",
+              "open": 3981.836,
+              "close": 3978.472,
+              "high": 3981.836,
+              "low": 3978.013,
+              "volume": 726515600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:30:00",
+              "open": 3978.481,
+              "close": 3975.899,
+              "high": 3978.481,
+              "low": 3975.311,
+              "volume": 894237300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:35:00",
+              "open": 3976.142,
+              "close": 3973.812,
+              "high": 3978.779,
+              "low": 3972.866,
+              "volume": 1188808600,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:40:00",
+              "open": 3973.504,
+              "close": 3969.356,
+              "high": 3974.38,
+              "low": 3968.919,
+              "volume": 1272692700,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:45:00",
+              "open": 3968.986,
+              "close": 3961.874,
+              "high": 3968.986,
+              "low": 3961.874,
+              "volume": 1474490400,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:50:00",
+              "open": 3962.081,
+              "close": 3959.375,
+              "high": 3964.072,
+              "low": 3959.375,
+              "volume": 1603620300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 14:55:00",
+              "open": 3959.34,
+              "close": 3957.636,
+              "high": 3961.871,
+              "low": 3957.158,
+              "volume": 2037297300,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
+            {
+              "time": "2026-03-20 15:00:00",
+              "open": 3957.353,
+              "close": 3957.053,
+              "high": 3957.46,
+              "low": 3955.711,
+              "volume": 2273032800,
+              "amount": 0.0,
+              "change_percent": 0.0
+            },
             {
               "time": "2026-03-23 09:35:00",
               "open": 3904.951,
@@ -3680,39 +4220,20 @@
             {
               "time": "2026-03-31 10:10:00",
               "open": 3940.003,
-              "close": 3942.051,
-              "high": 3942.782,
+              "close": 3939.798,
+              "high": 3940.342,
               "low": 3936.01,
-              "volume": 1390574800,
-              "amount": 0.0,
-              "change_percent": 0.0
-            },
-            {
-              "time": "2026-03-31 10:15:00",
-              "open": 3942.082,
-              "close": 3944.186,
-              "high": 3946.977,
-              "low": 3941.552,
-              "volume": 1358707300,
-              "amount": 0.0,
-              "change_percent": 0.0
-            },
-            {
-              "time": "2026-03-31 10:20:00",
-              "open": 3943.591,
-              "close": 3945.67,
-              "high": 3947.433,
-              "low": 3943.591,
-              "volume": 853324700,
+              "volume": 634228800,
               "amount": 0.0,
               "change_percent": 0.0
             }
           ],
           "start_date": "2026-03-21",
           "end_date": "2026-03-31",
-          "timestamp": "2026-03-31 11:29:36"
+          "timestamp": "2026-03-31 10:07:12",
+          "note": "共获取633条数据，因输出限制只返回最新的350条"
         },
-        "source": "cache",
+        "source": "sina",
         "count": 1
       }
     },
@@ -3720,7 +4241,7 @@
       "tool_id": "tool_fetch_index_opening",
       "ok": true,
       "rc": 0,
-      "duration_ms": 4248,
+      "duration_ms": 8239,
       "args": {},
       "error_message": "数据获取成功",
       "result": {
@@ -3733,9 +4254,9 @@
             "name": "上证指数",
             "opening_price": 3924.067,
             "pre_close": 3923.2869,
-            "change": -16.961,
-            "change_pct": -0.432,
-            "volume": 402014540.0,
+            "change": 16.352,
+            "change_pct": 0.417,
+            "volume": 226212936.0,
             "timestamp": "2026-03-31 09:28:00"
           }
         ],
@@ -3747,7 +4268,7 @@
       "tool_id": "tool_fetch_index_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 4372,
+      "duration_ms": 6631,
       "args": {
         "index_code": "000001",
         "lookback_days": 5,
@@ -3761,16 +4282,16 @@
         "data": {
           "code": "000001",
           "name": "上证指数",
-          "current_price": 3906.6313,
-          "change": -16.656,
-          "change_percent": -0.425,
+          "current_price": 3940.6204,
+          "change": 17.333,
+          "change_percent": 0.442,
           "open": 3924.067,
           "high": 3948.8107,
-          "low": 3904.3745,
+          "low": 3924.067,
           "prev_close": 3923.2869,
-          "volume": 402109700.0,
-          "amount": 590758638592.0,
-          "timestamp": "2026-03-31 11:29:45"
+          "volume": 226616911.0,
+          "amount": 328330584500.0,
+          "timestamp": "2026-03-31 10:07:27"
         },
         "source": "stock_zh_index_spot_sina",
         "count": 1
@@ -3780,7 +4301,7 @@
       "tool_id": "tool_fetch_etf_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3140,
+      "duration_ms": 3828,
       "args": {
         "etf_code": "510300",
         "lookback_days": 5,
@@ -3793,16 +4314,16 @@
         "data": {
           "code": "510300",
           "name": "沪深300ETF华泰柏瑞",
-          "current_price": 4.474,
-          "change": -0.0259999999999998,
-          "change_percent": -0.5777777777777733,
+          "current_price": 4.518,
+          "change": 0.017999999999999794,
+          "change_percent": 0.3999999999999954,
           "open": 4.501,
-          "high": 4.529,
-          "low": 4.471,
+          "high": 4.523,
+          "low": 4.498,
           "prev_close": 4.5,
-          "volume": 3186913.0,
-          "amount": 143684.0,
-          "timestamp": "2026-03-31 11:29:48"
+          "volume": 1277605.0,
+          "amount": 57651.0,
+          "timestamp": "2026-03-31 10:07:31"
         },
         "source": "qt.gtimg.cn",
         "count": 1
@@ -3812,7 +4333,7 @@
       "tool_id": "tool_fetch_option_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2353,
+      "duration_ms": 3162,
       "args": {
         "period": "15",
         "data_type": "realtime",
@@ -3824,20 +4345,20 @@
         "message": "Successfully fetched option realtime data",
         "data": {
           "contract_code": "10011210",
-          "current_price": 0.0235,
-          "change": 0.0036999999999999984,
-          "change_percent": 18.686868686868678,
-          "bid_price": 0.0232,
-          "ask_price": 0.0236,
-          "bid_volume": 48.0,
-          "ask_volume": 2.0,
-          "volume": 22507.0,
-          "open_interest": 33398.0,
+          "current_price": 0.0151,
+          "change": -0.004700000000000001,
+          "change_percent": -23.73737373737374,
+          "bid_price": 0.0151,
+          "ask_price": 0.0153,
+          "bid_volume": 89.0,
+          "ask_volume": 35.0,
+          "volume": 7298.0,
+          "open_interest": 32998.0,
           "prev_close": 0.0198,
           "open": 0.0186,
-          "high": 0.025,
-          "low": 0.0138,
-          "timestamp": "2026-03-31 11:29:50",
+          "high": 0.0188,
+          "low": 0.014,
+          "timestamp": "2026-03-31 10:07:34",
           "contract_name": "300ETF沽4月4200"
         },
         "source": "akshare_sina"
@@ -3847,7 +4368,7 @@
       "tool_id": "tool_fetch_etf_realtime",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2579,
+      "duration_ms": 3692,
       "args": {
         "etf_code": "510300"
       },
@@ -3858,16 +4379,16 @@
         "data": {
           "code": "510300",
           "name": "沪深300ETF华泰柏瑞",
-          "current_price": 4.475,
-          "change": -0.025000000000000355,
-          "change_percent": -0.5555555555555635,
+          "current_price": 4.517,
+          "change": 0.017000000000000348,
+          "change_percent": 0.3777777777777855,
           "open": 4.501,
-          "high": 4.529,
-          "low": 4.471,
+          "high": 4.523,
+          "low": 4.498,
           "prev_close": 4.5,
-          "volume": 3187036.0,
-          "amount": 143690.0,
-          "timestamp": "2026-03-31 11:29:53"
+          "volume": 1280675.0,
+          "amount": 57790.0,
+          "timestamp": "2026-03-31 10:07:38"
         },
         "source": "qt.gtimg.cn",
         "count": 1
@@ -3877,7 +4398,7 @@
       "tool_id": "tool_fetch_etf_historical",
       "ok": true,
       "rc": 0,
-      "duration_ms": 4156,
+      "duration_ms": 4603,
       "args": {
         "period": "daily",
         "etf_code": "510300"
@@ -4114,21 +4635,21 @@
       "tool_id": "tool_fetch_etf_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2759,
+      "duration_ms": 4277,
       "args": {
         "period": "5",
         "lookback_days": 5,
         "etf_code": "510300"
       },
-      "error_message": "Successfully fetched 298 records",
+      "error_message": "Successfully fetched 296 records",
       "result": {
         "success": true,
-        "message": "Successfully fetched 298 records",
+        "message": "Successfully fetched 296 records",
         "data": {
           "etf_code": "510300",
           "period": "5",
-          "total_count": 298,
-          "returned_count": 298,
+          "total_count": 296,
+          "returned_count": 296,
           "klines": [
             {
               "time": "2026-03-23 09:35:00",
@@ -7083,39 +7604,19 @@
             {
               "time": "2026-03-31 10:10:00",
               "open": 4.514,
-              "close": 4.522,
-              "high": 4.524,
+              "close": 4.518,
+              "high": 4.518,
               "low": 4.51,
-              "volume": 24323900,
-              "amount": 10999267580.000002,
-              "change_percent": 0.17722640673460965
-            },
-            {
-              "time": "2026-03-31 10:15:00",
-              "open": 4.522,
-              "close": 4.523,
-              "high": 4.529,
-              "low": 4.521,
-              "volume": 22269600,
-              "amount": 10072540080.0,
-              "change_percent": 0.022114108801396526
-            },
-            {
-              "time": "2026-03-31 10:20:00",
-              "open": 4.523,
-              "close": 4.523,
-              "high": 4.526,
-              "low": 4.52,
-              "volume": 13321500,
-              "amount": 6025314449.999999,
-              "change_percent": 0.0
+              "volume": 9193600,
+              "amount": 4153668479.9999995,
+              "change_percent": 0.08861320336728262
             }
           ],
           "start_date": "2026-03-21",
           "end_date": "2026-03-31",
-          "timestamp": "2026-03-31 11:30:00"
+          "timestamp": "2026-03-31 10:07:47"
         },
-        "source": "cache",
+        "source": "sina",
         "count": 1
       }
     },
@@ -7123,7 +7624,7 @@
       "tool_id": "tool_fetch_etf_iopv_snapshot",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3884,
+      "duration_ms": 4990,
       "args": {
         "etf_code": "510300"
       },
@@ -7148,7 +7649,7 @@
       "tool_id": "tool_fetch_option_realtime",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2410,
+      "duration_ms": 3156,
       "args": {
         "contract_code": "10011210"
       },
@@ -7158,20 +7659,20 @@
         "message": "Successfully fetched option realtime data",
         "data": {
           "contract_code": "10011210",
-          "current_price": 0.0235,
-          "change": 0.0036999999999999984,
-          "change_percent": 18.686868686868678,
-          "bid_price": 0.0221,
-          "ask_price": 0.0236,
-          "bid_volume": 3.0,
-          "ask_volume": 2.0,
-          "volume": 22507.0,
-          "open_interest": 33398.0,
+          "current_price": 0.0151,
+          "change": -0.004700000000000001,
+          "change_percent": -23.73737373737374,
+          "bid_price": 0.0153,
+          "ask_price": 0.0155,
+          "bid_volume": 70.0,
+          "ask_volume": 55.0,
+          "volume": 7298.0,
+          "open_interest": 32998.0,
           "prev_close": 0.0198,
           "open": 0.0186,
-          "high": 0.025,
-          "low": 0.0138,
-          "timestamp": "2026-03-31 11:30:06",
+          "high": 0.0188,
+          "low": 0.014,
+          "timestamp": "2026-03-31 10:07:55",
           "contract_name": "300ETF沽4月4200"
         },
         "source": "akshare_sina"
@@ -7181,50 +7682,51 @@
       "tool_id": "tool_fetch_option_greeks",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2135,
+      "duration_ms": 4150,
       "args": {
         "contract_code": "10011210"
       },
-      "error_message": "Successfully fetched option Greeks data from cache",
+      "error_message": "Successfully fetched option Greeks data",
       "result": {
         "success": true,
-        "message": "Successfully fetched option Greeks data from cache",
+        "message": "Successfully fetched option Greeks data",
         "data": {
-          "期权合约简称": "300ETF沽4月4200",
-          "成交量": "9561",
-          "Delta": "-0.0223",
-          "Gamma": "0.3054",
-          "Theta": "-0.0726",
-          "Vega": "0.059",
-          "隐含波动率": "0.2525",
-          "最高价": "0.0188",
-          "最低价": "0.0138",
-          "交易代码": "510300P2604M04200",
-          "行权价": "4.2000",
-          "最新价": "0.0141",
-          "理论价值": "0.0015",
           "contract_code": "10011210",
-          "timestamp": "2026-03-31 11:30:08"
+          "delta": -0.0242,
+          "gamma": 0.3275,
+          "theta": -0.0776,
+          "vega": 0.0631,
+          "rho": 0.0,
+          "implied_volatility": 0.2552,
+          "timestamp": "2026-03-31 10:07:59",
+          "contract_name": "300ETF沽4月4200",
+          "trading_code": "510300P2604M04200",
+          "strike_price": 4.2,
+          "current_price": 0.0153,
+          "theoretical_value": 0.0016,
+          "volume": 7231,
+          "high_price": 0.0188,
+          "low_price": 0.014
         },
-        "source": "cache"
+        "source": "akshare_sina"
       }
     },
     {
       "tool_id": "tool_fetch_option_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2659,
+      "duration_ms": 3660,
       "args": {
         "period": "15",
         "contract_code": "10011210"
       },
-      "error_message": "Successfully fetched 120 records",
+      "error_message": "Successfully fetched 37 records",
       "result": {
         "success": true,
-        "message": "Successfully fetched 120 records",
+        "message": "Successfully fetched 37 records",
         "data": {
           "contract_code": "10011210",
-          "count": 120,
+          "count": 37,
           "klines": [
             {
               "date": "2026-03-31",
@@ -7521,674 +8023,10 @@
               "volume": 105,
               "open_interest": 32997,
               "avg_price": 0.0159
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:07:00",
-              "price": 0.0151,
-              "volume": 68,
-              "open_interest": 32998,
-              "avg_price": 0.0158
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:08:00",
-              "price": 0.015,
-              "volume": 67,
-              "open_interest": 33010,
-              "avg_price": 0.0158
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:09:00",
-              "price": 0.0145,
-              "volume": 133,
-              "open_interest": 33050,
-              "avg_price": 0.0158
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:10:00",
-              "price": 0.0143,
-              "volume": 128,
-              "open_interest": 33070,
-              "avg_price": 0.0158
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:11:00",
-              "price": 0.0139,
-              "volume": 155,
-              "open_interest": 33090,
-              "avg_price": 0.0158
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:12:00",
-              "price": 0.0141,
-              "volume": 219,
-              "open_interest": 33233,
-              "avg_price": 0.0157
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:13:00",
-              "price": 0.0143,
-              "volume": 197,
-              "open_interest": 33261,
-              "avg_price": 0.0157
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:14:00",
-              "price": 0.0147,
-              "volume": 342,
-              "open_interest": 33303,
-              "avg_price": 0.0156
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:15:00",
-              "price": 0.0142,
-              "volume": 251,
-              "open_interest": 33309,
-              "avg_price": 0.0156
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:16:00",
-              "price": 0.0143,
-              "volume": 125,
-              "open_interest": 33349,
-              "avg_price": 0.0156
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:17:00",
-              "price": 0.0144,
-              "volume": 526,
-              "open_interest": 33084,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:18:00",
-              "price": 0.014,
-              "volume": 143,
-              "open_interest": 33128,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:19:00",
-              "price": 0.0144,
-              "volume": 49,
-              "open_interest": 33144,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:20:00",
-              "price": 0.0146,
-              "volume": 62,
-              "open_interest": 33144,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:21:00",
-              "price": 0.0147,
-              "volume": 85,
-              "open_interest": 33170,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:23:00",
-              "price": 0.0147,
-              "volume": 197,
-              "open_interest": 33192,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:24:00",
-              "price": 0.0151,
-              "volume": 105,
-              "open_interest": 33210,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:25:00",
-              "price": 0.0152,
-              "volume": 28,
-              "open_interest": 33211,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:26:00",
-              "price": 0.0152,
-              "volume": 124,
-              "open_interest": 33270,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:27:00",
-              "price": 0.015,
-              "volume": 30,
-              "open_interest": 33280,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:28:00",
-              "price": 0.0148,
-              "volume": 2,
-              "open_interest": 33280,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:29:00",
-              "price": 0.0148,
-              "volume": 12,
-              "open_interest": 33280,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:30:00",
-              "price": 0.015,
-              "volume": 35,
-              "open_interest": 33280,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:31:00",
-              "price": 0.0149,
-              "volume": 2,
-              "open_interest": 33279,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:32:00",
-              "price": 0.0152,
-              "volume": 13,
-              "open_interest": 33278,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:33:00",
-              "price": 0.0154,
-              "volume": 81,
-              "open_interest": 33293,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:34:00",
-              "price": 0.0158,
-              "volume": 41,
-              "open_interest": 33293,
-              "avg_price": 0.0154
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:35:00",
-              "price": 0.0165,
-              "volume": 112,
-              "open_interest": 33348,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:36:00",
-              "price": 0.0165,
-              "volume": 40,
-              "open_interest": 33336,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:37:00",
-              "price": 0.0164,
-              "volume": 36,
-              "open_interest": 33336,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:38:00",
-              "price": 0.0163,
-              "volume": 26,
-              "open_interest": 33336,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:39:00",
-              "price": 0.0165,
-              "volume": 2,
-              "open_interest": 33337,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:40:00",
-              "price": 0.0164,
-              "volume": 31,
-              "open_interest": 33348,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:41:00",
-              "price": 0.0169,
-              "volume": 88,
-              "open_interest": 33327,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:42:00",
-              "price": 0.0174,
-              "volume": 253,
-              "open_interest": 33316,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:43:00",
-              "price": 0.0174,
-              "volume": 187,
-              "open_interest": 33337,
-              "avg_price": 0.0155
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:44:00",
-              "price": 0.0176,
-              "volume": 114,
-              "open_interest": 33370,
-              "avg_price": 0.0156
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:45:00",
-              "price": 0.0172,
-              "volume": 200,
-              "open_interest": 33396,
-              "avg_price": 0.0156
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:46:00",
-              "price": 0.0176,
-              "volume": 122,
-              "open_interest": 33405,
-              "avg_price": 0.0156
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:47:00",
-              "price": 0.0182,
-              "volume": 352,
-              "open_interest": 33431,
-              "avg_price": 0.0157
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:48:00",
-              "price": 0.0185,
-              "volume": 553,
-              "open_interest": 33431,
-              "avg_price": 0.0158
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:49:00",
-              "price": 0.0181,
-              "volume": 189,
-              "open_interest": 33431,
-              "avg_price": 0.0159
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:50:00",
-              "price": 0.0182,
-              "volume": 133,
-              "open_interest": 33445,
-              "avg_price": 0.0159
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:51:00",
-              "price": 0.0183,
-              "volume": 228,
-              "open_interest": 33390,
-              "avg_price": 0.0159
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:52:00",
-              "price": 0.0187,
-              "volume": 150,
-              "open_interest": 33380,
-              "avg_price": 0.016
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:53:00",
-              "price": 0.018,
-              "volume": 165,
-              "open_interest": 33333,
-              "avg_price": 0.016
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:54:00",
-              "price": 0.0178,
-              "volume": 16,
-              "open_interest": 33327,
-              "avg_price": 0.016
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:55:00",
-              "price": 0.018,
-              "volume": 18,
-              "open_interest": 33327,
-              "avg_price": 0.016
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:56:00",
-              "price": 0.0183,
-              "volume": 96,
-              "open_interest": 33332,
-              "avg_price": 0.016
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:57:00",
-              "price": 0.0187,
-              "volume": 187,
-              "open_interest": 33332,
-              "avg_price": 0.016
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:58:00",
-              "price": 0.0185,
-              "volume": 106,
-              "open_interest": 33332,
-              "avg_price": 0.0161
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 10:59:00",
-              "price": 0.0182,
-              "volume": 265,
-              "open_interest": 33432,
-              "avg_price": 0.0161
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:00:00",
-              "price": 0.0191,
-              "volume": 154,
-              "open_interest": 33431,
-              "avg_price": 0.0161
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:01:00",
-              "price": 0.02,
-              "volume": 656,
-              "open_interest": 33435,
-              "avg_price": 0.0163
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:02:00",
-              "price": 0.0192,
-              "volume": 323,
-              "open_interest": 33435,
-              "avg_price": 0.0164
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:03:00",
-              "price": 0.0196,
-              "volume": 174,
-              "open_interest": 33459,
-              "avg_price": 0.0164
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:04:00",
-              "price": 0.0196,
-              "volume": 60,
-              "open_interest": 33444,
-              "avg_price": 0.0164
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:05:00",
-              "price": 0.0197,
-              "volume": 6,
-              "open_interest": 33443,
-              "avg_price": 0.0164
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:06:00",
-              "price": 0.02,
-              "volume": 101,
-              "open_interest": 33460,
-              "avg_price": 0.0164
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:07:00",
-              "price": 0.0204,
-              "volume": 300,
-              "open_interest": 33465,
-              "avg_price": 0.0165
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:08:00",
-              "price": 0.0202,
-              "volume": 165,
-              "open_interest": 33465,
-              "avg_price": 0.0165
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:09:00",
-              "price": 0.0202,
-              "volume": 251,
-              "open_interest": 33417,
-              "avg_price": 0.0166
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:10:00",
-              "price": 0.0195,
-              "volume": 142,
-              "open_interest": 33400,
-              "avg_price": 0.0166
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:11:00",
-              "price": 0.0203,
-              "volume": 316,
-              "open_interest": 33399,
-              "avg_price": 0.0167
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:12:00",
-              "price": 0.0204,
-              "volume": 50,
-              "open_interest": 33412,
-              "avg_price": 0.0167
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:13:00",
-              "price": 0.0208,
-              "volume": 119,
-              "open_interest": 33413,
-              "avg_price": 0.0167
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:14:00",
-              "price": 0.0205,
-              "volume": 276,
-              "open_interest": 33413,
-              "avg_price": 0.0168
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:15:00",
-              "price": 0.0212,
-              "volume": 550,
-              "open_interest": 33472,
-              "avg_price": 0.0169
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:16:00",
-              "price": 0.0208,
-              "volume": 137,
-              "open_interest": 33477,
-              "avg_price": 0.017
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:17:00",
-              "price": 0.0214,
-              "volume": 300,
-              "open_interest": 33378,
-              "avg_price": 0.017
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:18:00",
-              "price": 0.0216,
-              "volume": 428,
-              "open_interest": 33439,
-              "avg_price": 0.0171
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:19:00",
-              "price": 0.0213,
-              "volume": 366,
-              "open_interest": 33436,
-              "avg_price": 0.0172
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:20:00",
-              "price": 0.0218,
-              "volume": 232,
-              "open_interest": 33428,
-              "avg_price": 0.0173
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:21:00",
-              "price": 0.0217,
-              "volume": 526,
-              "open_interest": 33378,
-              "avg_price": 0.0174
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:22:00",
-              "price": 0.0218,
-              "volume": 15,
-              "open_interest": 33374,
-              "avg_price": 0.0174
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:23:00",
-              "price": 0.0221,
-              "volume": 395,
-              "open_interest": 33323,
-              "avg_price": 0.0175
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:24:00",
-              "price": 0.022,
-              "volume": 228,
-              "open_interest": 33315,
-              "avg_price": 0.0175
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:25:00",
-              "price": 0.0231,
-              "volume": 420,
-              "open_interest": 33304,
-              "avg_price": 0.0177
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:26:00",
-              "price": 0.0235,
-              "volume": 575,
-              "open_interest": 33329,
-              "avg_price": 0.0178
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:27:00",
-              "price": 0.0249,
-              "volume": 683,
-              "open_interest": 33355,
-              "avg_price": 0.018
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:28:00",
-              "price": 0.0235,
-              "volume": 248,
-              "open_interest": 33408,
-              "avg_price": 0.0181
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:29:00",
-              "price": 0.0239,
-              "volume": 101,
-              "open_interest": 33398,
-              "avg_price": 0.0181
-            },
-            {
-              "date": "2026-03-31",
-              "time": "2026-03-31 11:30:00",
-              "price": 0.0235,
-              "volume": 97,
-              "open_interest": 33398,
-              "avg_price": 0.0181
             }
           ],
           "date": "2026-03-31",
-          "timestamp": "2026-03-31 11:30:11"
+          "timestamp": "2026-03-31 10:08:03"
         },
         "source": "akshare_sina",
         "note": "此接口支持上交所和深交所期权，但只能返回当天的分钟数据"
@@ -8198,7 +8036,7 @@
       "tool_id": "tool_fetch_a50_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 12561,
+      "duration_ms": 18043,
       "args": {
         "data_type": "realtime"
       },
@@ -8210,20 +8048,20 @@
         "spot_data": {
           "code": "CN00Y",
           "name": "A50期指当月连续",
-          "current_price": 14567.0,
-          "change_pct": -0.03,
-          "volume": 199083.0,
-          "timestamp": "2026-03-31 11:30:24"
+          "current_price": 14656.0,
+          "change_pct": 0.58,
+          "volume": 136460.0,
+          "timestamp": "2026-03-31 10:08:21"
         },
         "hist_data": null,
-        "timestamp": "2026-03-31 11:30:13"
+        "timestamp": "2026-03-31 10:08:06"
       }
     },
     {
       "tool_id": "tool_fetch_sector_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2922,
+      "duration_ms": 6363,
       "args": {
         "sector_type": "industry",
         "period": "today"
@@ -8235,255 +8073,255 @@
         "sector_type": "industry",
         "summary": {
           "total_sectors": 90,
-          "avg_change": -0.83,
-          "max_gain": 5.14,
-          "max_loss": -3.87,
-          "total_inflow": -891.19,
+          "avg_change": 0.4,
+          "max_gain": 4.45,
+          "max_loss": -2.88,
+          "total_inflow": -7.83,
           "rotation_speed": "slow"
         },
         "leaders": {
           "top_gainers": [
             {
               "sector_name": "轨交设备",
-              "change_percent": 5.14,
-              "net_inflow": 2.53,
+              "change_percent": 4.45,
+              "net_inflow": 4.25,
               "rank": 1
             },
             {
-              "sector_name": "汽车整车",
-              "change_percent": 1.63,
-              "net_inflow": -4.75,
+              "sector_name": "贵金属",
+              "change_percent": 2.34,
+              "net_inflow": 11.48,
               "rank": 2
             },
             {
-              "sector_name": "工程机械",
-              "change_percent": 1.5,
-              "net_inflow": 1.45,
+              "sector_name": "汽车整车",
+              "change_percent": 2.33,
+              "net_inflow": 2.23,
               "rank": 3
             },
             {
-              "sector_name": "白酒",
-              "change_percent": 1.01,
-              "net_inflow": -0.53,
+              "sector_name": "工程机械",
+              "change_percent": 2.3,
+              "net_inflow": 2.96,
               "rank": 4
             },
             {
-              "sector_name": "医药商业",
-              "change_percent": 0.93,
-              "net_inflow": 0.94,
+              "sector_name": "医疗服务",
+              "change_percent": 1.64,
+              "net_inflow": 0.89,
               "rank": 5
             }
           ],
           "top_losers": [
             {
-              "sector_name": "电子化学品",
-              "change_percent": -3.09,
-              "net_inflow": -18.73,
+              "sector_name": "种植业与林业",
+              "change_percent": -1.22,
+              "net_inflow": -11.98,
               "rank": 86
             },
             {
-              "sector_name": "农化制品",
-              "change_percent": -3.22,
-              "net_inflow": -34.21,
+              "sector_name": "能源金属",
+              "change_percent": -1.56,
+              "net_inflow": -1.83,
               "rank": 87
             },
             {
-              "sector_name": "油气开采及服务",
-              "change_percent": -3.29,
-              "net_inflow": -14.99,
+              "sector_name": "农化制品",
+              "change_percent": -1.79,
+              "net_inflow": -12.92,
               "rank": 88
             },
             {
-              "sector_name": "能源金属",
-              "change_percent": -3.74,
-              "net_inflow": -8.32,
+              "sector_name": "油气开采及服务",
+              "change_percent": -2.36,
+              "net_inflow": -5.81,
               "rank": 89
             },
             {
               "sector_name": "煤炭开采加工",
-              "change_percent": -3.87,
-              "net_inflow": -21.18,
+              "change_percent": -2.88,
+              "net_inflow": -9.14,
               "rank": 90
             }
           ],
           "top_inflow": [
             {
-              "sector_name": "银行",
-              "change_percent": 0.78,
-              "net_inflow": 23.21,
-              "rank": 7
-            },
-            {
               "sector_name": "消费电子",
-              "change_percent": -0.95,
-              "net_inflow": 8.4,
-              "rank": 54
+              "change_percent": 0.96,
+              "net_inflow": 12.89,
+              "rank": 18
             },
             {
-              "sector_name": "文化传媒",
-              "change_percent": 0.3,
-              "net_inflow": 5.05,
-              "rank": 12
-            },
-            {
-              "sector_name": "白色家电",
-              "change_percent": 0.39,
-              "net_inflow": 4.48,
+              "sector_name": "通用设备",
+              "change_percent": 1.15,
+              "net_inflow": 12.16,
               "rank": 11
             },
             {
-              "sector_name": "轨交设备",
-              "change_percent": 5.14,
-              "net_inflow": 2.53,
-              "rank": 1
+              "sector_name": "贵金属",
+              "change_percent": 2.34,
+              "net_inflow": 11.48,
+              "rank": 2
+            },
+            {
+              "sector_name": "军工装备",
+              "change_percent": 1.14,
+              "net_inflow": 11.06,
+              "rank": 12
+            },
+            {
+              "sector_name": "军工电子",
+              "change_percent": 1.36,
+              "net_inflow": 10.53,
+              "rank": 9
             }
           ]
         },
         "etf_recommendations": [
           {
-            "sector_name": "银行",
-            "etf_code": "512800",
-            "sector_change": 0.78,
-            "sector_inflow": 23.21,
-            "score": 14.238
+            "sector_name": "军工电子",
+            "etf_code": "159999",
+            "sector_change": 1.36,
+            "sector_inflow": 10.53,
+            "score": 6.862
           },
           {
             "sector_name": "汽车整车",
             "etf_code": "512010",
-            "sector_change": 1.63,
-            "sector_inflow": -4.75,
-            "score": -2.198
+            "sector_change": 2.33,
+            "sector_inflow": 2.23,
+            "score": 2.27
           }
         ],
         "signal": {
-          "market_strength": "strong_bear",
-          "strength_description": "深度下跌",
+          "market_strength": "neutral",
+          "strength_description": "震荡市",
           "rotation_speed": "slow",
           "rotation_description": "缓慢轮动，适合配置",
           "style": "balanced",
           "style_description": "均衡配置",
           "confidence": 0.6,
-          "action": "观望等待"
+          "action": "谨慎操作"
         },
         "all_data": [
           {
             "sector_name": "轨交设备",
-            "change_percent": 5.14,
-            "net_inflow": 2.53,
+            "change_percent": 4.45,
+            "net_inflow": 4.25,
             "rank": 1
           },
           {
-            "sector_name": "汽车整车",
-            "change_percent": 1.63,
-            "net_inflow": -4.75,
+            "sector_name": "贵金属",
+            "change_percent": 2.34,
+            "net_inflow": 11.48,
             "rank": 2
           },
           {
-            "sector_name": "工程机械",
-            "change_percent": 1.5,
-            "net_inflow": 1.45,
+            "sector_name": "汽车整车",
+            "change_percent": 2.33,
+            "net_inflow": 2.23,
             "rank": 3
           },
           {
-            "sector_name": "白酒",
-            "change_percent": 1.01,
-            "net_inflow": -0.53,
+            "sector_name": "工程机械",
+            "change_percent": 2.3,
+            "net_inflow": 2.96,
             "rank": 4
           },
           {
-            "sector_name": "医药商业",
-            "change_percent": 0.93,
-            "net_inflow": 0.94,
+            "sector_name": "医疗服务",
+            "change_percent": 1.64,
+            "net_inflow": 0.89,
             "rank": 5
           },
           {
-            "sector_name": "汽车服务及其他",
-            "change_percent": 0.89,
-            "net_inflow": -0.12,
+            "sector_name": "黑色家电",
+            "change_percent": 1.49,
+            "net_inflow": 0.5,
             "rank": 6
           },
           {
-            "sector_name": "银行",
-            "change_percent": 0.78,
-            "net_inflow": 23.21,
+            "sector_name": "白酒",
+            "change_percent": 1.46,
+            "net_inflow": -1.88,
             "rank": 7
           },
           {
-            "sector_name": "保险",
-            "change_percent": 0.77,
-            "net_inflow": 1.75,
+            "sector_name": "白色家电",
+            "change_percent": 1.41,
+            "net_inflow": 7.49,
             "rank": 8
           },
           {
-            "sector_name": "医疗服务",
-            "change_percent": 0.5,
-            "net_inflow": -7.03,
+            "sector_name": "军工电子",
+            "change_percent": 1.36,
+            "net_inflow": 10.53,
             "rank": 9
           },
           {
-            "sector_name": "影视院线",
-            "change_percent": 0.39,
-            "net_inflow": 0.09,
+            "sector_name": "医药商业",
+            "change_percent": 1.18,
+            "net_inflow": 0.01,
             "rank": 10
           },
           {
-            "sector_name": "白色家电",
-            "change_percent": 0.39,
-            "net_inflow": 4.48,
+            "sector_name": "通用设备",
+            "change_percent": 1.15,
+            "net_inflow": 12.16,
             "rank": 11
           },
           {
-            "sector_name": "文化传媒",
-            "change_percent": 0.3,
-            "net_inflow": 5.05,
+            "sector_name": "军工装备",
+            "change_percent": 1.14,
+            "net_inflow": 11.06,
             "rank": 12
           },
           {
-            "sector_name": "黑色家电",
-            "change_percent": 0.3,
-            "net_inflow": -1.18,
+            "sector_name": "汽车服务及其他",
+            "change_percent": 1.11,
+            "net_inflow": 0.23,
             "rank": 13
           },
           {
-            "sector_name": "公路铁路运输",
-            "change_percent": 0.2,
-            "net_inflow": -0.1,
+            "sector_name": "影视院线",
+            "change_percent": 1.09,
+            "net_inflow": 1.53,
             "rank": 14
           },
           {
-            "sector_name": "物流",
-            "change_percent": 0.1,
-            "net_inflow": 1.11,
+            "sector_name": "保险",
+            "change_percent": 1.03,
+            "net_inflow": 0.78,
             "rank": 15
           },
           {
-            "sector_name": "机场航运",
-            "change_percent": -0.03,
-            "net_inflow": -0.47,
+            "sector_name": "文化传媒",
+            "change_percent": 1.03,
+            "net_inflow": 6.95,
             "rank": 16
           },
           {
-            "sector_name": "服装家纺",
-            "change_percent": -0.04,
-            "net_inflow": -3.09,
+            "sector_name": "电网设备",
+            "change_percent": 1.03,
+            "net_inflow": 8.59,
             "rank": 17
           },
           {
-            "sector_name": "中药",
-            "change_percent": -0.05,
-            "net_inflow": -1.56,
+            "sector_name": "消费电子",
+            "change_percent": 0.96,
+            "net_inflow": 12.89,
             "rank": 18
           },
           {
-            "sector_name": "贵金属",
-            "change_percent": -0.1,
-            "net_inflow": 0.0,
+            "sector_name": "专用设备",
+            "change_percent": 0.94,
+            "net_inflow": 4.96,
             "rank": 19
           },
           {
-            "sector_name": "证券",
-            "change_percent": -0.1,
-            "net_inflow": -6.55,
+            "sector_name": "机场航运",
+            "change_percent": 0.93,
+            "net_inflow": 2.23,
             "rank": 20
           }
         ],
@@ -8494,7 +8332,7 @@
       "tool_id": "tool_get_option_contracts",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3254,
+      "duration_ms": 7448,
       "args": {},
       "error_message": "Successfully fetched 44 contracts",
       "result": {
@@ -8738,22 +8576,22 @@
       "tool_id": "tool_check_trading_status",
       "ok": true,
       "rc": 0,
-      "duration_ms": 598,
+      "duration_ms": 3016,
       "args": {},
       "error_message": null,
       "result": {
         "success": true,
         "data": {
-          "status": "lunch_break",
-          "market_status_cn": "午休",
-          "is_trading_time": false,
+          "status": "trading",
+          "market_status_cn": "交易中",
+          "is_trading_time": true,
           "is_trading_day": true,
-          "a_share_continuous_bidding_active": false,
-          "allows_intraday_continuous_wording": false,
-          "quote_narration_rule_cn": "午休：上午已收市、下午未开盘。禁止编造下午盘中走势；勿将上午数据说成「当前盘中」。",
-          "current_time": "2026-03-31 11:30:31",
+          "a_share_continuous_bidding_active": true,
+          "allows_intraday_continuous_wording": true,
+          "quote_narration_rule_cn": "连续竞价时段：可使用盘中表述，但仍须标注数据时间与来源，并注意接口延迟。",
+          "current_time": "2026-03-31 10:08:38",
           "next_trading_time": "2026-03-31 13:00:00",
-          "remaining_minutes": 89,
+          "remaining_minutes": 292,
           "timezone": "Asia/Shanghai"
         }
       }
@@ -8762,7 +8600,7 @@
       "tool_id": "tool_get_a_share_market_regime",
       "ok": true,
       "rc": 0,
-      "duration_ms": 644,
+      "duration_ms": 1738,
       "args": {
         "timezone": "Asia/Shanghai"
       },
@@ -8770,17 +8608,17 @@
       "result": {
         "success": true,
         "data": {
-          "phase": "lunch_break",
+          "phase": "morning_session",
           "is_trading_day": true,
-          "can_trade": false,
-          "recommended_mode": "light",
-          "current_time": "2026-03-31 11:30:31",
+          "can_trade": true,
+          "recommended_mode": "normal",
+          "current_time": "2026-03-31 10:08:40",
           "timezone": "Asia/Shanghai",
           "next_transition": {
-            "next_phase": "afternoon_session",
-            "next_time": "2026-03-31 13:00:00"
+            "next_phase": "lunch_break",
+            "next_time": "2026-03-31 11:30:00"
           },
-          "remaining_minutes": 89
+          "remaining_minutes": 81
         }
       }
     },
@@ -8788,7 +8626,7 @@
       "tool_id": "tool_filter_a_share_tradability",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3142,
+      "duration_ms": 6005,
       "args": {
         "assume_tradable_if_unknown": false,
         "stock_codes": "600000"
@@ -8806,9 +8644,9 @@
               "status": "normal",
               "reasons": [],
               "quote": {
-                "current_price": 10.14,
-                "change_percent": 1.2987012987013067,
-                "volume": 537061.0,
+                "current_price": 9.98,
+                "change_percent": -0.2997002997002933,
+                "volume": 191825.0,
                 "prev_close": 10.01
               },
               "source": "qt.gtimg.cn"
@@ -8822,12 +8660,12 @@
       "tool_id": "tool_read_market_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1831,
+      "duration_ms": 2215,
       "args": {
         "data_type": "etf_daily",
         "symbol": "510300",
-        "start_date": "20260330",
-        "end_date": "20260330"
+        "start_date": "20240105",
+        "end_date": "20240105"
       },
       "error_message": "ok",
       "result": {
@@ -8835,14 +8673,14 @@
         "message": "ok",
         "data": [
           {
-            "日期": "2026-03-30 00:00:00",
-            "开盘": 4.462,
-            "最高": 4.505,
-            "最低": 4.453,
-            "收盘": 4.5,
-            "成交量": 543994287,
-            "成交额": 2434696108,
-            "涨跌幅": -0.17746228926353025
+            "日期": "2024-01-05 00:00:00",
+            "开盘": 3.404,
+            "最高": 3.439,
+            "最低": 3.377,
+            "收盘": 3.396,
+            "成交量": 1699669666,
+            "成交额": 5796964474,
+            "涨跌幅": -0.49809551714034006
           }
         ],
         "missing_dates": [],
@@ -8853,7 +8691,7 @@
       "tool_id": "tool_read_index_daily",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1436,
+      "duration_ms": 3013,
       "args": {
         "symbol": "000300"
       },
@@ -8901,9 +8739,9 @@
       "tool_id": "tool_read_index_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1394,
+      "duration_ms": 2225,
       "args": {
-        "symbol": "000001",
+        "symbol": "000300",
         "period": "5",
         "date": "20240105",
         "start_date": "20240105",
@@ -8923,11 +8761,11 @@
       "tool_id": "tool_read_etf_daily",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1576,
+      "duration_ms": 2912,
       "args": {
         "symbol": "510300",
-        "start_date": "20260330",
-        "end_date": "20260330"
+        "start_date": "20240105",
+        "end_date": "20240105"
       },
       "error_message": "ok",
       "result": {
@@ -8935,14 +8773,14 @@
         "message": "ok",
         "data": [
           {
-            "日期": "2026-03-30 00:00:00",
-            "开盘": 4.462,
-            "最高": 4.505,
-            "最低": 4.453,
-            "收盘": 4.5,
-            "成交量": 543994287,
-            "成交额": 2434696108,
-            "涨跌幅": -0.17746228926353025
+            "日期": "2024-01-05 00:00:00",
+            "开盘": 3.404,
+            "最高": 3.439,
+            "最低": 3.377,
+            "收盘": 3.396,
+            "成交量": 1699669666,
+            "成交额": 5796964474,
+            "涨跌幅": -0.49809551714034006
           }
         ],
         "missing_dates": [],
@@ -8953,7 +8791,7 @@
       "tool_id": "tool_read_etf_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1551,
+      "duration_ms": 2228,
       "args": {
         "symbol": "510300",
         "period": "5",
@@ -8975,7 +8813,7 @@
       "tool_id": "tool_read_option_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1562,
+      "duration_ms": 3014,
       "args": {
         "contract_code": "10011210",
         "period": "5",
@@ -8995,7 +8833,7 @@
       "tool_id": "tool_read_option_greeks",
       "ok": true,
       "rc": 0,
-      "duration_ms": 1419,
+      "duration_ms": 2271,
       "args": {
         "contract_code": "10011210",
         "date": "20240105"
@@ -9014,7 +8852,7 @@
       "tool_id": "tool_fetch_stock_financials",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2384,
+      "duration_ms": 4414,
       "args": {
         "lookback_report_count": 1,
         "symbols": "600000"
@@ -9040,7 +8878,7 @@
       "tool_id": "tool_fetch_stock_historical",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3852,
+      "duration_ms": 8283,
       "args": {
         "stock_code": "600000",
         "period": "daily"
@@ -9276,21 +9114,21 @@
       "tool_id": "tool_fetch_stock_minute",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2365,
+      "duration_ms": 3997,
       "args": {
         "stock_code": "600000",
         "period": "5",
         "lookback_days": 5
       },
-      "error_message": "Successfully fetched 298 records",
+      "error_message": "Successfully fetched 296 records",
       "result": {
         "success": true,
-        "message": "Successfully fetched 298 records",
+        "message": "Successfully fetched 296 records",
         "data": {
           "stock_code": "600000",
           "period": "5",
-          "total_count": 298,
-          "returned_count": 298,
+          "total_count": 296,
+          "returned_count": 296,
           "klines": [
             {
               "time": "2026-03-23 09:35:00",
@@ -12245,39 +12083,19 @@
             {
               "time": "2026-03-31 10:10:00",
               "open": 9.98,
-              "close": 9.96,
+              "close": 9.98,
               "high": 9.99,
-              "low": 9.95,
-              "volume": 2160980,
-              "amount": 2152336080.0,
-              "change_percent": -0.2004008016032066
-            },
-            {
-              "time": "2026-03-31 10:15:00",
-              "open": 9.95,
-              "close": 10.01,
-              "high": 10.04,
-              "low": 9.95,
-              "volume": 4256157,
-              "amount": 4260413157.0,
-              "change_percent": 0.5020080321284981
-            },
-            {
-              "time": "2026-03-31 10:20:00",
-              "open": 10.01,
-              "close": 10.07,
-              "high": 10.07,
-              "low": 10.01,
-              "volume": 2754059,
-              "amount": 2773337413.0,
-              "change_percent": 0.5994005994006013
+              "low": 9.97,
+              "volume": 557700,
+              "amount": 556584600.0,
+              "change_percent": 0.0
             }
           ],
           "start_date": "2026-03-21",
           "end_date": "2026-03-31",
-          "timestamp": "2026-03-31 11:30:53"
+          "timestamp": "2026-03-31 10:09:20"
         },
-        "source": "cache",
+        "source": "sina_http+cache",
         "count": 1
       }
     },
@@ -12285,7 +12103,7 @@
       "tool_id": "tool_fetch_stock_realtime",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2668,
+      "duration_ms": 4540,
       "args": {
         "stock_code": "600000",
         "mode": "production"
@@ -12297,16 +12115,16 @@
         "data": {
           "stock_code": "600000",
           "name": "浦发银行",
-          "current_price": 10.14,
-          "change": 0.13000000000000078,
-          "change_percent": 1.2987012987013067,
+          "current_price": 9.97,
+          "change": -0.03999999999999915,
+          "change_percent": -0.3996003996003911,
           "open": 10.01,
-          "high": 10.19,
-          "low": 9.95,
+          "high": 10.11,
+          "low": 9.96,
           "prev_close": 10.01,
-          "volume": 537061,
-          "amount": 54118.0,
-          "timestamp": "2026-03-31 11:30:56"
+          "volume": 193081,
+          "amount": 19367.0,
+          "timestamp": "2026-03-31 10:09:25"
         },
         "source": "qt.gtimg.cn",
         "count": 1
@@ -12316,7 +12134,7 @@
       "tool_id": "tool_stock_data_fetcher",
       "ok": true,
       "rc": 0,
-      "duration_ms": 4346,
+      "duration_ms": 9448,
       "args": {
         "action": "fetch",
         "data_types": [
@@ -12347,16 +12165,16 @@
           "realtime": {
             "stock_code": "600000",
             "name": "浦发银行",
-            "current_price": 10.14,
-            "change": 0.13000000000000078,
-            "change_percent": 1.2987012987013067,
+            "current_price": 9.98,
+            "change": -0.02999999999999936,
+            "change_percent": -0.2997002997002933,
             "open": 10.01,
-            "high": 10.19,
-            "low": 9.95,
+            "high": 10.11,
+            "low": 9.96,
             "prev_close": 10.01,
-            "volume": 537061,
-            "amount": 54118.0,
-            "timestamp": "2026-03-31 11:30:59"
+            "volume": 193398,
+            "amount": 19398.0,
+            "timestamp": "2026-03-31 10:09:30"
           },
           "realtime_fetch": {
             "success": true,
@@ -12511,18 +12329,18 @@
           "minute_fetch": {
             "5": {
               "success": true,
-              "returned_count": 298,
+              "returned_count": 296,
               "source": "cache"
             },
             "15": {
               "success": true,
-              "returned_count": 100,
-              "source": "cache"
+              "returned_count": 99,
+              "source": "sina_http+cache"
             },
             "30": {
               "success": true,
               "returned_count": 50,
-              "source": "cache"
+              "source": "sina_http+cache"
             }
           },
           "financials": {
@@ -15489,32 +15307,12 @@
               {
                 "time": "2026-03-31 10:10:00",
                 "open": 9.98,
-                "close": 9.96,
+                "close": 9.98,
                 "high": 9.99,
-                "low": 9.95,
-                "volume": 2160980,
-                "amount": 2152336080.0,
-                "change_percent": -0.2004008016032066
-              },
-              {
-                "time": "2026-03-31 10:15:00",
-                "open": 9.95,
-                "close": 10.01,
-                "high": 10.04,
-                "low": 9.95,
-                "volume": 4256157,
-                "amount": 4260413157.0,
-                "change_percent": 0.5020080321284981
-              },
-              {
-                "time": "2026-03-31 10:20:00",
-                "open": 10.01,
-                "close": 10.07,
-                "high": 10.07,
-                "low": 10.01,
-                "volume": 2754059,
-                "amount": 2773337413.0,
-                "change_percent": 0.5994005994006013
+                "low": 9.97,
+                "volume": 557700,
+                "amount": 556584600.0,
+                "change_percent": 0.0
               }
             ],
             "15": [
@@ -16326,7 +16124,7 @@
                 "low": 9.92,
                 "volume": 8087300,
                 "amount": 8063038100.0,
-                "change_percent": -0.499001996007975
+                "change_percent": 0.0
               },
               {
                 "time": "2026-03-30 10:00:00",
@@ -16501,22 +16299,12 @@
               {
                 "time": "2026-03-31 10:15:00",
                 "open": 9.98,
-                "close": 10.01,
-                "high": 10.04,
-                "low": 9.95,
-                "volume": 8317437,
-                "amount": 8325754437.0,
-                "change_percent": 0.30060120240480437
-              },
-              {
-                "time": "2026-03-31 10:30:00",
-                "open": 10.01,
-                "close": 10.07,
-                "high": 10.07,
-                "low": 10.01,
-                "volume": 2754059,
-                "amount": 2773337413.0,
-                "change_percent": 0.5994005994006013
+                "close": 9.98,
+                "high": 9.99,
+                "low": 9.96,
+                "volume": 2528200,
+                "amount": 2523143600.0,
+                "change_percent": 0.0
               }
             ],
             "30": [
@@ -16938,7 +16726,7 @@
                 "low": 9.93,
                 "volume": 5968803,
                 "amount": 5956865394.000001,
-                "change_percent": 0.20080321285140812
+                "change_percent": 0.0
               },
               {
                 "time": "2026-03-30 11:00:00",
@@ -17013,12 +16801,12 @@
               {
                 "time": "2026-03-31 10:30:00",
                 "open": 9.98,
-                "close": 10.07,
-                "high": 10.07,
-                "low": 9.95,
-                "volume": 11071496,
-                "amount": 11148996472.0,
-                "change_percent": 0.9018036072144353
+                "close": 9.98,
+                "high": 9.99,
+                "low": 9.96,
+                "volume": 2528200,
+                "amount": 2523143600.0,
+                "change_percent": 0.0
               }
             ]
           },
@@ -17047,7 +16835,7 @@
       "tool_id": "tool_stock_monitor",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3009,
+      "duration_ms": 3849,
       "args": {
         "action": "run_once",
         "output_channel": "feishu",
@@ -17074,7 +16862,7 @@
       "tool_id": "tool_fetch_limit_up_stocks",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2614,
+      "duration_ms": 3797,
       "args": {
         "exclude_st": true,
         "exclude_tail_limit_up": true
@@ -17088,12 +16876,12 @@
             "name": "顺发恒能",
             "limit_up_time": "09:25:00",
             "change_pct": 10.051546096801758,
-            "turnover_rate": 2.621500253677368,
+            "turnover_rate": 1.0785434246063232,
             "float_mv": 9821000362.949999,
             "board_name": "电力",
             "continuous_limit_up_count": 1,
             "latest_price": 4.27,
-            "amount": 257457541.0,
+            "amount": 105923755.0,
             "date": "20260331"
           },
           {
@@ -17101,12 +16889,12 @@
             "name": "宇通客车",
             "limit_up_time": "09:30:02",
             "change_pct": 10.0,
-            "turnover_rate": 1.3951727151870728,
+            "turnover_rate": 1.1736795902252197,
             "float_mv": 79391860536.78,
             "board_name": "商用车",
             "continuous_limit_up_count": 1,
             "latest_price": 35.86,
-            "amount": 1107541040.0,
+            "amount": 931693536.0,
             "date": "20260331"
           },
           {
@@ -17114,12 +16902,12 @@
             "name": "广日股份",
             "limit_up_time": "09:30:02",
             "change_pct": 9.97706413269043,
-            "turnover_rate": 1.5167784690856934,
+            "turnover_rate": 1.400309681892395,
             "float_mv": 8085755227.55,
             "board_name": "专用设备",
             "continuous_limit_up_count": 1,
             "latest_price": 9.59,
-            "amount": 122516926.0,
+            "amount": 113099546.0,
             "date": "20260331"
           },
           {
@@ -17127,12 +16915,12 @@
             "name": "闽发铝业",
             "limit_up_time": "09:30:03",
             "change_pct": 10.093896865844727,
-            "turnover_rate": 8.842921257019043,
+            "turnover_rate": 8.193543434143066,
             "float_mv": 4038852411.09,
             "board_name": "工业金属",
             "continuous_limit_up_count": 2,
             "latest_price": 4.69,
-            "amount": 356744432.0,
+            "amount": 330517008.0,
             "date": "20260331"
           },
           {
@@ -17140,12 +16928,12 @@
             "name": "津药药业",
             "limit_up_time": "09:30:42",
             "change_pct": 10.084033966064453,
-            "turnover_rate": 7.974819660186768,
+            "turnover_rate": 7.765406608581543,
             "float_mv": 5721486203.2,
             "board_name": "化学制药",
             "continuous_limit_up_count": 3,
             "latest_price": 5.24,
-            "amount": 452748000.0,
+            "amount": 440766480.0,
             "date": "20260331"
           },
           {
@@ -17153,12 +16941,12 @@
             "name": "泛微网络",
             "limit_up_time": "09:30:51",
             "change_pct": 10.0,
-            "turnover_rate": 2.340517044067383,
+            "turnover_rate": 2.228372812271118,
             "float_mv": 11139100744.75,
             "board_name": "软件开发",
             "continuous_limit_up_count": 1,
             "latest_price": 43.45,
-            "amount": 259092180.0,
+            "amount": 246600305.0,
             "date": "20260331"
           },
           {
@@ -17166,12 +16954,12 @@
             "name": "神剑股份",
             "limit_up_time": "09:30:57",
             "change_pct": 10.0,
-            "turnover_rate": 13.927404403686523,
+            "turnover_rate": 11.560730934143066,
             "float_mv": 13350529236.0,
             "board_name": "塑料",
             "continuous_limit_up_count": 4,
             "latest_price": 16.5,
-            "amount": 1845002720.0,
+            "amount": 1529039280.0,
             "date": "20260331"
           },
           {
@@ -17179,12 +16967,12 @@
             "name": "松芝股份",
             "limit_up_time": "09:30:57",
             "change_pct": 10.0,
-            "turnover_rate": 1.9935286045074463,
+            "turnover_rate": 1.8985443115234375,
             "float_mv": 5792982102.6,
             "board_name": "汽车零部",
             "continuous_limit_up_count": 1,
             "latest_price": 9.24,
-            "amount": 113936975.0,
+            "amount": 108434555.0,
             "date": "20260331"
           },
           {
@@ -17192,12 +16980,25 @@
             "name": "神州高铁",
             "limit_up_time": "09:31:18",
             "change_pct": 10.1010103225708,
-            "turnover_rate": 5.581979751586914,
+            "turnover_rate": 5.313426971435547,
             "float_mv": 8882291033.04,
             "board_name": "轨交设备",
             "continuous_limit_up_count": 2,
             "latest_price": 3.27,
-            "amount": 491299888.0,
+            "amount": 467446224.0,
+            "date": "20260331"
+          },
+          {
+            "code": "002634",
+            "name": "棒杰股份",
+            "limit_up_time": "09:31:36",
+            "change_pct": 9.963099479675293,
+            "turnover_rate": 2.9743831157684326,
+            "float_mv": 3991839969.72,
+            "board_name": "服装家纺",
+            "continuous_limit_up_count": 2,
+            "latest_price": 8.94,
+            "amount": 116933864.0,
             "date": "20260331"
           },
           {
@@ -17205,12 +17006,12 @@
             "name": "中化岩土",
             "limit_up_time": "09:32:12",
             "change_pct": 10.067113876342773,
-            "turnover_rate": 1.80789315700531,
+            "turnover_rate": 1.5825426578521729,
             "float_mv": 5768769811.5199995,
             "board_name": "专业工程",
             "continuous_limit_up_count": 1,
             "latest_price": 3.28,
-            "amount": 103116400.0,
+            "amount": 90116448.0,
             "date": "20260331"
           },
           {
@@ -17218,12 +17019,12 @@
             "name": "星辉环材",
             "limit_up_time": "09:32:33",
             "change_pct": 19.984107971191406,
-            "turnover_rate": 5.256229400634766,
+            "turnover_rate": 5.024349212646484,
             "float_mv": 5811288725.8,
             "board_name": "塑料",
             "continuous_limit_up_count": 1,
             "latest_price": 30.2,
-            "amount": 302764432.0,
+            "amount": 289289200.0,
             "date": "20260331"
           },
           {
@@ -17231,12 +17032,12 @@
             "name": "顺灏股份",
             "limit_up_time": "09:34:09",
             "change_pct": 10.025873184204102,
-            "turnover_rate": 9.980657577514648,
+            "turnover_rate": 9.297847747802734,
             "float_mv": 18029646113.22,
             "board_name": "包装印刷",
             "continuous_limit_up_count": 1,
             "latest_price": 17.01,
-            "amount": 1772587104.0,
+            "amount": 1649478944.0,
             "date": "20260331"
           },
           {
@@ -17244,12 +17045,25 @@
             "name": "闽东电力",
             "limit_up_time": "09:34:12",
             "change_pct": 9.97977066040039,
-            "turnover_rate": 8.007264137268066,
+            "turnover_rate": 7.187089920043945,
             "float_mv": 7172282899.32,
             "board_name": "电力",
             "continuous_limit_up_count": 1,
             "latest_price": 16.31,
-            "amount": 561774928.0,
+            "amount": 502949712.0,
+            "date": "20260331"
+          },
+          {
+            "code": "002821",
+            "name": "凯莱英",
+            "limit_up_time": "09:34:12",
+            "change_pct": 10.0,
+            "turnover_rate": 2.203947067260742,
+            "float_mv": 35118948150.659996,
+            "board_name": "医疗服务",
+            "continuous_limit_up_count": 1,
+            "latest_price": 110.77,
+            "amount": 766912592.0,
             "date": "20260331"
           },
           {
@@ -17257,12 +17071,12 @@
             "name": "中国铁物",
             "limit_up_time": "09:34:21",
             "change_pct": 9.86842155456543,
-            "turnover_rate": 2.8918731212615967,
+            "turnover_rate": 2.389469623565674,
             "float_mv": 20208170940.54,
             "board_name": "轨交设备",
             "continuous_limit_up_count": 1,
             "latest_price": 3.34,
-            "amount": 569517872.0,
+            "amount": 467991296.0,
             "date": "20260331"
           },
           {
@@ -17270,12 +17084,12 @@
             "name": "京运通",
             "limit_up_time": "09:35:21",
             "change_pct": 10.10988998413086,
-            "turnover_rate": 7.6121625900268555,
+            "turnover_rate": 6.952310562133789,
             "float_mv": 12097160333.609999,
             "board_name": "电力",
             "continuous_limit_up_count": 1,
             "latest_price": 5.01,
-            "amount": 899228592.0,
+            "amount": 819405264.0,
             "date": "20260331"
           },
           {
@@ -17283,12 +17097,12 @@
             "name": "平潭发展",
             "limit_up_time": "09:36:48",
             "change_pct": 9.9827880859375,
-            "turnover_rate": 19.749217987060547,
+            "turnover_rate": 17.809192657470703,
             "float_mv": 24474881498.219997,
             "board_name": "林业Ⅱ",
             "continuous_limit_up_count": 2,
             "latest_price": 12.78,
-            "amount": 4712990720.0,
+            "amount": 4238454304.0,
             "date": "20260331"
           },
           {
@@ -17296,25 +17110,12 @@
             "name": "天顺股份",
             "limit_up_time": "09:38:18",
             "change_pct": 9.985597610473633,
-            "turnover_rate": 6.817759990692139,
+            "turnover_rate": 2.905111312866211,
             "float_mv": 3387080060.06,
             "board_name": "物流",
             "continuous_limit_up_count": 1,
             "latest_price": 22.91,
-            "amount": 225974240.0,
-            "date": "20260331"
-          },
-          {
-            "code": "002218",
-            "name": "拓日新能",
-            "limit_up_time": "09:39:36",
-            "change_pct": 10.0,
-            "turnover_rate": 21.884294509887695,
-            "float_mv": 9649319865.57,
-            "board_name": "电力",
-            "continuous_limit_up_count": 1,
-            "latest_price": 6.93,
-            "amount": 2064531456.0,
+            "amount": 95429111.0,
             "date": "20260331"
           },
           {
@@ -17322,12 +17123,12 @@
             "name": "三湘印象",
             "limit_up_time": "09:40:00",
             "change_pct": 10.019268035888672,
-            "turnover_rate": 3.052468776702881,
+            "turnover_rate": 2.665107250213623,
             "float_mv": 6644244036.78,
             "board_name": "房地产开",
             "continuous_limit_up_count": 1,
             "latest_price": 5.71,
-            "amount": 198863965.0,
+            "amount": 173126711.0,
             "date": "20260331"
           },
           {
@@ -17335,12 +17136,12 @@
             "name": "巨力索具",
             "limit_up_time": "09:40:03",
             "change_pct": 10.007638931274414,
-            "turnover_rate": 17.719911575317383,
+            "turnover_rate": 17.03759765625,
             "float_mv": 13747536000.0,
             "board_name": "通用设备",
             "continuous_limit_up_count": 1,
             "latest_price": 14.4,
-            "amount": 2389476640.0,
+            "amount": 2295675328.0,
             "date": "20260331"
           },
           {
@@ -17348,12 +17149,12 @@
             "name": "舒华体育",
             "limit_up_time": "09:40:47",
             "change_pct": 10.005157470703125,
-            "turnover_rate": 9.776126861572266,
+            "turnover_rate": 9.406378746032715,
             "float_mv": 8728801735.59,
             "board_name": "文娱用品",
             "continuous_limit_up_count": 1,
             "latest_price": 21.33,
-            "amount": 828387216.0,
+            "amount": 796112624.0,
             "date": "20260331"
           },
           {
@@ -17361,12 +17162,12 @@
             "name": "天地在线",
             "limit_up_time": "09:41:15",
             "change_pct": 9.991079330444336,
-            "turnover_rate": 10.469115257263184,
+            "turnover_rate": 9.58845329284668,
             "float_mv": 2772208349.28,
             "board_name": "广告营销",
             "continuous_limit_up_count": 1,
             "latest_price": 24.66,
-            "amount": 280975168.0,
+            "amount": 256561379.0,
             "date": "20260331"
           },
           {
@@ -17374,12 +17175,12 @@
             "name": "新能泰山",
             "limit_up_time": "09:47:03",
             "change_pct": 10.080645561218262,
-            "turnover_rate": 14.399706840515137,
+            "turnover_rate": 13.616153717041016,
             "float_mv": 6860662377.66,
             "board_name": "电网设备",
             "continuous_limit_up_count": 1,
             "latest_price": 5.46,
-            "amount": 912715328.0,
+            "amount": 858958448.0,
             "date": "20260331"
           },
           {
@@ -17387,12 +17188,12 @@
             "name": "海量数据",
             "limit_up_time": "09:51:53",
             "change_pct": 10.02610969543457,
-            "turnover_rate": 5.075133800506592,
+            "turnover_rate": 4.644292831420898,
             "float_mv": 6075383849.5,
             "board_name": "IT服务Ⅱ",
             "continuous_limit_up_count": 1,
             "latest_price": 21.07,
-            "amount": 297689296.0,
+            "amount": 271514032.0,
             "date": "20260331"
           },
           {
@@ -17400,12 +17201,12 @@
             "name": "通达股份",
             "limit_up_time": "09:54:21",
             "change_pct": 9.989806175231934,
-            "turnover_rate": 11.741124153137207,
+            "turnover_rate": 11.105758666992188,
             "float_mv": 4887179461.58,
             "board_name": "电网设备",
             "continuous_limit_up_count": 1,
             "latest_price": 10.79,
-            "amount": 558934912.0,
+            "amount": 527883440.0,
             "date": "20260331"
           },
           {
@@ -17413,12 +17214,38 @@
             "name": "邵阳液压",
             "limit_up_time": "09:54:27",
             "change_pct": 20.0,
-            "turnover_rate": 24.495973587036133,
+            "turnover_rate": 23.115907669067383,
             "float_mv": 3111947907.24,
             "board_name": "工程机械",
             "continuous_limit_up_count": 1,
             "latest_price": 44.76,
-            "amount": 724401104.0,
+            "amount": 681454160.0,
+            "date": "20260331"
+          },
+          {
+            "code": "600320",
+            "name": "振华重工",
+            "limit_up_time": "09:57:46",
+            "change_pct": 10.0,
+            "turnover_rate": 2.110869884490967,
+            "float_mv": 17174727907.369999,
+            "board_name": "专用设备",
+            "continuous_limit_up_count": 1,
+            "latest_price": 5.17,
+            "amount": 352731616.0,
+            "date": "20260331"
+          },
+          {
+            "code": "603601",
+            "name": "再升科技",
+            "limit_up_time": "09:58:27",
+            "change_pct": 10.0,
+            "turnover_rate": 21.85707664489746,
+            "float_mv": 18220338487.45,
+            "board_name": "专业工程",
+            "continuous_limit_up_count": 2,
+            "latest_price": 15.95,
+            "amount": 3786217552.0,
             "date": "20260331"
           },
           {
@@ -17426,12 +17253,12 @@
             "name": "中体产业",
             "limit_up_time": "09:58:39",
             "change_pct": 10.0,
-            "turnover_rate": 12.712095260620117,
+            "turnover_rate": 9.069135665893555,
             "float_mv": 11504561673.33,
             "board_name": "体育Ⅱ",
             "continuous_limit_up_count": 1,
             "latest_price": 11.99,
-            "amount": 1432152784.0,
+            "amount": 1016365584.0,
             "date": "20260331"
           },
           {
@@ -17439,12 +17266,12 @@
             "name": "永达股份",
             "limit_up_time": "10:01:18",
             "change_pct": 9.986129760742188,
-            "turnover_rate": 6.109649181365967,
+            "turnover_rate": 5.429596424102783,
             "float_mv": 1808040000.0,
             "board_name": "工程机械",
             "continuous_limit_up_count": 1,
             "latest_price": 15.86,
-            "amount": 106889142.0,
+            "amount": 94593519.0,
             "date": "20260331"
           },
           {
@@ -17452,117 +17279,26 @@
             "name": "坤彩科技",
             "limit_up_time": "10:09:32",
             "change_pct": 10.019880294799805,
-            "turnover_rate": 2.129424571990967,
+            "turnover_rate": 1.4143849611282349,
             "float_mv": 18129384000.0,
             "board_name": "非金属材",
             "continuous_limit_up_count": 1,
             "latest_price": 27.67,
-            "amount": 372923696.0,
-            "date": "20260331"
-          },
-          {
-            "code": "301048",
-            "name": "金鹰重工",
-            "limit_up_time": "10:09:42",
-            "change_pct": 19.98166847229004,
-            "turnover_rate": 8.156820297241211,
-            "float_mv": 6981334206.0,
-            "board_name": "轨交设备",
-            "continuous_limit_up_count": 1,
-            "latest_price": 13.09,
-            "amount": 538782288.0,
-            "date": "20260331"
-          },
-          {
-            "code": "600502",
-            "name": "安徽建工",
-            "limit_up_time": "10:09:56",
-            "change_pct": 9.9609375,
-            "turnover_rate": 9.608112335205078,
-            "float_mv": 9664086070.94,
-            "board_name": "基础建设",
-            "continuous_limit_up_count": 2,
-            "latest_price": 5.63,
-            "amount": 915100688.0,
-            "date": "20260331"
-          },
-          {
-            "code": "600528",
-            "name": "中铁工业",
-            "limit_up_time": "10:12:09",
-            "change_pct": 9.952038764953613,
-            "turnover_rate": 6.041943073272705,
-            "float_mv": 20371628061.96,
-            "board_name": "基础建设",
-            "continuous_limit_up_count": 1,
-            "latest_price": 9.17,
-            "amount": 1192277472.0,
-            "date": "20260331"
-          },
-          {
-            "code": "600495",
-            "name": "晋西车轴",
-            "limit_up_time": "10:15:52",
-            "change_pct": 10.044642448425293,
-            "turnover_rate": 5.602980136871338,
-            "float_mv": 5956381067.98,
-            "board_name": "轨交设备",
-            "continuous_limit_up_count": 1,
-            "latest_price": 4.93,
-            "amount": 326664288.0,
-            "date": "20260331"
-          },
-          {
-            "code": "603657",
-            "name": "春光科技",
-            "limit_up_time": "10:44:52",
-            "change_pct": 10.0,
-            "turnover_rate": 3.7330808639526367,
-            "float_mv": 3777209997.0,
-            "board_name": "家电零部",
-            "continuous_limit_up_count": 1,
-            "latest_price": 27.94,
-            "amount": 136801569.0,
-            "date": "20260331"
-          },
-          {
-            "code": "605162",
-            "name": "新中港",
-            "limit_up_time": "10:49:33",
-            "change_pct": 10.047392845153809,
-            "turnover_rate": 7.831540584564209,
-            "float_mv": 4650768653.219999,
-            "board_name": "电力",
-            "continuous_limit_up_count": 1,
-            "latest_price": 11.61,
-            "amount": 349060064.0,
-            "date": "20260331"
-          },
-          {
-            "code": "300992",
-            "name": "泰福泵业",
-            "limit_up_time": "11:14:12",
-            "change_pct": 20.0,
-            "turnover_rate": 19.753738403320312,
-            "float_mv": 3245476612.0800004,
-            "board_name": "通用设备",
-            "continuous_limit_up_count": 1,
-            "latest_price": 41.88,
-            "amount": 575256720.0,
+            "amount": 243500598.0,
             "date": "20260331"
           }
         ],
         "dates": [
           "20260331"
         ],
-        "count": 36
+        "count": 32
       }
     },
     {
       "tool_id": "tool_sector_heat_score",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3534,
+      "duration_ms": 4654,
       "args": {},
       "error_message": null,
       "result": {
@@ -17572,9 +17308,9 @@
           {
             "name": "轨交设备",
             "score": 65,
-            "limit_up_count": 4,
-            "avg_change": 12.5,
-            "net_flow": 2.56,
+            "limit_up_count": 3,
+            "avg_change": 13.32,
+            "net_flow": 4.25,
             "phase": "发酵",
             "max_continuous": 2,
             "leaders": [
@@ -17584,7 +17320,7 @@
                 "limit_up_time": "09:31:18",
                 "continuous_limit_up_count": 2,
                 "float_mv": 8882291033.04,
-                "turnover_rate": 5.581979751586914
+                "turnover_rate": 5.316217422485352
               },
               {
                 "code": "000927",
@@ -17592,7 +17328,7 @@
                 "limit_up_time": "09:34:21",
                 "continuous_limit_up_count": 1,
                 "float_mv": 20208170940.54,
-                "turnover_rate": 2.8918731212615967
+                "turnover_rate": 2.3897109031677246
               },
               {
                 "code": "301048",
@@ -17600,15 +17336,107 @@
                 "limit_up_time": "10:09:42",
                 "continuous_limit_up_count": 1,
                 "float_mv": 6981334206.0,
-                "turnover_rate": 8.156820297241211
+                "turnover_rate": 7.014003753662109
+              }
+            ]
+          },
+          {
+            "name": "医疗服务",
+            "score": 40,
+            "limit_up_count": 1,
+            "avg_change": 10.0,
+            "net_flow": 0.89,
+            "phase": "退潮",
+            "max_continuous": 1,
+            "leaders": [
+              {
+                "code": "002821",
+                "name": "凯莱英",
+                "limit_up_time": "09:34:12",
+                "continuous_limit_up_count": 1,
+                "float_mv": 35118948150.659996,
+                "turnover_rate": 2.204073190689087
+              }
+            ]
+          },
+          {
+            "name": "通用设备",
+            "score": 40,
+            "limit_up_count": 1,
+            "avg_change": 10.01,
+            "net_flow": 12.16,
+            "phase": "退潮",
+            "max_continuous": 1,
+            "leaders": [
+              {
+                "code": "002342",
+                "name": "巨力索具",
+                "limit_up_time": "09:40:03",
+                "continuous_limit_up_count": 1,
+                "float_mv": 13747536000.0,
+                "turnover_rate": 17.038257598876953
+              }
+            ]
+          },
+          {
+            "name": "电网设备",
+            "score": 40,
+            "limit_up_count": 2,
+            "avg_change": 10.04,
+            "net_flow": 8.59,
+            "phase": "退潮",
+            "max_continuous": 1,
+            "leaders": [
+              {
+                "code": "000720",
+                "name": "新能泰山",
+                "limit_up_time": "09:47:03",
+                "continuous_limit_up_count": 1,
+                "float_mv": 6860662377.66,
+                "turnover_rate": 13.618183135986328
+              },
+              {
+                "code": "002560",
+                "name": "通达股份",
+                "limit_up_time": "09:54:21",
+                "continuous_limit_up_count": 1,
+                "float_mv": 4887179461.58,
+                "turnover_rate": 11.105978965759277
+              }
+            ]
+          },
+          {
+            "name": "工程机械",
+            "score": 40,
+            "limit_up_count": 2,
+            "avg_change": 14.99,
+            "net_flow": 2.96,
+            "phase": "退潮",
+            "max_continuous": 1,
+            "leaders": [
+              {
+                "code": "301079",
+                "name": "邵阳液压",
+                "limit_up_time": "09:54:27",
+                "continuous_limit_up_count": 1,
+                "float_mv": 3111947907.24,
+                "turnover_rate": 23.117490768432617
+              },
+              {
+                "code": "001239",
+                "name": "永达股份",
+                "limit_up_time": "10:01:18",
+                "continuous_limit_up_count": 1,
+                "float_mv": 1808040000.0,
+                "turnover_rate": 5.441438674926758
               }
             ]
           },
           {
             "name": "电力",
-            "score": 40,
-            "limit_up_count": 5,
-            "avg_change": 10.04,
+            "score": 30,
+            "limit_up_count": 3,
+            "avg_change": 10.05,
             "net_flow": null,
             "phase": "退潮",
             "max_continuous": 1,
@@ -17619,7 +17447,7 @@
                 "limit_up_time": "09:25:00",
                 "continuous_limit_up_count": 1,
                 "float_mv": 9821000362.949999,
-                "turnover_rate": 2.621500253677368
+                "turnover_rate": 1.0785869359970093
               },
               {
                 "code": "000993",
@@ -17627,7 +17455,7 @@
                 "limit_up_time": "09:34:12",
                 "continuous_limit_up_count": 1,
                 "float_mv": 7172282899.32,
-                "turnover_rate": 8.007264137268066
+                "turnover_rate": 7.187635898590088
               },
               {
                 "code": "601908",
@@ -17635,34 +17463,34 @@
                 "limit_up_time": "09:35:21",
                 "continuous_limit_up_count": 1,
                 "float_mv": 12097160333.609999,
-                "turnover_rate": 7.6121625900268555
+                "turnover_rate": 6.952310562133789
               }
             ]
           },
           {
-            "name": "工程机械",
-            "score": 40,
+            "name": "专用设备",
+            "score": 30,
             "limit_up_count": 2,
-            "avg_change": 14.99,
-            "net_flow": 1.42,
+            "avg_change": 9.99,
+            "net_flow": 4.96,
             "phase": "退潮",
             "max_continuous": 1,
             "leaders": [
               {
-                "code": "301079",
-                "name": "邵阳液压",
-                "limit_up_time": "09:54:27",
+                "code": "600894",
+                "name": "广日股份",
+                "limit_up_time": "09:30:02",
                 "continuous_limit_up_count": 1,
-                "float_mv": 3111947907.24,
-                "turnover_rate": 24.495973587036133
+                "float_mv": 8085755227.55,
+                "turnover_rate": 1.400309681892395
               },
               {
-                "code": "001239",
-                "name": "永达股份",
-                "limit_up_time": "10:01:18",
+                "code": "600320",
+                "name": "振华重工",
+                "limit_up_time": "09:57:46",
                 "continuous_limit_up_count": 1,
-                "float_mv": 1808040000.0,
-                "turnover_rate": 6.109649181365967
+                "float_mv": 17174727907.369999,
+                "turnover_rate": 2.111053466796875
               }
             ]
           },
@@ -17681,7 +17509,7 @@
                 "limit_up_time": "09:30:42",
                 "continuous_limit_up_count": 3,
                 "float_mv": 5721486203.2,
-                "turnover_rate": 7.974819660186768
+                "turnover_rate": 7.765498638153076
               }
             ]
           },
@@ -17700,7 +17528,7 @@
                 "limit_up_time": "09:30:57",
                 "continuous_limit_up_count": 4,
                 "float_mv": 13350529236.0,
-                "turnover_rate": 13.927404403686523
+                "turnover_rate": 11.560891151428223
               },
               {
                 "code": "300834",
@@ -17708,26 +17536,7 @@
                 "limit_up_time": "09:32:33",
                 "continuous_limit_up_count": 1,
                 "float_mv": 5811288725.8,
-                "turnover_rate": 5.256229400634766
-              }
-            ]
-          },
-          {
-            "name": "物流",
-            "score": 30,
-            "limit_up_count": 1,
-            "avg_change": 9.99,
-            "net_flow": 1.18,
-            "phase": "退潮",
-            "max_continuous": 1,
-            "leaders": [
-              {
-                "code": "002800",
-                "name": "天顺股份",
-                "limit_up_time": "09:38:18",
-                "continuous_limit_up_count": 1,
-                "float_mv": 3387080060.06,
-                "turnover_rate": 6.817759990692139
+                "turnover_rate": 5.024349212646484
               }
             ]
           },
@@ -17746,7 +17555,53 @@
                 "limit_up_time": "09:30:03",
                 "continuous_limit_up_count": 2,
                 "float_mv": 4038852411.09,
-                "turnover_rate": 8.842921257019043
+                "turnover_rate": 8.193578720092773
+              }
+            ]
+          },
+          {
+            "name": "服装家纺",
+            "score": 25,
+            "limit_up_count": 1,
+            "avg_change": 9.96,
+            "net_flow": null,
+            "phase": "退潮",
+            "max_continuous": 2,
+            "leaders": [
+              {
+                "code": "002634",
+                "name": "棒杰股份",
+                "limit_up_time": "09:31:36",
+                "continuous_limit_up_count": 2,
+                "float_mv": 3991839969.72,
+                "turnover_rate": 2.9768242835998535
+              }
+            ]
+          },
+          {
+            "name": "专业工程",
+            "score": 25,
+            "limit_up_count": 2,
+            "avg_change": 10.03,
+            "net_flow": null,
+            "phase": "退潮",
+            "max_continuous": 2,
+            "leaders": [
+              {
+                "code": "603601",
+                "name": "再升科技",
+                "limit_up_time": "09:58:27",
+                "continuous_limit_up_count": 2,
+                "float_mv": 18220338487.45,
+                "turnover_rate": 21.857776641845703
+              },
+              {
+                "code": "002542",
+                "name": "中化岩土",
+                "limit_up_time": "09:32:12",
+                "continuous_limit_up_count": 1,
+                "float_mv": 5768769811.5199995,
+                "turnover_rate": 1.5826278924942017
               }
             ]
           },
@@ -17765,34 +17620,7 @@
                 "limit_up_time": "09:36:48",
                 "continuous_limit_up_count": 2,
                 "float_mv": 24474881498.219997,
-                "turnover_rate": 19.749217987060547
-              }
-            ]
-          },
-          {
-            "name": "基础建设",
-            "score": 25,
-            "limit_up_count": 2,
-            "avg_change": 9.96,
-            "net_flow": null,
-            "phase": "退潮",
-            "max_continuous": 2,
-            "leaders": [
-              {
-                "code": "600502",
-                "name": "安徽建工",
-                "limit_up_time": "10:09:56",
-                "continuous_limit_up_count": 2,
-                "float_mv": 9664086070.94,
-                "turnover_rate": 9.608112335205078
-              },
-              {
-                "code": "600528",
-                "name": "中铁工业",
-                "limit_up_time": "10:12:09",
-                "continuous_limit_up_count": 1,
-                "float_mv": 20371628061.96,
-                "turnover_rate": 6.041943073272705
+                "turnover_rate": 17.8098087310791
               }
             ]
           },
@@ -17811,26 +17639,7 @@
                 "limit_up_time": "09:30:02",
                 "continuous_limit_up_count": 1,
                 "float_mv": 79391860536.78,
-                "turnover_rate": 1.3951727151870728
-              }
-            ]
-          },
-          {
-            "name": "专用设备",
-            "score": 20,
-            "limit_up_count": 1,
-            "avg_change": 9.98,
-            "net_flow": null,
-            "phase": "退潮",
-            "max_continuous": 1,
-            "leaders": [
-              {
-                "code": "600894",
-                "name": "广日股份",
-                "limit_up_time": "09:30:02",
-                "continuous_limit_up_count": 1,
-                "float_mv": 8085755227.55,
-                "turnover_rate": 1.5167784690856934
+                "turnover_rate": 1.1736795902252197
               }
             ]
           },
@@ -17849,7 +17658,7 @@
                 "limit_up_time": "09:30:51",
                 "continuous_limit_up_count": 1,
                 "float_mv": 11139100744.75,
-                "turnover_rate": 2.340517044067383
+                "turnover_rate": 2.228372812271118
               }
             ]
           },
@@ -17868,26 +17677,7 @@
                 "limit_up_time": "09:30:57",
                 "continuous_limit_up_count": 1,
                 "float_mv": 5792982102.6,
-                "turnover_rate": 1.9935286045074463
-              }
-            ]
-          },
-          {
-            "name": "专业工程",
-            "score": 20,
-            "limit_up_count": 1,
-            "avg_change": 10.07,
-            "net_flow": null,
-            "phase": "退潮",
-            "max_continuous": 1,
-            "leaders": [
-              {
-                "code": "002542",
-                "name": "中化岩土",
-                "limit_up_time": "09:32:12",
-                "continuous_limit_up_count": 1,
-                "float_mv": 5768769811.5199995,
-                "turnover_rate": 1.80789315700531
+                "turnover_rate": 1.8985443115234375
               }
             ]
           },
@@ -17906,7 +17696,26 @@
                 "limit_up_time": "09:34:09",
                 "continuous_limit_up_count": 1,
                 "float_mv": 18029646113.22,
-                "turnover_rate": 9.980657577514648
+                "turnover_rate": 9.29904556274414
+              }
+            ]
+          },
+          {
+            "name": "物流",
+            "score": 20,
+            "limit_up_count": 1,
+            "avg_change": 9.99,
+            "net_flow": null,
+            "phase": "退潮",
+            "max_continuous": 1,
+            "leaders": [
+              {
+                "code": "002800",
+                "name": "天顺股份",
+                "limit_up_time": "09:38:18",
+                "continuous_limit_up_count": 1,
+                "float_mv": 3387080060.06,
+                "turnover_rate": 2.905111312866211
               }
             ]
           },
@@ -17925,34 +17734,7 @@
                 "limit_up_time": "09:40:00",
                 "continuous_limit_up_count": 1,
                 "float_mv": 6644244036.78,
-                "turnover_rate": 3.052468776702881
-              }
-            ]
-          },
-          {
-            "name": "通用设备",
-            "score": 20,
-            "limit_up_count": 2,
-            "avg_change": 15.0,
-            "net_flow": null,
-            "phase": "退潮",
-            "max_continuous": 1,
-            "leaders": [
-              {
-                "code": "002342",
-                "name": "巨力索具",
-                "limit_up_time": "09:40:03",
-                "continuous_limit_up_count": 1,
-                "float_mv": 13747536000.0,
-                "turnover_rate": 17.719911575317383
-              },
-              {
-                "code": "300992",
-                "name": "泰福泵业",
-                "limit_up_time": "11:14:12",
-                "continuous_limit_up_count": 1,
-                "float_mv": 3245476612.0800004,
-                "turnover_rate": 19.753738403320312
+                "turnover_rate": 2.665107250213623
               }
             ]
           },
@@ -17971,7 +17753,7 @@
                 "limit_up_time": "09:40:47",
                 "continuous_limit_up_count": 1,
                 "float_mv": 8728801735.59,
-                "turnover_rate": 9.776126861572266
+                "turnover_rate": 9.406524658203125
               }
             ]
           },
@@ -17990,34 +17772,7 @@
                 "limit_up_time": "09:41:15",
                 "continuous_limit_up_count": 1,
                 "float_mv": 2772208349.28,
-                "turnover_rate": 10.469115257263184
-              }
-            ]
-          },
-          {
-            "name": "电网设备",
-            "score": 20,
-            "limit_up_count": 2,
-            "avg_change": 10.04,
-            "net_flow": null,
-            "phase": "退潮",
-            "max_continuous": 1,
-            "leaders": [
-              {
-                "code": "000720",
-                "name": "新能泰山",
-                "limit_up_time": "09:47:03",
-                "continuous_limit_up_count": 1,
-                "float_mv": 6860662377.66,
-                "turnover_rate": 14.399706840515137
-              },
-              {
-                "code": "002560",
-                "name": "通达股份",
-                "limit_up_time": "09:54:21",
-                "continuous_limit_up_count": 1,
-                "float_mv": 4887179461.58,
-                "turnover_rate": 11.741124153137207
+                "turnover_rate": 9.588541984558105
               }
             ]
           },
@@ -18036,7 +17791,7 @@
                 "limit_up_time": "09:51:53",
                 "continuous_limit_up_count": 1,
                 "float_mv": 6075383849.5,
-                "turnover_rate": 5.075133800506592
+                "turnover_rate": 4.644292831420898
               }
             ]
           },
@@ -18055,7 +17810,7 @@
                 "limit_up_time": "09:58:39",
                 "continuous_limit_up_count": 1,
                 "float_mv": 11504561673.33,
-                "turnover_rate": 12.712095260620117
+                "turnover_rate": 9.069531440734863
               }
             ]
           },
@@ -18074,26 +17829,7 @@
                 "limit_up_time": "10:09:32",
                 "continuous_limit_up_count": 1,
                 "float_mv": 18129384000.0,
-                "turnover_rate": 2.129424571990967
-              }
-            ]
-          },
-          {
-            "name": "家电零部",
-            "score": 20,
-            "limit_up_count": 1,
-            "avg_change": 10.0,
-            "net_flow": null,
-            "phase": "退潮",
-            "max_continuous": 1,
-            "leaders": [
-              {
-                "code": "603657",
-                "name": "春光科技",
-                "limit_up_time": "10:44:52",
-                "continuous_limit_up_count": 1,
-                "float_mv": 3777209997.0,
-                "turnover_rate": 3.7330808639526367
+                "turnover_rate": 1.4184905290603638
               }
             ]
           }
@@ -18104,7 +17840,7 @@
       "tool_id": "tool_write_limit_up_with_sector",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3441,
+      "duration_ms": 6370,
       "args": {},
       "error_message": null,
       "result": {
@@ -18112,14 +17848,14 @@
         "date": "20260331",
         "path": "/home/xie/openclaw-data-china-stock/data/limit_up_research/20260331_limit_up_with_sector.json",
         "sectors_count": 24,
-        "limit_up_count": 36
+        "limit_up_count": 33
       }
     },
     {
       "tool_id": "tool_limit_up_daily_flow",
       "ok": true,
       "rc": 0,
-      "duration_ms": 3659,
+      "duration_ms": 5728,
       "args": {
         "write_json": true,
         "write_report": true,
@@ -18131,7 +17867,7 @@
         "date": "20260331",
         "json_path": "/home/xie/openclaw-data-china-stock/data/limit_up_research/20260331_limit_up_with_sector.json",
         "report_path": "/home/xie/openclaw-data-china-stock/data/limit_up_research/20260331_report.md",
-        "sectors_count": 24,
+        "sectors_count": 25,
         "feishu_notification": null
       }
     },
@@ -18139,7 +17875,7 @@
       "tool_id": "tool_dragon_tiger_list",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2729,
+      "duration_ms": 5335,
       "args": {},
       "error_message": null,
       "result": {
@@ -18151,12 +17887,12 @@
             "name": "顺发恒能",
             "limit_up_time": "09:25:00",
             "change_pct": 10.051546096801758,
-            "turnover_rate": 2.621500253677368,
+            "turnover_rate": 1.0786564350128174,
             "float_mv": 9821000362.949999,
             "board_name": "电力",
             "continuous_limit_up_count": 1,
             "latest_price": 4.27,
-            "amount": 257457541.0,
+            "amount": 105934857.0,
             "date": "20260331"
           },
           {
@@ -18164,12 +17900,12 @@
             "name": "宇通客车",
             "limit_up_time": "09:30:02",
             "change_pct": 10.0,
-            "turnover_rate": 1.3951727151870728,
+            "turnover_rate": 1.1737743616104126,
             "float_mv": 79391860536.78,
             "board_name": "商用车",
             "continuous_limit_up_count": 1,
             "latest_price": 35.86,
-            "amount": 1107541040.0,
+            "amount": 931768848.0,
             "date": "20260331"
           },
           {
@@ -18177,12 +17913,12 @@
             "name": "广日股份",
             "limit_up_time": "09:30:02",
             "change_pct": 9.97706413269043,
-            "turnover_rate": 1.5167784690856934,
+            "turnover_rate": 1.400760293006897,
             "float_mv": 8085755227.55,
             "board_name": "专用设备",
             "continuous_limit_up_count": 1,
             "latest_price": 9.59,
-            "amount": 122516926.0,
+            "amount": 113135988.0,
             "date": "20260331"
           },
           {
@@ -18190,12 +17926,12 @@
             "name": "闽发铝业",
             "limit_up_time": "09:30:03",
             "change_pct": 10.093896865844727,
-            "turnover_rate": 8.842921257019043,
+            "turnover_rate": 8.198200225830078,
             "float_mv": 4038852411.09,
             "board_name": "工业金属",
             "continuous_limit_up_count": 2,
             "latest_price": 4.69,
-            "amount": 356744432.0,
+            "amount": 330705072.0,
             "date": "20260331"
           },
           {
@@ -18203,12 +17939,12 @@
             "name": "津药药业",
             "limit_up_time": "09:30:42",
             "change_pct": 10.084033966064453,
-            "turnover_rate": 7.974819660186768,
+            "turnover_rate": 7.767000198364258,
             "float_mv": 5721486203.2,
             "board_name": "化学制药",
             "continuous_limit_up_count": 3,
             "latest_price": 5.24,
-            "amount": 452748000.0,
+            "amount": 440857664.0,
             "date": "20260331"
           },
           {
@@ -18216,12 +17952,12 @@
             "name": "泛微网络",
             "limit_up_time": "09:30:51",
             "change_pct": 10.0,
-            "turnover_rate": 2.340517044067383,
+            "turnover_rate": 2.228684663772583,
             "float_mv": 11139100744.75,
             "board_name": "软件开发",
             "continuous_limit_up_count": 1,
             "latest_price": 43.45,
-            "amount": 259092180.0,
+            "amount": 246635065.0,
             "date": "20260331"
           },
           {
@@ -18229,12 +17965,12 @@
             "name": "神剑股份",
             "limit_up_time": "09:30:57",
             "change_pct": 10.0,
-            "turnover_rate": 13.927404403686523,
+            "turnover_rate": 11.561744689941406,
             "float_mv": 13350529236.0,
             "board_name": "塑料",
             "continuous_limit_up_count": 4,
             "latest_price": 16.5,
-            "amount": 1845002720.0,
+            "amount": 1529174576.0,
             "date": "20260331"
           },
           {
@@ -18242,12 +17978,12 @@
             "name": "松芝股份",
             "limit_up_time": "09:30:57",
             "change_pct": 10.0,
-            "turnover_rate": 1.9935286045074463,
+            "turnover_rate": 1.899198293685913,
             "float_mv": 5792982102.6,
             "board_name": "汽车零部",
             "continuous_limit_up_count": 1,
             "latest_price": 9.24,
-            "amount": 113936975.0,
+            "amount": 108472439.0,
             "date": "20260331"
           },
           {
@@ -18255,12 +17991,25 @@
             "name": "神州高铁",
             "limit_up_time": "09:31:18",
             "change_pct": 10.1010103225708,
-            "turnover_rate": 5.581979751586914,
+            "turnover_rate": 5.316681385040283,
             "float_mv": 8882291033.04,
             "board_name": "轨交设备",
             "continuous_limit_up_count": 2,
             "latest_price": 3.27,
-            "amount": 491299888.0,
+            "amount": 467735280.0,
+            "date": "20260331"
+          },
+          {
+            "code": "002634",
+            "name": "棒杰股份",
+            "limit_up_time": "09:31:36",
+            "change_pct": 9.963099479675293,
+            "turnover_rate": 2.97689151763916,
+            "float_mv": 3991839969.72,
+            "board_name": "服装家纺",
+            "continuous_limit_up_count": 2,
+            "latest_price": 8.94,
+            "amount": 117033992.0,
             "date": "20260331"
           },
           {
@@ -18268,12 +18017,12 @@
             "name": "中化岩土",
             "limit_up_time": "09:32:12",
             "change_pct": 10.067113876342773,
-            "turnover_rate": 1.80789315700531,
+            "turnover_rate": 1.5976440906524658,
             "float_mv": 5768769811.5199995,
             "board_name": "专业工程",
             "continuous_limit_up_count": 1,
             "latest_price": 3.28,
-            "amount": 103116400.0,
+            "amount": 90987616.0,
             "date": "20260331"
           },
           {
@@ -18281,12 +18030,12 @@
             "name": "星辉环材",
             "limit_up_time": "09:32:33",
             "change_pct": 19.984107971191406,
-            "turnover_rate": 5.256229400634766,
+            "turnover_rate": 5.026115894317627,
             "float_mv": 5811288725.8,
             "board_name": "塑料",
             "continuous_limit_up_count": 1,
             "latest_price": 30.2,
-            "amount": 302764432.0,
+            "amount": 289391872.0,
             "date": "20260331"
           },
           {
@@ -18294,12 +18043,12 @@
             "name": "顺灏股份",
             "limit_up_time": "09:34:09",
             "change_pct": 10.025873184204102,
-            "turnover_rate": 9.980657577514648,
+            "turnover_rate": 9.302413940429688,
             "float_mv": 18029646113.22,
             "board_name": "包装印刷",
             "continuous_limit_up_count": 1,
             "latest_price": 17.01,
-            "amount": 1772587104.0,
+            "amount": 1650302224.0,
             "date": "20260331"
           },
           {
@@ -18307,12 +18056,25 @@
             "name": "闽东电力",
             "limit_up_time": "09:34:12",
             "change_pct": 9.97977066040039,
-            "turnover_rate": 8.007264137268066,
+            "turnover_rate": 7.189295768737793,
             "float_mv": 7172282899.32,
             "board_name": "电力",
             "continuous_limit_up_count": 1,
             "latest_price": 16.31,
-            "amount": 561774928.0,
+            "amount": 503107920.0,
+            "date": "20260331"
+          },
+          {
+            "code": "002821",
+            "name": "凯莱英",
+            "limit_up_time": "09:34:12",
+            "change_pct": 10.0,
+            "turnover_rate": 2.2048301696777344,
+            "float_mv": 35118948150.659996,
+            "board_name": "医疗服务",
+            "continuous_limit_up_count": 1,
+            "latest_price": 110.77,
+            "amount": 767222752.0,
             "date": "20260331"
           },
           {
@@ -18320,12 +18082,12 @@
             "name": "中国铁物",
             "limit_up_time": "09:34:21",
             "change_pct": 9.86842155456543,
-            "turnover_rate": 2.8918731212615967,
+            "turnover_rate": 2.393132209777832,
             "float_mv": 20208170940.54,
             "board_name": "轨交设备",
             "continuous_limit_up_count": 1,
             "latest_price": 3.34,
-            "amount": 569517872.0,
+            "amount": 468731440.0,
             "date": "20260331"
           },
           {
@@ -18333,12 +18095,12 @@
             "name": "京运通",
             "limit_up_time": "09:35:21",
             "change_pct": 10.10988998413086,
-            "turnover_rate": 7.6121625900268555,
+            "turnover_rate": 6.956961631774902,
             "float_mv": 12097160333.609999,
             "board_name": "电力",
             "continuous_limit_up_count": 1,
             "latest_price": 5.01,
-            "amount": 899228592.0,
+            "amount": 819967888.0,
             "date": "20260331"
           },
           {
@@ -18346,12 +18108,12 @@
             "name": "平潭发展",
             "limit_up_time": "09:36:48",
             "change_pct": 9.9827880859375,
-            "turnover_rate": 19.749217987060547,
+            "turnover_rate": 17.81655502319336,
             "float_mv": 24474881498.219997,
             "board_name": "林业Ⅱ",
             "continuous_limit_up_count": 2,
             "latest_price": 12.78,
-            "amount": 4712990720.0,
+            "amount": 4240256272.0,
             "date": "20260331"
           },
           {
@@ -18359,25 +18121,12 @@
             "name": "天顺股份",
             "limit_up_time": "09:38:18",
             "change_pct": 9.985597610473633,
-            "turnover_rate": 6.817759990692139,
+            "turnover_rate": 2.905787706375122,
             "float_mv": 3387080060.06,
             "board_name": "物流",
             "continuous_limit_up_count": 1,
             "latest_price": 22.91,
-            "amount": 225974240.0,
-            "date": "20260331"
-          },
-          {
-            "code": "002218",
-            "name": "拓日新能",
-            "limit_up_time": "09:39:36",
-            "change_pct": 10.0,
-            "turnover_rate": 21.884294509887695,
-            "float_mv": 9649319865.57,
-            "board_name": "电力",
-            "continuous_limit_up_count": 1,
-            "latest_price": 6.93,
-            "amount": 2064531456.0,
+            "amount": 95452021.0,
             "date": "20260331"
           },
           {
@@ -18385,12 +18134,12 @@
             "name": "三湘印象",
             "limit_up_time": "09:40:00",
             "change_pct": 10.019268035888672,
-            "turnover_rate": 3.052468776702881,
+            "turnover_rate": 2.665562629699707,
             "float_mv": 6644244036.78,
             "board_name": "房地产开",
             "continuous_limit_up_count": 1,
             "latest_price": 5.71,
-            "amount": 198863965.0,
+            "amount": 173156974.0,
             "date": "20260331"
           },
           {
@@ -18398,12 +18147,12 @@
             "name": "巨力索具",
             "limit_up_time": "09:40:03",
             "change_pct": 10.007638931274414,
-            "turnover_rate": 17.719911575317383,
+            "turnover_rate": 17.045547485351562,
             "float_mv": 13747536000.0,
             "board_name": "通用设备",
             "continuous_limit_up_count": 1,
             "latest_price": 14.4,
-            "amount": 2389476640.0,
+            "amount": 2296768288.0,
             "date": "20260331"
           },
           {
@@ -18411,12 +18160,12 @@
             "name": "舒华体育",
             "limit_up_time": "09:40:47",
             "change_pct": 10.005157470703125,
-            "turnover_rate": 9.776126861572266,
+            "turnover_rate": 9.410605430603027,
             "float_mv": 8728801735.59,
             "board_name": "文娱用品",
             "continuous_limit_up_count": 1,
             "latest_price": 21.33,
-            "amount": 828387216.0,
+            "amount": 796481632.0,
             "date": "20260331"
           },
           {
@@ -18424,12 +18173,12 @@
             "name": "天地在线",
             "limit_up_time": "09:41:15",
             "change_pct": 9.991079330444336,
-            "turnover_rate": 10.469115257263184,
+            "turnover_rate": 9.592811584472656,
             "float_mv": 2772208349.28,
             "board_name": "广告营销",
             "continuous_limit_up_count": 1,
             "latest_price": 24.66,
-            "amount": 280975168.0,
+            "amount": 256682213.0,
             "date": "20260331"
           },
           {
@@ -18437,12 +18186,12 @@
             "name": "新能泰山",
             "limit_up_time": "09:47:03",
             "change_pct": 10.080645561218262,
-            "turnover_rate": 14.399706840515137,
+            "turnover_rate": 13.619743347167969,
             "float_mv": 6860662377.66,
             "board_name": "电网设备",
             "continuous_limit_up_count": 1,
             "latest_price": 5.46,
-            "amount": 912715328.0,
+            "amount": 859204688.0,
             "date": "20260331"
           },
           {
@@ -18450,12 +18199,12 @@
             "name": "海量数据",
             "limit_up_time": "09:51:53",
             "change_pct": 10.02610969543457,
-            "turnover_rate": 5.075133800506592,
+            "turnover_rate": 4.6451945304870605,
             "float_mv": 6075383849.5,
             "board_name": "IT服务Ⅱ",
             "continuous_limit_up_count": 1,
             "latest_price": 21.07,
-            "amount": 297689296.0,
+            "amount": 271568816.0,
             "date": "20260331"
           },
           {
@@ -18463,12 +18212,12 @@
             "name": "通达股份",
             "limit_up_time": "09:54:21",
             "change_pct": 9.989806175231934,
-            "turnover_rate": 11.741124153137207,
+            "turnover_rate": 11.110108375549316,
             "float_mv": 4887179461.58,
             "board_name": "电网设备",
             "continuous_limit_up_count": 1,
             "latest_price": 10.79,
-            "amount": 558934912.0,
+            "amount": 528096000.0,
             "date": "20260331"
           },
           {
@@ -18476,12 +18225,38 @@
             "name": "邵阳液压",
             "limit_up_time": "09:54:27",
             "change_pct": 20.0,
-            "turnover_rate": 24.495973587036133,
+            "turnover_rate": 23.12381935119629,
             "float_mv": 3111947907.24,
             "board_name": "工程机械",
             "continuous_limit_up_count": 1,
             "latest_price": 44.76,
-            "amount": 724401104.0,
+            "amount": 681700336.0,
+            "date": "20260331"
+          },
+          {
+            "code": "600320",
+            "name": "振华重工",
+            "limit_up_time": "09:57:46",
+            "change_pct": 10.0,
+            "turnover_rate": 2.1165049076080322,
+            "float_mv": 17174727907.369999,
+            "board_name": "专用设备",
+            "continuous_limit_up_count": 1,
+            "latest_price": 5.17,
+            "amount": 353699440.0,
+            "date": "20260331"
+          },
+          {
+            "code": "603601",
+            "name": "再升科技",
+            "limit_up_time": "09:58:27",
+            "change_pct": 10.0,
+            "turnover_rate": 21.863126754760742,
+            "float_mv": 18220338487.45,
+            "board_name": "专业工程",
+            "continuous_limit_up_count": 2,
+            "latest_price": 15.95,
+            "amount": 3787319696.0,
             "date": "20260331"
           },
           {
@@ -18489,12 +18264,12 @@
             "name": "中体产业",
             "limit_up_time": "09:58:39",
             "change_pct": 10.0,
-            "turnover_rate": 12.712095260620117,
+            "turnover_rate": 9.072064399719238,
             "float_mv": 11504561673.33,
             "board_name": "体育Ⅱ",
             "continuous_limit_up_count": 1,
             "latest_price": 11.99,
-            "amount": 1432152784.0,
+            "amount": 1016702512.0,
             "date": "20260331"
           },
           {
@@ -18502,12 +18277,12 @@
             "name": "永达股份",
             "limit_up_time": "10:01:18",
             "change_pct": 9.986129760742188,
-            "turnover_rate": 6.109649181365967,
+            "turnover_rate": 5.444771766662598,
             "float_mv": 1808040000.0,
             "board_name": "工程机械",
             "continuous_limit_up_count": 1,
             "latest_price": 15.86,
-            "amount": 106889142.0,
+            "amount": 94867897.0,
             "date": "20260331"
           },
           {
@@ -18515,12 +18290,12 @@
             "name": "坤彩科技",
             "limit_up_time": "10:09:32",
             "change_pct": 10.019880294799805,
-            "turnover_rate": 2.129424571990967,
+            "turnover_rate": 1.4332188367843628,
             "float_mv": 18129384000.0,
             "board_name": "非金属材",
             "continuous_limit_up_count": 1,
             "latest_price": 27.67,
-            "amount": 372923696.0,
+            "amount": 246915076.0,
             "date": "20260331"
           },
           {
@@ -18528,12 +18303,12 @@
             "name": "金鹰重工",
             "limit_up_time": "10:09:42",
             "change_pct": 19.98166847229004,
-            "turnover_rate": 8.156820297241211,
+            "turnover_rate": 7.138447284698486,
             "float_mv": 6981334206.0,
             "board_name": "轨交设备",
             "continuous_limit_up_count": 1,
             "latest_price": 13.09,
-            "amount": 538782288.0,
+            "amount": 467686256.0,
             "date": "20260331"
           },
           {
@@ -18541,77 +18316,12 @@
             "name": "安徽建工",
             "limit_up_time": "10:09:56",
             "change_pct": 9.9609375,
-            "turnover_rate": 9.608112335205078,
+            "turnover_rate": 8.897435188293457,
             "float_mv": 9664086070.94,
             "board_name": "基础建设",
             "continuous_limit_up_count": 2,
             "latest_price": 5.63,
-            "amount": 915100688.0,
-            "date": "20260331"
-          },
-          {
-            "code": "600528",
-            "name": "中铁工业",
-            "limit_up_time": "10:12:09",
-            "change_pct": 9.952038764953613,
-            "turnover_rate": 6.041943073272705,
-            "float_mv": 20371628061.96,
-            "board_name": "基础建设",
-            "continuous_limit_up_count": 1,
-            "latest_price": 9.17,
-            "amount": 1192277472.0,
-            "date": "20260331"
-          },
-          {
-            "code": "600495",
-            "name": "晋西车轴",
-            "limit_up_time": "10:15:52",
-            "change_pct": 10.044642448425293,
-            "turnover_rate": 5.602980136871338,
-            "float_mv": 5956381067.98,
-            "board_name": "轨交设备",
-            "continuous_limit_up_count": 1,
-            "latest_price": 4.93,
-            "amount": 326664288.0,
-            "date": "20260331"
-          },
-          {
-            "code": "603657",
-            "name": "春光科技",
-            "limit_up_time": "10:44:52",
-            "change_pct": 10.0,
-            "turnover_rate": 3.7330808639526367,
-            "float_mv": 3777209997.0,
-            "board_name": "家电零部",
-            "continuous_limit_up_count": 1,
-            "latest_price": 27.94,
-            "amount": 136801569.0,
-            "date": "20260331"
-          },
-          {
-            "code": "605162",
-            "name": "新中港",
-            "limit_up_time": "10:49:33",
-            "change_pct": 10.047392845153809,
-            "turnover_rate": 7.831540584564209,
-            "float_mv": 4650768653.219999,
-            "board_name": "电力",
-            "continuous_limit_up_count": 1,
-            "latest_price": 11.61,
-            "amount": 349060064.0,
-            "date": "20260331"
-          },
-          {
-            "code": "300992",
-            "name": "泰福泵业",
-            "limit_up_time": "11:14:12",
-            "change_pct": 20.0,
-            "turnover_rate": 19.753738403320312,
-            "float_mv": 3245476612.0800004,
-            "board_name": "通用设备",
-            "continuous_limit_up_count": 1,
-            "latest_price": 41.88,
-            "amount": 575256720.0,
+            "amount": 846420208.0,
             "date": "20260331"
           }
         ],
@@ -18627,7 +18337,7 @@
       "tool_id": "tool_capital_flow",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2396,
+      "duration_ms": 4054,
       "args": {
         "lookback_days": 3,
         "symbols": "600000"
@@ -18658,7 +18368,7 @@
       "tool_id": "tool_fetch_northbound_flow",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2745,
+      "duration_ms": 4539,
       "args": {
         "lookback_days": 1
       },
@@ -18695,7 +18405,7 @@
       "tool_id": "tool_fetch_policy_news",
       "ok": true,
       "rc": 0,
-      "duration_ms": 523,
+      "duration_ms": 674,
       "args": {
         "max_items": 5,
         "use_cache": true,
@@ -18747,71 +18457,7 @@
       "tool_id": "tool_fetch_macro_commodities",
       "ok": true,
       "rc": 0,
-      "duration_ms": 7215,
-      "args": {
-        "disable_network": false
-      },
-      "error_message": "yfinance_empty_tavily_fallback",
-      "result": {
-        "success": true,
-        "message": "yfinance_empty_tavily_fallback",
-        "data": {
-          "items": [
-            {
-              "code": "macro_digest",
-              "name": "大宗检索提要",
-              "change_pct": null,
-              "digest": "WTI crude oil futures are up 58% this month, the most since May 2020, while Brent crude futures have risen 59% this month, marking its highest monthly gain ever. COMEX gold futures are down 1.70%, and copper futures are down 2.72%.",
-              "source": "tavily",
-              "numeric_unverified": true
-            },
-            {
-              "code": "news",
-              "name": "Oil rises for a fourth day on supply cuts from widening Middle East conflict - R",
-              "change_pct": null,
-              "digest": "BENGALURU, March 31 (Reuters) - Oil prices rose for ​a fourth day on Tuesday, with Brent crude poised for its largest monthly gain on record and U.S. Iran's effective closure of the Strait of ⁠Hormuz, which typically carries about a fifth of global oil supply and large numbers of liquefied natural g",
-              "url": "https://www.reuters.com/business/energy/oil-rises-fourth-day-supply-cuts-widening-middle-east-conflict-2026-03-31/",
-              "source": "tavily",
-              "numeric_unverified": true
-            },
-            {
-              "code": "news",
-              "name": "gold bars on black background - Mining.com",
-              "change_pct": null,
-              "digest": "Copper $ 5.3745 / lb  -2.72%. Brent Crude Oil $ 112.19 / bbl  4.20%. Palladium $ 1445.2 / ozt  -1.32%. Crude Oil $ 98.32 / bbl  3.49%. Natural Gas $ 3.095 / Btu  -0.80%. Silver Futures $ 69.664 / ozt  -4.35%. Aluminum Futures $ 3126.75 / ton  -1.30%. Micro Gold Futures $ 4574.9 / ozt  -1.69%. Micro ",
-              "url": "https://www.mining.com/wells-fargo-doubles-down-on-gold-price-despite-slump/gold-bars-on-black-background/",
-              "source": "tavily",
-              "numeric_unverified": true
-            },
-            {
-              "code": "news",
-              "name": "Gold’s Rally Has Seen Different Buyers Come And Go - Mining.com",
-              "change_pct": null,
-              "digest": "Copper $ 5.3745 / lb  -2.72%. Brent Crude Oil $ 112.19 / bbl  4.20%. Palladium $ 1445.2 / ozt  -1.32%. Crude Oil $ 98.32 / bbl  3.49%. Natural Gas $ 3.095 / Btu  -0.80%. Silver Futures $ 69.664 / ozt  -4.35%. Aluminum Futures $ 3126.75 / ton  -1.30%. Micro Gold Futures $ 4574.9 / ozt  -1.69%. Micro ",
-              "url": "https://www.mining.com/web/dip-buyers-arrive-to-pull-gold-back-from-brink-of-a-bear-market/golds-rally-has-seen-different-buyers-come-and-go/",
-              "source": "tavily",
-              "numeric_unverified": true
-            },
-            {
-              "code": "news",
-              "name": "Judge upholds US government approval of ioneer’s Nevada lithium mine - Mining.co",
-              "change_pct": null,
-              "digest": "Brent Crude Oil $ 112.19 / bbl  4.20%. Palladium $ 1445.2 / ozt  -1.32%. Crude Oil $ 98.32 / bbl  3.49%. Silver Futures $ 69.664 / ozt  -4.35%. Aluminum Futures $ 3126.75 / ton  -1.30%. Micro Gold Futures $ 4574.9 / ozt  -1.69%. Micro Silver Futures $ 69.664 / ozt  -4.44%. Platinum $ 1970.5 / ozt  -",
-              "url": "https://www.mining.com/web/judge-upholds-us-government-approval-of-ioneers-nevada-lithium-mine/",
-              "source": "tavily",
-              "numeric_unverified": true
-            }
-          ],
-          "source": "tavily",
-          "numeric_unverified": true
-        }
-      }
-    },
-    {
-      "tool_id": "tool_fetch_overnight_futures_digest",
-      "ok": true,
-      "rc": 0,
-      "duration_ms": 4927,
+      "duration_ms": 4776,
       "args": {
         "disable_network": false
       },
@@ -18820,16 +18466,53 @@
         "success": true,
         "message": "ok",
         "data": {
-          "as_of": "2026-03-31 11:31:33",
-          "a50_digest": "The FTSE China A50 futures night session showed little change, with the index remaining stable as U.S. stock futures were also little changed after the S&P 500 approached correction territory. The market received positive news regarding potential progress in U.S.-Iran peace talks, which contributed to the stable market conditions.",
-          "hxc_digest": "As of March 31, 2026, the Nasdaq China Golden Dragon Index (HXC) closed up 0.5% from the previous day's close, indicating a slight increase in the index's value. This rise comes amid a backdrop of inflation-based uncertainty affecting global markets, with the Federal Reserve's March inflation forecast worsening. Despite these headwinds, China's markets remain relatively insulated, with continued a",
+          "items": [
+            {
+              "code": "CL=F",
+              "name": "WTI原油",
+              "change_pct": NaN,
+              "source": "yfinance"
+            },
+            {
+              "code": "GC=F",
+              "name": "COMEX黄金",
+              "change_pct": NaN,
+              "source": "yfinance"
+            },
+            {
+              "code": "HG=F",
+              "name": "COMEX铜",
+              "change_pct": NaN,
+              "source": "yfinance"
+            }
+          ],
+          "source": "yfinance"
+        }
+      }
+    },
+    {
+      "tool_id": "tool_fetch_overnight_futures_digest",
+      "ok": true,
+      "rc": 0,
+      "duration_ms": 4782,
+      "args": {
+        "disable_network": false
+      },
+      "error_message": "ok",
+      "result": {
+        "success": true,
+        "message": "ok",
+        "data": {
+          "as_of": "2026-03-31 10:10:19",
+          "a50_digest": "As of 31 March 2026 at 02:10:20, the FTSE China A50 futures night session showed little change. The S&P 500 was close to entering correction territory, and the Dow Jones experienced significant declines due to rising oil prices and doubts over Iran negotiations. Despite mixed market conditions, overnight trading in futures did not necessarily predict the next regular session's performance.",
+          "hxc_digest": "The Nasdaq China Golden Dragon Index (HXC) closed higher on March 30, 2026, despite Asian shares generally declining due to soaring oil prices and concerns over the U.S. war with Iran. This indicates that China's market remains relatively insulated compared to other regions, although there is still some risk appetite for Chinese risk assets as shown by IPO demand.",
           "evidence_urls": [
-            "https://www.fxstreet.com/analysis/if-you-dont-own-physical-202603301215",
-            "https://www.cnbc.com/2026/03/30/stock-market-today-live-updates.html",
             "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-trump-powell-micron-stock-mu/",
-            "https://www.fool.com/investing/2026/03/30/federal-reserve-march-inflation-forecast-worsened/",
+            "https://www.cnbc.com/2026/03/30/stock-market-today-live-updates.html",
             "https://news.futunn.com/en/post/70831090/fortune-enrichment-holdings-limited-increased-its-stake-in-beijing-capital",
-            "https://www.cnbc.com/video/2026/03/30/china-remains-insulated-as-the-markets-call-out-trumps-bluffs-on-iran.html"
+            "https://www.tipranks.com/news/company-announcements/xizang-zhihui-mining-announces-board-change-as-non-executive-director-resigns",
+            "https://www.cnbc.com/video/2026/03/30/china-remains-insulated-as-the-markets-call-out-trumps-bluffs-on-iran.html",
+            "https://apnews.com/article/stock-markets-war-oil-trump-iran-1aef947ecb395c3bb97fcdb5ed3826f1"
           ],
           "source_type": "search_fallback",
           "numeric_unverified": true
@@ -18840,7 +18523,7 @@
       "tool_id": "tool_conditional_overnight_futures_digest",
       "ok": true,
       "rc": 0,
-      "duration_ms": 545,
+      "duration_ms": 1212,
       "args": {
         "overnight_overlay_degraded": false,
         "disable_network": false
@@ -18856,7 +18539,7 @@
       "tool_id": "tool_fetch_announcement_digest",
       "ok": true,
       "rc": 0,
-      "duration_ms": 2704,
+      "duration_ms": 6687,
       "args": {
         "max_items": 5,
         "disable_network": false
@@ -18866,26 +18549,40 @@
         "success": true,
         "message": "ok",
         "data": {
-          "as_of": "2026-03-31 11:31:41",
+          "as_of": "2026-03-31 10:10:31",
           "items": [
             {
-              "title": "清溢光电股东增减持排名_数据中心",
-              "url": "https://data.eastmoney.com/gdggcg/gddetail/688138.html",
-              "snippet": "东方财富网高管持股功能主要是统计上市公司董事、监事、高级管理人员以及相关人员、公告披露的部分股东持有本公司股份变动情况。",
+              "title": "多家A股公司发布重要公告_新浪新闻",
+              "url": "https://www.sina.cn/news/detail/5272869565111549.html",
+              "snippet": "3月4日晚间，多家A股上市公司发布重大事项、业绩预告及增减持等关键公告，涵盖股权变动、上市状态调整、经营数据与风险提示等核心信息，以下为精选整理：. 1. 佳缘科技：股东王进拟以询价转让方式减持公司3%股份，用于自身资金安排，受让方所持股份将锁定6个月。. 3. 汇隆新材：因核心条款未达成一致，终止筹划控制权变更事项，公司股票3月5日起复牌。. 4. 法尔胜（8天6板）：发布异动公告，明确不涉及特种光纤、光纤传感业务，无相关研发与投入；若股价继续异常上涨，将依规申请停牌核查。. 1. 强一股份：2026年1-2月合并营业收入同比大幅增长158%，经营表现亮眼。. 2. 厦钨新能：预计1-2月营收27.02亿元-35.46亿元，同比增长60%-110%，主营量价齐升驱动增长。. 1. 凯盛新材：股东凯盛投资计划减持不超2.49%股份，减持方式为集中竞价或大宗交易。. 2. 沐曦股份：预计20",
               "source_type": "search",
               "category": "announcement"
             },
             {
-              "title": "4月10日晚间公司重大事项公告",
-              "url": "https://caifuhao.eastmoney.com/news/20250410194717946983530",
-              "snippet": "沪深两市多家上市公司4月10日晚间发布公司公告，以下为重要公告汇总。 【品大事】. 大丰实业：与智元机器人签订股权合作协议开发人形机器人项目.",
+              "title": "近3000家公司“交卷”，A股2025年业绩预告收官 - 证券时报",
+              "url": "https://stcn.com/article/detail/3626507.html",
+              "snippet": "来源：每日经济新闻作者：蔡鼎2026-02-03 07:30. Wind金融终端数据显示，截至2026年1月31日，除70多家已披露年报的公司外，A股市场已有近3000家上市公司对外披露2025年年度业绩预告，覆盖范围广泛，为市场判断A股上市公司全年业绩走势提供了重要参考。. 具体来看，沪深北三市共有2956家公司披露了2025年年度业绩预告。总的来看，剔除扭亏为盈的上市公司后，宁波富邦（SH600768）同比预增超30倍居首，万科A（SZ000002）预计亏损820亿元，成“亏损王”。此外，有147家公司的业绩预告超出机构一致预测值。. 剔除扭亏为盈的上市公司后，宁波富邦以 3099.59% ~4379.43%的归母净利润预计增幅位居榜首，成为业绩预告中的黑马。公告显示，宁波富邦预计2025年实现归母净利润5000万元~7000万元。不过，据公司公告，其归母净利润大增系非经常性损益较上年",
               "source_type": "search",
               "category": "announcement"
             },
             {
-              "title": "7月9日晚间公司重大事项公告",
-              "url": "https://caifuhao.eastmoney.com/news/20250709200416686937360",
-              "snippet": "沪深两市多家上市公司7月9日晚间发布公司公告，以下为重要公告汇总。 【品大事】. 五连板华光环能：公司生产经营活动一切正常基本面没有发生重大变化.",
+              "title": "A股利好捕捉：增持订单重组_新浪新闻",
+              "url": "https://www.sina.cn/news/detail/5282327460579344.html",
+              "snippet": "3.30-3.31 A股利好捕捉：增持+订单+重组齐发 三类核心投资机会值得关注！. 复盘3月30日-31日A股上市公司公告，多家企业集中释放股东增持、大额订单、资产重组三大利好信号，覆盖消费、新能源、船舶制造、半导体等多个热门赛道。此类利好均为企业实打实的经营与资本动作，并非单纯概念炒作，背后蕴藏着值得重点跟踪的投资机会。. 一、股东增持/锁仓：真金白银彰显信心，筑牢股价安全边际. 在A股市场中，高管、核心股东的增持与锁仓行为，是传递企业发展信心最直接的信号，能有效缓解市场抛压、稳定股价预期。近两日共有8家公司披露相关公告，核心标的亮点突出：. 杭叉集团高管以自有资金增持股份，并非小额象征性操作，真金白银入场护盘，充分彰显管理层对公司长期发展的坚定看好，直接强化股价稳定性预期。. 中国宝安持股5%以上股东增持计划落地，核心股东主动增持可直接对冲二级市场抛压，有效缓解资金观望情绪，降低股价",
+              "source_type": "search",
+              "category": "announcement"
+            },
+            {
+              "title": "上市公司减持规则研究：基于制度设置及实践问题的分析",
+              "url": "https://www.allbrightlaw.com/SH/CN/10475/f89761bc98730e13.aspx",
+              "snippet": "## 全站搜索. 首页 锦天城概况 党建工作 专业领域 行业领域 专业人员 全球网络 新闻资讯 出版刊物 加入我们 联系我们 订阅下载 CN EN JP. 首页 > 全球网络 > 上海 > 出版刊物 > 专业文章 > 上市公司减持规则研究：基于制度设置及实践问题的分析. ## 上市公司减持规则研究：基于制度设置及实践问题的分析. 作者：靳如悦 刘凌霄　2025-06-30. 上市公司股份减持制度作为资本市场的基石性制度之一，深刻影响着市场的资源配置效率、投资者权益保护及整体稳定性。在我国资本市场快速发展的背景下，股东减持行为日益频繁且复杂多样，对市场运行产生了广泛而深远的影响。近年来，随着市场环境的变化，大股东“花式减持”“绕道减持”等现象频发，不仅扰乱了市场秩序，也严重损害了中小投资者的利益，引发了市场的高度关注与监管部门的重视。. 为回应市场关切，构建更加公平、有序、稳定的资本市场环境",
+              "source_type": "search",
+              "category": "announcement"
+            },
+            {
+              "title": "业绩大全_ 数据中心_ 东方财富网",
+              "url": "https://data.eastmoney.com/bbsj/603377.html",
+              "snippet": "指数|期指|期权|个股|板块|排行|新股|基金|港股|美股|期货|外汇|黄金|自选股|自选基金. | 截止 日期 | 每股 收益(元) | 每股收 益(扣除) (元) | 营业总收入 | 净利润 | 每股 净资产 (元) | 净资产 收益率 (%) | 每股经 营现金 流量(元) | 销售 毛利率 (%) | 利润分配 | 首次 公告 日期 | 最新 公告 日期 |. | 营业总收入(元) | 同比增长 (%) | 季度环比 增长(%) | 净利润(元) | 同比增长 (%) | 季度环比 增长(%) |. | 截止日期 | 每股收 益(元) | 营业总收入 | 净利润 | 每股 净资 产(元) | 净资产 收益率 (%) | 公告 日期 |. | 营业收 入(元) | 去年同 期(元) | 同比增 长(%) | 季度环比 增长(%) | 净利润 (元) | 去年同 期(元) | 同比增长",
               "source_type": "search",
               "category": "announcement"
             }
@@ -18899,7 +18596,7 @@
       "tool_id": "tool_fetch_market_data",
       "ok": true,
       "rc": 0,
-      "duration_ms": 5310,
+      "duration_ms": 6940,
       "args": {
         "asset_type": "index",
         "asset_code": "",
@@ -18915,16 +18612,16 @@
         "data": {
           "code": "000001",
           "name": "上证指数",
-          "current_price": 3908.282,
-          "change": -15.005,
-          "change_percent": -0.382,
+          "current_price": 3942.0866,
+          "change": 18.8,
+          "change_percent": 0.479,
           "open": 3924.067,
           "high": 3948.8107,
-          "low": 3904.3745,
+          "low": 3924.067,
           "prev_close": 3923.2869,
-          "volume": 402671746.0,
-          "amount": 591619835505.0,
-          "timestamp": "2026-03-31 11:31:46"
+          "volume": 235784777.0,
+          "amount": 342835462646.0,
+          "timestamp": "2026-03-31 10:10:37"
         },
         "source": "stock_zh_index_spot_sina",
         "count": 1

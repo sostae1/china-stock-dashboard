@@ -71,6 +71,10 @@ def tool_read_market_data(
             if dt in ("index_minute", "etf_minute"):
                 effective_start = start_date
                 effective_end = end_date
+                if not effective_start and not effective_end and date:
+                    # 兼容别名工具（tool_read_index_minute / tool_read_etf_minute）只传 date 的场景
+                    effective_start = str(date)
+                    effective_end = str(date)
                 if not effective_start and not effective_end and not date:
                     today = datetime.now()
                     effective_end = today.strftime("%Y%m%d")

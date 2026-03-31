@@ -9,6 +9,8 @@ from typing import Optional, Dict, Any, List
 from datetime import datetime
 import os
 import sys
+import time
+from contextlib import nullcontext
 
 # 导入交易日判断工具
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -24,6 +26,15 @@ except ImportError:
     TRADING_DAY_CHECK_AVAILABLE = False
     def check_trading_day_before_operation(*args, **kwargs):
         return None
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
 
 try:
     import akshare as ak
@@ -63,12 +74,21 @@ def _safe_get(row: pd.Series, *keys: str, default: float = 0) -> float:
 
 def _fetch_sina() -> Optional[pd.DataFrame]:
     """主数据源：新浪 stock_zh_index_spot_sina()"""
-    try:
-        df = ak.stock_zh_index_spot_sina()
-        if df is not None and not df.empty:
-            return df
-    except Exception:
-        pass
+    # 新浪偶发短时网络/代理异常：重试 + 必要时绕过代理环境
+    last_err: Optional[str] = None
+    max_retries = 3
+    retry_delay = 1.5
+    for i in range(max_retries):
+        try:
+            ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+            with ctx:
+                df = ak.stock_zh_index_spot_sina()
+            if df is not None and not df.empty:
+                return df
+        except Exception as e:  # noqa: BLE001
+            last_err = repr(e)
+        if i < max_retries - 1:
+            time.sleep(retry_delay * (i + 1))
     return None
 
 
@@ -78,7 +98,9 @@ def _fetch_em() -> Optional[pd.DataFrame]:
     all_df = None
     for symbol in symbols_to_try:
         try:
-            temp_df = ak.stock_zh_index_spot_em(symbol=symbol)
+            ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+            with ctx:
+                temp_df = ak.stock_zh_index_spot_em(symbol=symbol)
             if temp_df is not None and not temp_df.empty:
                 if all_df is None:
                     all_df = temp_df
@@ -295,8 +317,8 @@ def fetch_index_opening(
 
             if df is not None and not df.empty:
                 results = _extract_results(df, index_codes_list)
-        else:
-            # akshare 不可用时，使用 mootdx 兜底（快照/开盘近似）
+        # 结果为空时，无论 AKSHARE_AVAILABLE 状态如何，都尝试 mootdx 兜底
+        if not results:
             results = _mootdx_fetch_opening_items(index_codes_list)
             if results:
                 source = "mootdx"

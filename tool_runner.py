@@ -39,6 +39,34 @@ def _load_dotenv_for_tools() -> None:
 
 _load_dotenv_for_tools()
 
+
+def _apply_market_data_proxy_policy() -> None:
+    """
+    统一代理策略（默认开启）：
+    - 许多 AkShare 东财链路（*_em）在代理环境下会偶发失败（ProxyError/RemoteDisconnected）。
+    - 在独立插件场景下，默认对工具进程关闭代理变量，减少“交互式可用、工具内失败”的抖动。
+
+    控制方式：
+    - OPENCLAW_DISABLE_PROXY_FOR_MARKET_DATA=0/false/off/no  -> 不清理代理变量
+    - 其他值或未设置 -> 清理代理变量并设置 NO_PROXY=*
+    """
+    raw = (os.getenv("OPENCLAW_DISABLE_PROXY_FOR_MARKET_DATA") or "1").strip().lower()
+    enabled = raw not in {"0", "false", "off", "no"}
+    if not enabled:
+        return
+
+    proxy_keys = (
+        "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY",
+        "http_proxy", "https_proxy", "all_proxy",
+    )
+    for k in proxy_keys:
+        os.environ.pop(k, None)
+    os.environ["NO_PROXY"] = "*"
+    os.environ["no_proxy"] = "*"
+
+
+_apply_market_data_proxy_policy()
+
 # 旧工具名 -> (新工具名, 注入参数) 用于兼容 cron/工作流
 ALIASES = {
     "tool_fetch_index_realtime": ("tool_fetch_index_data", {"data_type": "realtime"}),

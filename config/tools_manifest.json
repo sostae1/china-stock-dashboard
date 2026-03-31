@@ -271,8 +271,8 @@
     {
       "id": "tool_fetch_etf_iopv_snapshot",
       "label": "获取 ETF IOPV/折价率",
-      "description": "从东财 ETF 列表（AkShare fund_etf_spot_em）按代码筛选 IOPV 实时估值、基金折价率等字段。",
-      "description_short": "ETF IOPV/折价率快照（东财列表）。",
+      "description": "ETF 快照查询；主源 AkShare fund_etf_spot_ths，备源 AkShare fund_etf_category_sina(symbol=ETF基金)。",
+      "description_short": "ETF 快照（同花顺主源，新浪备源）。",
       "parameters": {
         "type": "object",
         "properties": {
@@ -370,8 +370,8 @@
     {
       "id": "tool_fetch_sector_data",
       "label": "获取板块轮动数据",
-      "description": "行业/概念板块涨跌与轮动（东财优先，AkShare 备用）。sector_type=industry|concept，period=today|week|month。",
-      "description_short": "板块轮动（行业/概念）。",
+      "description": "全列表截面：行业优先 AkShare stock_board_industry_summary_ths（同花顺页），其次新浪 stock_sector_spot，再东财 push2/AkShare；概念优先新浪「概念」，再东财概念列表/JSONP。period 仅对东财概念 JSONP 有效；成功返回可含 data_source。",
+      "description_short": "板块轮动（THS/新浪优先，东财备用）。",
       "parameters": {
         "type": "object",
         "properties": {

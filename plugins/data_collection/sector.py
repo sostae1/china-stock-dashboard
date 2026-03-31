@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """
 板块轮动数据采集模块
-数据源：东方财富行业板块接口
+
+全列表截面优先级（尽量弱化东财 JSONP / 单 host push2）：
+- 行业：同花顺 industry_summary_ths → 新浪 stock_sector_spot(新浪行业/行业) → 东财 push2 → AkShare stock_board_industry_name_em
+- 概念：新浪 stock_sector_spot(概念) → AkShare stock_board_concept_name_em(push2) → 东财 GetConcept JSONP
+
+period（today/week/month）仅对东财概念 JSONP 路径有效；THS/新浪为当前截面快照。
 """
 
 import requests
 import json
 import pandas as pd
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 import logging
 from contextlib import nullcontext
 
@@ -35,34 +40,175 @@ def tool_fetch_sector_data(sector_type: str = "industry", period: str = "today")
     Returns:
         包含板块涨跌幅数据的字典
     """
-    # 1) 优先使用东方财富 JSONP 接口
-    try:
-        df = _fetch_sector_data_from_eastmoney(sector_type=sector_type, period=period)
-        if df is not None and not df.empty:
-            return _build_sector_response_from_df(df, sector_type)
-        logger.warning("东方财富板块接口返回空 DataFrame，将尝试 AkShare 备用源")
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"获取板块数据失败（东方财富接口）: {e}")
+    sector_type = (sector_type or "industry").strip().lower()
+    if sector_type not in ("industry", "concept"):
+        return {
+            "status": "error",
+            "error": 'sector_type 须为 "industry" 或 "concept"',
+            "sector_type": sector_type,
+            "date": datetime.now().strftime("%Y-%m-%d"),
+        }
 
-    # 2) 备用：AkShare 行业板块接口（无 net_inflow 也可用作热度评分基础）
+    # ----- 行业：同花顺一览 → 新浪 → 东财 push2 → AkShare -----
+    if sector_type == "industry":
+        for src, fetcher in (
+            ("ths_industry_summary", _fetch_sector_from_ths_industry_summary),
+            ("sina_新浪行业", lambda: _fetch_sector_from_sina("新浪行业")),
+            ("sina_行业", lambda: _fetch_sector_from_sina("行业")),
+        ):
+            try:
+                df = fetcher()
+                if df is not None and not df.empty:
+                    return _build_sector_response_from_df(df, sector_type, data_source=src)
+            except Exception as e:  # noqa: BLE001
+                logger.warning("行业板块数据源 %s 失败: %s", src, e)
+        try:
+            df = _fetch_sector_data_from_eastmoney(sector_type="industry", period=period)
+            if df is not None and not df.empty:
+                return _build_sector_response_from_df(df, sector_type, data_source="em_push2_industry")
+        except Exception as e:  # noqa: BLE001
+            logger.warning("东财行业 push2 失败: %s", e)
+        try:
+            df = _fetch_sector_data_from_akshare(sector_type="industry")
+            if df is not None and not df.empty:
+                return _build_sector_response_from_df(df, sector_type, data_source="akshare_industry_name_em")
+        except Exception as e:  # noqa: BLE001
+            logger.error("AkShare 行业备用失败: %s", e)
+        return {
+            "status": "error",
+            "error": "行业板块：同花顺/新浪/东财/AkShare 均无有效数据",
+            "sector_type": sector_type,
+            "date": datetime.now().strftime("%Y-%m-%d"),
+        }
+
+    # ----- 概念：新浪截面 → 东财概念 clist → 东财 JSONP -----
+    for src, fetcher in (("sina_概念", lambda: _fetch_sector_from_sina("概念")),):
+        try:
+            df = fetcher()
+            if df is not None and not df.empty:
+                return _build_sector_response_from_df(df, sector_type, data_source=src)
+        except Exception as e:  # noqa: BLE001
+            logger.warning("概念板块数据源 %s 失败: %s", src, e)
     try:
-        df = _fetch_sector_data_from_akshare(sector_type=sector_type)
+        df = _fetch_sector_from_em_concept_clist()
         if df is not None and not df.empty:
-            return _build_sector_response_from_df(df, sector_type)
-        return {
-            "status": "error",
-            "error": "东方财富与 AkShare 板块接口均无有效数据",
-            "sector_type": sector_type,
-            "date": datetime.now().strftime("%Y-%m-%d"),
-        }
+            return _build_sector_response_from_df(df, sector_type, data_source="em_concept_clist")
     except Exception as e:  # noqa: BLE001
-        logger.error(f"获取板块数据失败（AkShare 备用源）: {e}")
-        return {
-            "status": "error",
-            "error": str(e),
-            "sector_type": sector_type,
-            "date": datetime.now().strftime("%Y-%m-%d"),
+        logger.warning("东财概念 push2 列表失败: %s", e)
+    try:
+        df = _fetch_sector_data_from_eastmoney(sector_type="concept", period=period)
+        if df is not None and not df.empty:
+            return _build_sector_response_from_df(df, sector_type, data_source="em_concept_jsonp")
+    except Exception as e:  # noqa: BLE001
+        logger.error("东财概念 JSONP 失败: %s", e)
+    return {
+        "status": "error",
+        "error": "概念板块：新浪/东财均无有效数据",
+        "sector_type": sector_type,
+        "date": datetime.now().strftime("%Y-%m-%d"),
+    }
+
+
+def _fetch_sector_from_ths_industry_summary() -> Optional[pd.DataFrame]:
+    """同花顺行业一览（AkShare stock_board_industry_summary_ths），全表截面。"""
+    try:
+        import akshare as ak  # type: ignore[import]
+    except Exception as e:  # noqa: BLE001
+        logger.error("AkShare 未安装: %s", e)
+        return None
+    try:
+        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+        with ctx:
+            raw = ak.stock_board_industry_summary_ths()
+    except Exception as e:  # noqa: BLE001
+        logger.warning("stock_board_industry_summary_ths 失败: %s", e)
+        return None
+    if raw is None or raw.empty or "板块" not in raw.columns or "涨跌幅" not in raw.columns:
+        return None
+    if "净流入" in raw.columns:
+        net_inflow = pd.to_numeric(raw["净流入"], errors="coerce").fillna(0.0)
+    else:
+        net_inflow = 0.0
+    df = pd.DataFrame(
+        {
+            "sector_name": raw["板块"].astype(str).str.strip(),
+            "change_percent": pd.to_numeric(raw["涨跌幅"], errors="coerce"),
+            "net_inflow": net_inflow,
         }
+    )
+    df["net_inflow"] = pd.to_numeric(df["net_inflow"], errors="coerce").fillna(0.0)
+    df = df[(df["sector_name"].str.len() > 0) & (df["change_percent"].notna())]
+    return df if not df.empty else None
+
+
+def _fetch_sector_from_sina(indicator: str) -> Optional[pd.DataFrame]:
+    """新浪板块截面（AkShare stock_sector_spot），indicator 见 AkShare 文档。"""
+    try:
+        import akshare as ak  # type: ignore[import]
+    except Exception as e:  # noqa: BLE001
+        logger.error("AkShare 未安装: %s", e)
+        return None
+    try:
+        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+        with ctx:
+            raw = ak.stock_sector_spot(indicator=indicator)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("stock_sector_spot(%s) 失败: %s", indicator, e)
+        return None
+    if raw is None or raw.empty or "板块" not in raw.columns or "涨跌幅" not in raw.columns:
+        return None
+    df = pd.DataFrame(
+        {
+            "sector_name": raw["板块"].astype(str).str.strip(),
+            "change_percent": pd.to_numeric(raw["涨跌幅"], errors="coerce"),
+            "net_inflow": 0.0,
+        }
+    )
+    df = df[(df["sector_name"].str.len() > 0) & (df["change_percent"].notna())]
+    return df if not df.empty else None
+
+
+def _fetch_sector_from_em_concept_clist() -> Optional[pd.DataFrame]:
+    """东财概念板块全表（AkShare stock_board_concept_name_em，push2 分页）。"""
+    try:
+        import akshare as ak  # type: ignore[import]
+    except Exception as e:  # noqa: BLE001
+        logger.error("AkShare 未安装: %s", e)
+        return None
+    try:
+        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+        with ctx:
+            raw = ak.stock_board_concept_name_em()
+    except Exception as e:  # noqa: BLE001
+        logger.warning("stock_board_concept_name_em 失败: %s", e)
+        return None
+    if raw is None or raw.empty:
+        return None
+    name_col = "板块名称" if "板块名称" in raw.columns else None
+    chg_col = "涨跌幅" if "涨跌幅" in raw.columns else None
+    if not name_col or not chg_col:
+        for c in raw.columns:
+            s = str(c)
+            if name_col is None and "名称" in s:
+                name_col = c
+            if chg_col is None and "涨跌幅" in s:
+                chg_col = c
+    if not name_col or not chg_col:
+        return None
+    net_col = None
+    for c in raw.columns:
+        if "净流入" in str(c):
+            net_col = c
+            break
+    df = pd.DataFrame(
+        {
+            "sector_name": raw[name_col].astype(str).str.strip(),
+            "change_percent": pd.to_numeric(raw[chg_col], errors="coerce"),
+            "net_inflow": pd.to_numeric(raw[net_col], errors="coerce").fillna(0.0) if net_col else 0.0,
+        }
+    )
+    df = df[(df["sector_name"].str.len() > 0) & (df["change_percent"].notna())]
+    return df if not df.empty else None
 
 
 def _fetch_sector_data_from_eastmoney(sector_type: str, period: str) -> Optional[pd.DataFrame]:
@@ -279,7 +425,12 @@ def _fetch_sector_data_from_akshare(sector_type: str) -> Optional[pd.DataFrame]:
     return df
 
 
-def _build_sector_response_from_df(df: pd.DataFrame, sector_type: str) -> Dict:
+def _build_sector_response_from_df(
+    df: pd.DataFrame,
+    sector_type: str,
+    *,
+    data_source: Optional[str] = None,
+) -> Dict:
     """从标准化 DataFrame 构建 tool_fetch_sector_data 返回结构。"""
     df = df.copy()
     df = df.sort_values("change_percent", ascending=False)
@@ -294,7 +445,7 @@ def _build_sector_response_from_df(df: pd.DataFrame, sector_type: str) -> Dict:
     etf_recommendations = _generate_etf_recommendations(df.head(10))
     signal = _generate_sector_signal(df, rotation_speed)
 
-    return {
+    out: Dict = {
         "status": "success",
         "date": datetime.now().strftime("%Y-%m-%d"),
         "sector_type": sector_type,
@@ -315,6 +466,9 @@ def _build_sector_response_from_df(df: pd.DataFrame, sector_type: str) -> Dict:
         "signal": signal,
         "all_data": df.head(20).to_dict("records"),
     }
+    if data_source:
+        out["data_source"] = data_source
+    return out
 
 
 def _calculate_rotation_speed(df: pd.DataFrame) -> str:
@@ -381,12 +535,13 @@ def _generate_etf_recommendations(df: pd.DataFrame) -> List[Dict]:
         # 查找对应的ETF
         for keyword, etf_code in sector_etf_map.items():
             if keyword in sector_name and etf_code not in seen_etfs:
+                ni = float(row["net_inflow"]) if pd.notna(row.get("net_inflow", 0)) else 0.0
                 recommendations.append({
                     "sector_name": sector_name,
                     "etf_code": etf_code,
-                    "sector_change": round(row["change_percent"], 2),
-                    "sector_inflow": round(row["net_inflow"], 2),
-                    "score": row["change_percent"] * 0.4 + row["net_inflow"] * 0.6
+                    "sector_change": round(float(row["change_percent"]), 2),
+                    "sector_inflow": round(ni, 2),
+                    "score": float(row["change_percent"]) * 0.4 + ni * 0.6,
                 })
                 seen_etfs.add(etf_code)
                 break

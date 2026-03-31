@@ -11,6 +11,11 @@ from pathlib import Path
 import os
 import sys
 import pytz
+import requests
+import json
+import time
+import random
+from contextlib import nullcontext
 
 try:
     import akshare as ak
@@ -71,6 +76,176 @@ except ImportError:
 
     def check_trading_day_before_operation(*args, **kwargs):
         return None
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
+
+
+# 最近一次 fetch_single_stock_minute 的调试信息（用于 mode=test 排障）
+_LAST_FETCH_SINGLE_DEBUG: Dict[str, Any] = {}
+
+
+_SINA_USER_AGENT_POOL = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+]
+
+
+def _pick_sina_user_agent() -> str:
+    return random.choice(_SINA_USER_AGENT_POOL)
+
+
+def _apply_delay_jitter(delay_seconds: float, jitter_ratio: float = 0.2) -> float:
+    if delay_seconds <= 0:
+        return 0.0
+    jitter_amount = delay_seconds * jitter_ratio * (random.random() * 2 - 1)
+    return max(0.0, delay_seconds + jitter_amount)
+
+
+def _normalize_stock_code_for_sina(raw: str) -> Optional[str]:
+    """
+    Normalize stock code to 6-digit digits for sina symbol building.
+    Accepts: 600751 / sh600751 / 600751.SH / 600751.SZ / 600751.BJ etc.
+    """
+    s = str(raw or "").strip()
+    if not s:
+        return None
+    u = s.upper().replace("．", ".")
+    for suf in (".SH", ".SZ", ".BJ"):
+        if u.endswith(suf):
+            u = u[: -len(suf)]
+            break
+    low = u.lower()
+    if low.startswith(("sh", "sz", "bj")) and len(u) > 2:
+        u = u[2:]
+    u = u.strip()
+    if not u.isdigit() or len(u) != 6:
+        return None
+    return u
+
+
+def _stock_sina_symbol(digits: str) -> str:
+    return f"sh{digits}" if digits.startswith("6") else f"sz{digits}"
+
+
+def _fetch_stock_minute_sina_direct(
+    stock_code: str,
+    period: str,
+    start_date_str: str,
+    end_date_str: str,
+    max_retries: int = 3,
+    retry_delay: float = 1.0,
+) -> Optional[pd.DataFrame]:
+    """
+    Direct Sina minute K-line fetch (more resilient than AkShare wrapper).
+    Endpoint: https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData
+    """
+    clean = _normalize_stock_code_for_sina(stock_code)
+    if not clean:
+        return None
+    sina_symbol = _stock_sina_symbol(clean)
+
+    period_to_scale = {"1": 1, "5": 5, "15": 15, "30": 30, "60": 60}
+    scale = period_to_scale.get(period)
+    if scale is None:
+        return None
+
+    try:
+        start_dt = datetime.strptime(start_date_str[:10], "%Y-%m-%d")
+        end_dt = datetime.strptime(end_date_str[:10], "%Y-%m-%d")
+        days_diff = (end_dt - start_dt).days + 1
+        datalen = min(int(days_diff * (240 / scale) * 1.2), 1023)
+    except Exception:
+        datalen = 1023
+
+    url = "https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData"
+    params = {"symbol": sina_symbol, "scale": scale, "ma": "no", "datalen": datalen}
+    headers = {"Referer": "https://finance.sina.com.cn", "User-Agent": _pick_sina_user_agent()}
+
+    for attempt in range(max_retries):
+        try:
+            if attempt > 0:
+                time.sleep(_apply_delay_jitter(min(retry_delay * (2 ** (attempt - 1)), 20.0)))
+                headers["User-Agent"] = _pick_sina_user_agent()
+
+            r = requests.get(url, params=params, headers=headers, timeout=10)
+            if r.status_code != 200:
+                continue
+
+            try:
+                data = r.json()
+            except Exception:
+                try:
+                    data = json.loads(r.text)
+                except Exception:
+                    continue
+
+            if not data or not isinstance(data, list):
+                continue
+
+            df = pd.DataFrame(data)
+            if df is None or df.empty:
+                continue
+
+            column_mapping = {
+                "day": "时间",
+                "open": "开盘",
+                "close": "收盘",
+                "high": "最高",
+                "low": "最低",
+                "volume": "成交量",
+            }
+            keep = [c for c in column_mapping.keys() if c in df.columns]
+            if not keep:
+                continue
+
+            df = df[keep].copy().rename(columns=column_mapping)
+            if "成交额" not in df.columns:
+                df["成交额"] = 0.0
+
+            if "时间" in df.columns:
+                raw_time = df["时间"].copy()
+                parsed = pd.to_datetime(df["时间"], errors="coerce")
+                if parsed.notna().any():
+                    df["时间"] = parsed
+                    df = df[df["时间"].notna()].copy()
+                    df["时间"] = df["时间"].dt.strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    df["时间"] = raw_time.astype(str)
+
+            for c in ["开盘", "收盘", "最高", "最低", "成交量", "成交额"]:
+                if c in df.columns:
+                    df[c] = pd.to_numeric(df[c], errors="coerce")
+
+            df = normalize_column_names(df)
+            df = calculate_missing_fields(df)
+
+            if "时间" in df.columns:
+                df = df.sort_values("时间").reset_index(drop=True)
+
+            # Light end-date filtering only (avoid over-filtering to empty)
+            try:
+                end_dt2 = datetime.strptime(end_date_str[:19], "%Y-%m-%d %H:%M:%S")
+                tvals = pd.to_datetime(df["时间"], errors="coerce")
+                mask = tvals.notna() & (tvals <= end_dt2)
+                df2 = df[mask].copy()
+                if not df2.empty:
+                    df = df2
+            except Exception:
+                pass
+
+            return df if df is not None and not df.empty else None
+        except Exception:
+            continue
+
+    return None
 
 
 def normalize_date(date_str: str) -> str:
@@ -134,6 +309,11 @@ def calculate_missing_fields(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.copy()
 
+    # AkShare/Sina 在部分 pandas 版本下可能把 volume 列为字符串 dtype；先数值化，避免成交额计算报错
+    for col in ("开盘", "收盘", "最高", "最低", "成交量", "成交额"):
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
     if "成交额" not in df.columns or df["成交额"].isna().all() or (df["成交额"] == 0).all():
         if "成交量" in df.columns and "收盘" in df.columns:
             df["成交额"] = df["成交量"] * df["收盘"] * 100
@@ -143,7 +323,7 @@ def calculate_missing_fields(df: pd.DataFrame) -> pd.DataFrame:
     if "涨跌幅" not in df.columns:
         if "收盘" in df.columns:
             df["涨跌幅"] = df["收盘"].pct_change() * 100
-            df["涨跌幅"] = df["涨跌幅"].fillna(0)
+            df["涨跌幅"] = df["涨跌幅"].replace([np.inf, -np.inf], np.nan).fillna(0)
         else:
             df["涨跌幅"] = 0
 
@@ -199,7 +379,8 @@ def _fetch_stock_minute_sina(
 ) -> Optional[pd.DataFrame]:
     """
     使用 AkShare 的新浪分钟接口获取股票分钟数据（主数据源）
-    对应 docs 中的 stock_zh_a_minute(symbol='sh600751', period='1', adjust="")
+    对应 docs 中的 stock_zh_a_minute(symbol='sh600751', period='1', adjust="qfq")
+    备注：在部分环境/时段下 adjust="" 可能返回空；这里做多路尝试提高命中率。
     """
     if not AKSHARE_AVAILABLE:
         return None
@@ -213,21 +394,34 @@ def _fetch_stock_minute_sina(
         symbol = f"sh{clean}"
     else:
         symbol = f"sz{clean}"
-    try:
-        df = ak.stock_zh_a_minute(symbol=symbol, period=period, adjust="")
-        if df is None or df.empty:
-            return None
-        # stock_zh_a_minute 返回列名为 day/open/high/low/close/volume
-        df = normalize_column_names(df)
-        df = calculate_missing_fields(df)
-        if "时间" in df.columns:
-            df["时间"] = pd.to_datetime(df["时间"], errors="coerce")
-            df = df[df["时间"].notna()].copy()
-            df["时间"] = df["时间"].dt.strftime("%Y-%m-%d %H:%M:%S")
-            df = df.sort_values("时间").reset_index(drop=True)
-        return df
-    except Exception:
-        return None
+    for adj in ("qfq", "", "hfq"):
+        try:
+            # 先按当前环境请求（有些环境需要代理/自定义网络）
+            df = ak.stock_zh_a_minute(symbol=symbol, period=period, adjust=adj)
+            # 若为空，再尝试临时清理代理环境（避免代理导致的偶发异常/污染）
+            if (df is None or df.empty) and PROXY_ENV_AVAILABLE:
+                with without_proxy_env():
+                    df = ak.stock_zh_a_minute(symbol=symbol, period=period, adjust=adj)
+            if df is None or df.empty:
+                continue
+            # stock_zh_a_minute 返回列名为 day/open/high/low/close/volume/amount
+            df = normalize_column_names(df)
+            df = calculate_missing_fields(df)
+            if "时间" in df.columns:
+                # 仅当能解析出有效时间时才过滤；否则保留原始字符串避免整表变空
+                raw_time = df["时间"].copy()
+                parsed = pd.to_datetime(df["时间"], errors="coerce")
+                if parsed.notna().any():
+                    df["时间"] = parsed
+                    df = df[df["时间"].notna()].copy()
+                    df["时间"] = df["时间"].dt.strftime("%Y-%m-%d %H:%M:%S")
+                    df = df.sort_values("时间").reset_index(drop=True)
+                else:
+                    df["时间"] = raw_time.astype(str)
+            return df
+        except Exception:
+            continue
+    return None
 
 
 def _fetch_stock_minute_efinance(
@@ -294,26 +488,85 @@ def _fetch_stock_minute_eastmoney(
     使用 AkShare 的东财分钟接口获取股票分钟数据（备用数据源）
     对应 docs 中的 stock_zh_a_hist_min_em
     """
-    if not AKSHARE_AVAILABLE:
-        return None
-    try:
-        df = ak.stock_zh_a_hist_min_em(
-            symbol=clean_code,
-            period=period,
-            start_date=start_date_str,
-            end_date=end_date_str,
-            adjust="",
-        )
+    def _normalize_out(df: pd.DataFrame) -> Optional[pd.DataFrame]:
         if df is None or df.empty:
             return None
         df = normalize_column_names(df)
         df = calculate_missing_fields(df)
         if "时间" in df.columns:
-            df["时间"] = pd.to_datetime(df["时间"], errors="coerce")
-            df = df[df["时间"].notna()].copy()
-            df["时间"] = df["时间"].dt.strftime("%Y-%m-%d %H:%M:%S")
-            df = df.sort_values("时间").reset_index(drop=True)
-        return df
+            raw_time = df["时间"].copy()
+            parsed = pd.to_datetime(df["时间"], errors="coerce")
+            if parsed.notna().any():
+                df["时间"] = parsed
+                df = df[df["时间"].notna()].copy()
+                df["时间"] = df["时间"].dt.strftime("%Y-%m-%d %H:%M:%S")
+                df = df.sort_values("时间").reset_index(drop=True)
+            else:
+                df["时间"] = raw_time.astype(str)
+        return df if df is not None and not df.empty else None
+
+    # 1) 先尝试 AkShare（若可用）
+    if AKSHARE_AVAILABLE:
+        try:
+            df = ak.stock_zh_a_hist_min_em(
+                symbol=clean_code,
+                period=period,
+                start_date=start_date_str,
+                end_date=end_date_str,
+                adjust="",
+            )
+            if (df is None or df.empty) and PROXY_ENV_AVAILABLE:
+                with without_proxy_env():
+                    df = ak.stock_zh_a_hist_min_em(
+                        symbol=clean_code,
+                        period=period,
+                        start_date=start_date_str,
+                        end_date=end_date_str,
+                        adjust="",
+                    )
+            out = _normalize_out(df)
+            if out is not None:
+                return out
+        except Exception:
+            pass
+
+    # 2) 兜底：直连东财 push2his（避免 akshare 偶发断连）
+    try:
+        # secid market_id: 1 上证 0 深证
+        market_id = 1 if str(clean_code).startswith("6") else 0
+        url = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
+        params = {
+            "fields1": "f1,f2,f3,f4,f5,f6",
+            "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
+            "ut": "7eea3edcaed734bea9cbfc24409ed989",
+            "klt": period,
+            "fqt": "0",
+            "secid": f"{market_id}.{clean_code}",
+            "beg": "0",
+            "end": "20500000",
+        }
+        r = requests.get(url, params=params, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        if (r is None or r.status_code >= 400) and PROXY_ENV_AVAILABLE:
+            with without_proxy_env():
+                r = requests.get(url, params=params, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        j = r.json()
+        kl = ((j or {}).get("data") or {}).get("klines") or []
+        if not kl:
+            return None
+        rows = [x.split(",") for x in kl if isinstance(x, str) and x]
+        if not rows:
+            return None
+        df2 = pd.DataFrame(rows)
+        # f51..f58 => 时间,开盘,收盘,最高,最低,成交量,成交额,振幅
+        if df2.shape[1] < 7:
+            return None
+        df2 = df2.iloc[:, :7]
+        df2.columns = ["时间", "开盘", "收盘", "最高", "最低", "成交量", "成交额"]
+        for c in ["开盘", "收盘", "最高", "最低", "成交量", "成交额"]:
+            df2[c] = pd.to_numeric(df2[c], errors="coerce")
+        out = _normalize_out(df2)
+        return out
     except Exception:
         return None
 
@@ -437,6 +690,15 @@ def fetch_single_stock_minute(
     df: Optional[pd.DataFrame] = None
     source: Optional[str] = None
     cached_partial_df: Optional[pd.DataFrame] = None
+    debug: Dict[str, Any] = {
+        "stock_code": stock_code,
+        "clean_code": clean_code,
+        "period": period,
+        "start_date_str": start_date_str,
+        "end_date_str": end_date_str,
+        "minute_source_preference": minute_source_preference,
+        "attempts": [],
+    }
 
     # 缓存
     if use_cache and CACHE_AVAILABLE:
@@ -460,14 +722,19 @@ def fetch_single_stock_minute(
             pass
 
     # 主数据源1：mootdx 分钟K线（如果可用）
-    df = _fetch_stock_minute_mootdx(
-        stock_code=stock_code,
-        period=period,
-        start_date_str=start_date_str,
-        end_date_str=end_date_str,
-    )
-    if df is not None and not df.empty:
-        source = "mootdx"
+    try:
+        debug["attempts"].append({"source": "mootdx", "ok": False})
+        df = _fetch_stock_minute_mootdx(
+            stock_code=stock_code,
+            period=period,
+            start_date_str=start_date_str,
+            end_date_str=end_date_str,
+        )
+        if df is not None and not df.empty:
+            source = "mootdx"
+            debug["attempts"][-1]["ok"] = True
+    except Exception as e:  # noqa: BLE001
+        debug["attempts"][-1]["error"] = repr(e)
 
     pref = (minute_source_preference or "auto").strip().lower()
     if pref not in ("auto", "sina", "eastmoney", "efinance"):
@@ -475,42 +742,74 @@ def fetch_single_stock_minute(
 
     def _try_sina() -> None:
         nonlocal df, source
+        if df is None or df.empty:
+            debug["attempts"].append({"source": "sina_http", "ok": False})
+            try:
+                tmp = _fetch_stock_minute_sina_direct(
+                    stock_code=stock_code,
+                    period=period,
+                    start_date_str=start_date_str,
+                    end_date_str=end_date_str,
+                )
+                if tmp is not None and not tmp.empty:
+                    df = tmp
+                    source = "sina_http"
+                    debug["attempts"][-1]["ok"] = True
+                    return
+            except Exception as e:  # noqa: BLE001
+                debug["attempts"][-1]["error"] = repr(e)
+
         if (df is None or df.empty) and AKSHARE_AVAILABLE:
-            tmp = _fetch_stock_minute_sina(
-                stock_code=stock_code,
-                period=period,
-                start_date_str=start_date_str,
-                end_date_str=end_date_str,
-            )
-            if tmp is not None and not tmp.empty:
-                df = tmp
-                source = "sina_akshare"
+            debug["attempts"].append({"source": "sina_akshare", "ok": False})
+            try:
+                tmp = _fetch_stock_minute_sina(
+                    stock_code=stock_code,
+                    period=period,
+                    start_date_str=start_date_str,
+                    end_date_str=end_date_str,
+                )
+                if tmp is not None and not tmp.empty:
+                    df = tmp
+                    source = "sina_akshare"
+                    debug["attempts"][-1]["ok"] = True
+            except Exception as e:  # noqa: BLE001
+                debug["attempts"][-1]["error"] = repr(e)
 
     def _try_em() -> None:
         nonlocal df, source
         if (df is None or df.empty) and AKSHARE_AVAILABLE:
-            tmp = _fetch_stock_minute_eastmoney(
-                clean_code=clean_code,
-                period=period,
-                start_date_str=start_date_str,
-                end_date_str=end_date_str,
-            )
-            if tmp is not None and not tmp.empty:
-                df = tmp
-                source = "eastmoney_akshare"
+            debug["attempts"].append({"source": "eastmoney_akshare", "ok": False})
+            try:
+                tmp = _fetch_stock_minute_eastmoney(
+                    clean_code=clean_code,
+                    period=period,
+                    start_date_str=start_date_str,
+                    end_date_str=end_date_str,
+                )
+                if tmp is not None and not tmp.empty:
+                    df = tmp
+                    source = "eastmoney_akshare"
+                    debug["attempts"][-1]["ok"] = True
+            except Exception as e:  # noqa: BLE001
+                debug["attempts"][-1]["error"] = repr(e)
 
     def _try_ef() -> None:
         nonlocal df, source
         if (df is None or df.empty) and EFINANCE_AVAILABLE:
-            tmp = _fetch_stock_minute_efinance(
-                clean_code=clean_code,
-                period=period,
-                start_date_str=start_date_str,
-                end_date_str=end_date_str,
-            )
-            if tmp is not None and not tmp.empty:
-                df = tmp
-                source = "efinance"
+            debug["attempts"].append({"source": "efinance", "ok": False})
+            try:
+                tmp = _fetch_stock_minute_efinance(
+                    clean_code=clean_code,
+                    period=period,
+                    start_date_str=start_date_str,
+                    end_date_str=end_date_str,
+                )
+                if tmp is not None and not tmp.empty:
+                    df = tmp
+                    source = "efinance"
+                    debug["attempts"][-1]["ok"] = True
+            except Exception as e:  # noqa: BLE001
+                debug["attempts"][-1]["error"] = repr(e)
 
     if pref == "auto":
         _try_sina()
@@ -557,6 +856,8 @@ def fetch_single_stock_minute(
         except Exception:
             pass
 
+    global _LAST_FETCH_SINGLE_DEBUG
+    _LAST_FETCH_SINGLE_DEBUG = debug
     return df, source
 
 
@@ -693,6 +994,7 @@ def fetch_stock_minute(
 
     results: List[Dict[str, Any]] = []
     source: Optional[str] = None
+    debug_all: Dict[str, Any] = {"per_code": {}}
 
     for code in codes:
         df, data_source = fetch_single_stock_minute(
@@ -706,6 +1008,30 @@ def fetch_stock_minute(
         )
         if data_source:
             source = data_source
+        if mode == "test":
+            debug_all["per_code"][code] = dict(_LAST_FETCH_SINGLE_DEBUG)
+
+        # 盘后/非交易日场景：如果默认区间（到“今天”）取不到分钟数据，尝试回退到最近一天
+        if (df is None or df.empty) and not start_date and not end_date:
+            try:
+                end_dt = datetime.strptime(end_date_norm, "%Y-%m-%d")
+                fallback_end = (end_dt - timedelta(days=1)).strftime("%Y-%m-%d")
+                fallback_start = (end_dt - timedelta(days=max(2, lookback_days))).strftime("%Y-%m-%d")
+                df2, data_source2 = fetch_single_stock_minute(
+                    stock_code=code,
+                    period=period,
+                    start_date=fallback_start,
+                    end_date=fallback_end,
+                    lookback_days=lookback_days,
+                    use_cache=use_cache,
+                    minute_source_preference=minute_source_preference,
+                )
+                if df2 is not None and not df2.empty:
+                    df = df2
+                    if data_source2:
+                        source = data_source2
+            except Exception:
+                pass
 
         if df is None or df.empty:
             results.append(
@@ -784,21 +1110,27 @@ def fetch_stock_minute(
         returned_total = 0
 
     if returned_total <= 0:
-        return {
+        out = {
             "success": False,
             "message": "未从外部源获取到分钟数据（returned_count=0）",
             "data": final_data,
             "source": source or "unknown",
             "count": len(results),
         }
+        if mode == "test":
+            out["debug"] = debug_all
+        return out
 
-    return {
+    out = {
         "success": True,
         "message": f"Successfully fetched {returned_total} records",
         "data": final_data,
         "source": source or "akshare",
         "count": len(results),
     }
+    if mode == "test":
+        out["debug"] = debug_all
+    return out
 
 
 def tool_fetch_stock_minute(

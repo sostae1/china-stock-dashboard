@@ -244,8 +244,8 @@ result = tool_fetch_etf_realtime(etf_code="510300,510050,510500")
 
 **功能说明**：
 
-- 从东方财富 ETF 全量列表（AkShare `fund_etf_spot_em`）中按代码筛选，读取 **IOPV 实时估值**、**基金折价率** 等字段（若接口列名变更需随 AkShare 版本调整）。
-- 与上方「ETF 实时行情」互补：主实时链可能走 mootdx、新浪等同路径；本工具专注东财列表中的 IOPV/折价元数据。
+- 主源使用同花顺 ETF 列表（AkShare `fund_etf_spot_ths`），备源使用新浪 ETF 列表（AkShare `fund_etf_category_sina(symbol="ETF基金")`）。
+- 两个数据源侧重行情/净值字段，通常不提供 IOPV/折价率列；工具返回统一快照字段，并在缺失时将 `iopv` / `discount_pct` 置为 `null`。
 
 **使用方法**：
 
@@ -258,7 +258,7 @@ result = tool_fetch_etf_iopv_snapshot(etf_code="510300")
 
 **OpenClaw 注册名**：`tool_fetch_etf_iopv_snapshot`（见项目根 `tool_runner.py` 中 `TOOL_MAP`）。
 
-**返回说明**：成功时 `source` 为 `fund_etf_spot_em`；网络或接口失败时 `success` 为 `false`，仍建议携带 `source` 字段便于排障。更完整的分类与附录见上级目录 [ROADMAP.md](../ROADMAP.md)。
+**返回说明**：成功时 `source` 为 `fund_etf_spot_ths` 或 `fund_etf_category_sina`；网络或接口失败时 `success` 为 `false`，仍建议携带 `source` 字段便于排障。更完整的分类与附录见上级目录 [ROADMAP.md](../ROADMAP.md)。
 
 ---
 

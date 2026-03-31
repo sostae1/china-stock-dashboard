@@ -9,6 +9,8 @@ from datetime import datetime
 from pathlib import Path
 import os
 import sys
+import time
+from contextlib import nullcontext
 
 # 导入交易日判断工具
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,6 +32,15 @@ try:
     AKSHARE_AVAILABLE = True
 except ImportError:
     AKSHARE_AVAILABLE = False
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
 
 # 尝试导入原系统的缓存模块（优先使用当前环境 /home/xie/src，其次回退到 Windows 路径）
 try:
@@ -177,7 +188,19 @@ def fetch_option_minute(
         
         # 使用 option_sse_minute_sina 获取期权分钟数据
         # 注意：此接口支持上交所和深交所期权，但只能返回当天的分钟数据
-        df = ak.option_sse_minute_sina(symbol=contract_code)
+        # 与 stock_minute 同思路：增加重试与代理环境绕过，降低偶发网络/代理导致的空返回
+        df = None
+        last_error = None
+        for i in range(3):
+            try:
+                ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+                with ctx:
+                    df = ak.option_sse_minute_sina(symbol=contract_code)
+                if df is not None and not df.empty:
+                    break
+            except Exception as e:  # noqa: BLE001
+                last_error = repr(e)
+            time.sleep(1.2 * (i + 1))
         
         if df is None or df.empty:
             return {
@@ -193,7 +216,8 @@ def fetch_option_minute(
                 },
                 'source': 'akshare_sina',
                 'is_fallback': True,
-                'note': '此接口只能返回当天的分钟数据'
+                'note': '此接口只能返回当天的分钟数据',
+                'debug_error': last_error,
             }
         
         # ========== 统一字段名 ==========
@@ -237,16 +261,32 @@ def fetch_option_minute(
                 # 缓存保存失败不影响主流程
                 pass
         
+        def _safe_float(v: Any, default: float = 0.0) -> float:
+            try:
+                if v is None:
+                    return default
+                return float(v)
+            except (ValueError, TypeError):
+                return default
+
+        def _safe_int(v: Any, default: int = 0) -> int:
+            try:
+                if v is None:
+                    return default
+                return int(float(v))
+            except (ValueError, TypeError):
+                return default
+
         # 转换数据格式
         klines = []
         for _, row in df.iterrows():
             klines.append({
                 "date": str(row.get('日期', '')),
                 "time": str(row.get('时间', '')),
-                "price": float(row.get('价格', 0)),
-                "volume": int(row.get('成交量', 0)),
-                "open_interest": int(row.get('持仓量', 0)),
-                "avg_price": float(row.get('均价', 0))
+                "price": _safe_float(row.get('价格', 0)),
+                "volume": _safe_int(row.get('成交量', 0)),
+                "open_interest": _safe_int(row.get('持仓量', 0)),
+                "avg_price": _safe_float(row.get('均价', 0))
             })
         
         return {

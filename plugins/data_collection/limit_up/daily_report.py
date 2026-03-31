@@ -218,13 +218,15 @@ def tool_limit_up_daily_flow(
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 
+    # 采集/写盘工具只返回结果给上层；飞书通知由上层通过 `tool_send_feishu_notification` 发送
+    feishu_notification: Optional[Dict[str, Any]] = None
     if send_feishu:
-        try:
-            from merged.send_feishu_notification import tool_send_feishu_notification
-            content = "\n".join(lines[:50])
-            tool_send_feishu_notification(notification_type="message", message=content[:2000], title=f"涨停回马枪 {dt}")
-        except Exception as e:
-            logger.warning("飞书推送失败: %s", e)
+        content = "\n".join(lines[:50])
+        feishu_notification = {
+            "notification_type": "message",
+            "title": f"涨停回马枪 {dt}",
+            "message": content[:2000],
+        }
 
     return {
         "success": True,
@@ -232,4 +234,5 @@ def tool_limit_up_daily_flow(
         "json_path": json_path,
         "report_path": str(report_path),
         "sectors_count": len(sectors),
+        "feishu_notification": feishu_notification,
     }

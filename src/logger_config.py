@@ -155,12 +155,18 @@ def get_module_logger(module_name: str) -> logging.Logger:
             logging_config = config.get('logging', {})
             
             log_level = logging_config.get('level', 'INFO')
-            log_dir = logging_config.get('file_path', 'logs/option_trading_{date}.log')
-            # 提取目录部分
-            if '{date}' in log_dir:
-                log_dir = log_dir.split('{date}')[0].rstrip('/')
+            file_path_tmpl = logging_config.get('file_path', 'logs/option_trading_{date}.log')
+            # file_path_tmpl: logs/openclaw-data-china-stock_{date}.log
+            # 解析目录与文件前缀：目录=Path(...).parent，前缀=文件名中 {date} 前的部分
+            p = Path(str(file_path_tmpl))
+            log_dir = str(p.parent) if str(p.parent) else 'logs'
+            filename = p.name
+            if '{date}' in filename:
+                prefix = filename.split('{date}')[0]
             else:
-                log_dir = 'logs'
+                prefix = filename.rsplit('.', 1)[0]
+            # 避免末尾下划线影响（setup_logger 内会再加 _{today}.log）
+            prefix = prefix.rstrip('_')
             
             max_file_size_mb = logging_config.get('max_file_size_mb', 10)
             backup_count = logging_config.get('backup_count', 7)
@@ -168,6 +174,7 @@ def get_module_logger(module_name: str) -> logging.Logger:
             _logger_config_cache = {
                 'log_level': log_level,
                 'log_dir': log_dir,
+                'log_file_prefix': prefix,
                 'max_file_size_mb': max_file_size_mb,
                 'backup_count': backup_count
             }
@@ -177,6 +184,7 @@ def get_module_logger(module_name: str) -> logging.Logger:
             _logger_config_cache = {
                 'log_level': 'INFO',
                 'log_dir': 'logs',
+                'log_file_prefix': 'option_trading',
                 'max_file_size_mb': 10,
                 'backup_count': 7
             }
@@ -185,7 +193,7 @@ def get_module_logger(module_name: str) -> logging.Logger:
         name=module_name,
         log_level=_logger_config_cache['log_level'],
         log_dir=_logger_config_cache['log_dir'],
-        log_file_prefix='option_trading',
+        log_file_prefix=_logger_config_cache.get('log_file_prefix', 'option_trading'),
         max_file_size_mb=_logger_config_cache['max_file_size_mb'],
         backup_count=_logger_config_cache['backup_count'],
         console_output=True

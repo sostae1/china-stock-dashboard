@@ -9,12 +9,23 @@ from typing import Optional, Dict, Any, List, Tuple
 from datetime import datetime, timedelta
 from pathlib import Path
 import sys
+import time
+from contextlib import nullcontext
 
 try:
     import akshare as ak
     AKSHARE_AVAILABLE = True
 except ImportError:
     AKSHARE_AVAILABLE = False
+
+try:
+    from plugins.utils.proxy_env import without_proxy_env
+    PROXY_ENV_AVAILABLE = True
+except Exception:
+    PROXY_ENV_AVAILABLE = False
+
+    def without_proxy_env(*args, **kwargs):  # type: ignore[no-redef]
+        return nullcontext()
 
 # 尝试导入缓存/配置/交易日模块（优先使用当前环境中的本地 src 包）
 try:
@@ -285,7 +296,17 @@ def fetch_a50_data(
         # 获取实时数据（使用期货接口）
         if data_type in ["spot", "both"]:
             try:
-                spot_df = ak.futures_global_spot_em()
+                spot_df = None
+                last_err = None
+                for i in range(3):
+                    try:
+                        ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+                        with ctx:
+                            spot_df = ak.futures_global_spot_em()
+                        break
+                    except Exception as e:  # noqa: BLE001
+                        last_err = repr(e)
+                        time.sleep(1.5 * (i + 1))
                 
                 if spot_df is not None and not spot_df.empty:
                     # 查找代码列和名称列
@@ -450,7 +471,15 @@ def fetch_a50_data(
                         fetch_start_date = min(missing_dates)
                         fetch_end_date = max(missing_dates)
                     
-                    temp_df = ak.futures_foreign_hist(symbol="CHA50CFD")
+                    temp_df = None
+                    for i in range(3):
+                        try:
+                            ctx = without_proxy_env() if PROXY_ENV_AVAILABLE else nullcontext()
+                            with ctx:
+                                temp_df = ak.futures_foreign_hist(symbol="CHA50CFD")
+                            break
+                        except Exception:
+                            time.sleep(1.5 * (i + 1))
                     
                     if temp_df is not None and not temp_df.empty:
                         # 统一数据格式

@@ -238,14 +238,15 @@ def _patch_args_for_read_tools(
     if tool_id in ("tool_read_index_minute", "tool_read_etf_minute"):
         data_type = "index_minute" if "index" in tool_id else "etf_minute"
         sym_key = _pick_first(cache_samples.get(data_type, {}).keys(), "000300" if data_type == "index_minute" else "510300")
-        # Minute caches are usually stored under period subdir; our cache scanner won't see them unless present.
-        # Provide a conservative interval to satisfy read_cache_data's required params.
+        # Minute caches通常按 period/日期落盘；这里给 read_cache_data 一个保守但有效的时间窗口。
         out["symbol"] = out.get("symbol") or sym_key
         out["period"] = out.get("period") or "5"
-        if not out.get("start_date") and not out.get("end_date") and not out.get("date"):
-            today = datetime.now()
-            out["end_date"] = today.strftime("%Y%m%d")
-            out["start_date"] = (today.replace(hour=0, minute=0, second=0, microsecond=0)).strftime("%Y%m%d")
+        today_str = datetime.now().strftime("%Y%m%d")
+        effective_date = out.get("date") or today_str
+        # read_market_data 对分钟口径实际会校验 start/end；因此三者统一补齐，避免仅有 date 仍报错。
+        out["date"] = effective_date
+        out["start_date"] = out.get("start_date") or effective_date
+        out["end_date"] = out.get("end_date") or effective_date
         return out
 
     if tool_id in ("tool_read_option_minute", "tool_read_option_greeks"):
