@@ -10,8 +10,8 @@
 openclaw plugins install @shaoxing-xie/openclaw-data-china-stock
 ```
 
-## 本地安装（可选）
-如果你希望在本地（非 OpenClaw 内）复现/调试工具调用，可以先安装依赖：
+## 从 GitHub 仓库安装（第三方/本地调试）
+如果你是**第三方用户**，从 GitHub 克隆了本仓库，希望在本机（非 OpenClaw 内）复现或调试 `tool_runner.py` 的工具调用，可以先在自己的虚拟环境中安装依赖：
 
 ```bash
 pip install -r requirements.txt

@@ -13,4 +13,6 @@ pyarrow
 akshare
 tushare
 yfinance
+mootdx
+efinance
 
