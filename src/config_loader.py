@@ -95,6 +95,9 @@ def get_default_config() -> Dict[str, Any]:
             'console': True,
             'file': True
         },
+        'data_cache': {
+            'enabled': False,
+        },
         'trading_hours': {
             'morning_start': '09:30',
             'morning_end': '11:30',

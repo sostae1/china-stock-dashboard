@@ -22,10 +22,10 @@ def _is_disk_cache_write_enabled() -> bool:
     """
     try:
         cfg = load_system_config()
-        return bool(cfg.get("data_cache", {}).get("enabled", True))
+        return bool(cfg.get("data_cache", {}).get("enabled", False))
     except Exception:
-        # 保守：如果配置加载失败，默认允许写入（避免数据链路不可用）
-        return True
+        # 配置加载失败时仍默认不写盘，与文档「默认关闭写入」一致；需要写入时在 config.yaml 显式开启
+        return False
 
 
 def get_holidays(config: Optional[Dict] = None) -> set:
