@@ -1,0 +1,4 @@
+{
+  "tool": "tool_fetch_stock_financial_reports",
+  "mock_columns": ["报告期", "资产总计", "负债合计"]
+}

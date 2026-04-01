@@ -10,11 +10,52 @@
 
 ### 核心亮点
 
-- **统一入口**：优先使用 `tool_fetch_market_data`，跨指数 / ETF / 股票 / 期权（支持 `realtime` / `historical` / `minute` / `opening` / `greeks` 等 `view`）。
+- **统一入口**：优先使用 `tool_fetch_market_data`，跨指数 / ETF / 股票 / 期权；股票另支持 `timeshare` / `pre_market` / `market_overview` / `valuation_snapshot` 等扩展 `view`。
 - **多源降级**：AkShare、新浪、东方财富、可选 Tushare 等按配置优先级与熔断/重试协作，降低单点不可用对 Agent 工作流的影响。
 - **缓存可控**：默认关闭磁盘 Parquet **写入**，避免脏数据污染；需要离线补数时再在 `config.yaml` 中开启 `data_cache.enabled=true`。
 - **散户常用能力**：涨停池、龙虎榜、北向资金、板块热度、期权 Greeks、交易状态与合约查询等（以 `config/tools_manifest.json` 注册为准）。
-- **契约一致**：多数工具返回带 `success` / `data` / `message` / `source` 的 JSON，便于 Agent 编排。
+- **契约一致**：多数工具返回带 `success` / `data` / `message` / `source` 的 JSON；A 股扩展工具通常还带 `provider`、`fallback_route`、`attempt_counts`，便于排障。
+
+---
+
+### A 股扩展工具体系（P0 / P1 与统一入口）
+
+本节概括**新增/强化**的 A 股相关能力（以 `config/tools_manifest.json` 为准）。设计取向：**按数据域聚合、用参数区分子能力**，不把「东财接口 vs 新浪接口」拆成一堆并列工具；需要可复现或排障时，可使用可选参数 **`provider_preference`**（与内部多源降级链并存，只调整**尝试顺序**）。
+
+#### 分层与工具一览
+
+| 分层 | 工具 ID | 功能 | 关键参数（节选） |
+|------|---------|------|------------------|
+| **P0** | `tool_fetch_a_share_universe` | 沪深京 A 股代码/简称主数据 | `max_rows`；`provider_preference`：`auto` / `standard` / `eastmoney` |
+| **P0** | `tool_fetch_stock_financial_reports` | 资产负债表 / 利润表 / 现金流量表（报告期） | `statement_type`：`balance` / `income` / `cashflow`；`provider_preference`：`auto` / `eastmoney` / `sina` |
+| **P0** | `tool_fetch_stock_corporate_actions` | 分红、解禁、增发、配股、回购等 | `action_kind`：`dividend` / `restricted_unlock` / `issuance` / `allotment` / `buyback`；部分需 `stock_code` 或日期区间 |
+| **P0** | `tool_fetch_margin_trading` | 融资融券（沪深汇总、明细、深市标的） | `market`：`sh` / `sz`；`data_kind`：`summary` / `detail` / `underlying_sz`；`date` / `start_date` / `end_date` 按 kind |
+| **P0** | `tool_fetch_block_trades` | 大宗交易（统计、明细、活跃股、营业部排行等） | `block_kind`：`sctj` / `mrtj` / `mrmx` / `hygtj` / `yybph`；`start_date` / `end_date` / `window` |
+| **P1** | `tool_fetch_stock_shareholders` | 十大股东、流通股东、股东户数、基金持股等 | `holder_kind`：`top10` / `top10_float` / `holder_count` / `holder_change_ths` / `fund_holder`；户数控支持 `provider_preference`：`cninfo` / `ths` |
+| **P1** | `tool_fetch_ipo_calendar` | 新股申报、上市列表、发审委、辅导、个股 IPO 摘要等 | `ipo_kind`：`declare_em` / `new_list_cninfo` / `review_em` / `tutor_em` / `stock_detail` / `stock_summary`；后两者需 `stock_code` |
+| **P1** | `tool_fetch_index_constituents` | 指数成份；可选中证权重 | `index_code`；`include_weight`；`provider_preference`：`auto` / `csindex` / `sina` / `eastmoney` |
+| **P1** | `tool_fetch_stock_research_news` | 个股新闻、研报、财联社主新闻流 | `content_kind`：`news` / `research` / `main_feed`；`main_feed` 不依赖个股代码；`max_rows` |
+
+与上述互补的存量工具：个股实时/日/分钟线（`tool_fetch_stock_*`）、估值快照 **`tool_fetch_stock_financials`**（与三大表 `tool_fetch_stock_financial_reports` 区分）。
+
+#### `tool_fetch_market_data` 在股票上的扩展 `view`
+
+在 **`asset_type=stock`** 时，除 `realtime` / `historical` / `minute` / `opening` 外，还可使用：
+
+| `view` | 含义 | 典型入参 |
+|--------|------|-----------|
+| `timeshare` | 当日分时（连续竞价时段分钟序列） | `asset_code`（6 位） |
+| `pre_market` | 盘前参考/盘前分钟 | `asset_code`；`start_date` / `end_date`（YYYYMMDD） |
+| `market_overview` | 两市摘要类总貌（轻量） | `start_date` 可选（如深交摘要日期）；可不填 `asset_code` |
+| `valuation_snapshot` | 个股估值/主要指标快查 | `asset_code`（委托财务指标快照能力） |
+
+与 `minute` 的区别：`minute` 偏 **K 线粒度**；`timeshare` 偏 **当日分时语义**。
+
+#### 代码与清单位置
+
+- 实现：**`plugins/data_collection/stock/fundamentals_extended.py`**（P0）、**`stock/reference_p1.py`**（P1）、**`stock/unified_stock_views.py`**（供 `merged/fetch_market_data` 调用）、**`utils/provider_preference.py`**
+- 对外参数与说明：**`config/tools_manifest.yaml`** → 运行 **`config/tools_manifest.json`**
+- Provider 与 AkShare 主函数对照：[plugins/data_collection/ROADMAP.md](plugins/data_collection/ROADMAP.md) **附录 F、G**
 
 ---
 
@@ -43,6 +84,18 @@ pip install -r requirements.txt
 ```
 
 将本仓库作为扩展挂载的方式以你本机 OpenClaw 文档为准；常见做法包括把插件目录复制/链接到 `extensions` 并在 `openclaw.json` 中允许该插件，或执行 `openclaw plugins install --help` 查看是否支持**路径安装 / 符号链接**。
+
+### 测试与质量门禁
+
+- **单元测试（无外网）**：仓库根目录执行  
+  `python3 -m unittest discover -s tests -p 'test_*.py' -v`  
+  覆盖 Provider 降级逻辑、`tool_runner` 调度、manifest 与 `TOOL_MAP`/`ALIASES` 一致性、A 股扩展工具的 mock 路径等。
+- **全工具抽检（可选联网）**：  
+  `python3 scripts/test_all_tools.py --manifest config/tools_manifest.json --report tool_test_report.json`  
+  默认超时较长；可加 `--limit N` 或 `--disable-network`（对支持该参数的工具有效）。对 `tool_fetch_market_data` 默认会**额外**抽检股票扩展 `view`（`timeshare` / `pre_market` / `market_overview` / `valuation_snapshot`）各一次；上述额外调用使用 `max(--timeout-seconds, --extra-stock-market-view-min-timeout)`，默认下限 **120 秒**（分时等接口常在 45s 内未完成）。若需加快可加 `--no-extra-stock-market-views`。单次子进程超时记为失败并写入报告，**不会**中断整次脚本。报告用于发版前对比回归。
+- **L4 列名契约（mock、无网）**：`tests/test_dto_snapshots_l4.py` 与 `tests/fixtures/l4/*.json` 锁定若干工具的 `data[0]` 键集合；上游字段变更时需更新 fixture 并在 PR 说明。
+- **报告差异对比**：`python3 scripts/compare_tool_reports.py <baseline.json> <current.json>`，当前失败数多于基线则退出码 1；过渡期可设 `COMPARE_STRICT=0` 仅打印摘要。可将基线 `tool_test_report_baseline.json` 置于仓库根并在 CI 中启用（见 `.github/workflows/unittest.yml`）。
+- 详细 Provider 矩阵与扩展能力卡片见 [plugins/data_collection/ROADMAP.md](plugins/data_collection/ROADMAP.md) 附录 F/G。
 
 ---
 
@@ -91,7 +144,19 @@ tools:
       contract_code: "10010910"
 ```
 
-**更多能力（示例）**：涨停池 `tool_fetch_limit_up_stocks`、北向 `tool_fetch_northbound_flow`、龙虎榜 `tool_dragon_tiger_list`（完整列表见下文）。
+**个股当日分时（统一入口扩展 `view`）：**
+
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: stock
+      view: timeshare
+      asset_code: "600000"
+      mode: production
+```
+
+**更多能力（示例）**：主数据 `tool_fetch_a_share_universe`、指数成份 `tool_fetch_index_constituents`、涨停池 `tool_fetch_limit_up_stocks`、北向 `tool_fetch_northbound_flow`、龙虎榜 `tool_dragon_tiger_list`（完整列表见上文「A 股扩展工具体系」与下文清单）。
 
 ### Tushare 备份配置
 
@@ -110,6 +175,7 @@ tools:
 本插件包含 `data_collection` 与 `merged` 的工具实现，并对外提供稳定的 `tool_*` 接口，覆盖：
 
 - 指数 / ETF / 个股 / 期权市场数据（实时、历史、分钟、开盘、Greeks 等）。
+- **A 股底座扩展**：证券主数据、三大表财报、公司行为、两融与大宗；股东/IPO/指数成份/新闻研报（P1）；统一入口下股票分时、盘前、市场总貌、估值快照等 `view`（以清单为准）。
 - 期权合约列表（按 underlying）。
 - 可选：盘前/政策/news、行业轮动、涨停池、北向资金等（以清单为准）。
 - 可选：本地 Parquet 缓存读取。
@@ -155,6 +221,21 @@ tools:
 
 ---
 
+### 数据域分类总表（与 ROADMAP 对齐）
+
+| 数据域（一级） | 代表工具（示例） | 说明 |
+|----------------|------------------|------|
+| 行情 Quote | `tool_fetch_market_data`、`tool_fetch_stock_*`、指数/ETF/期权 merged 入口 | 实时、日/周/月、分钟；股票扩展 `timeshare` / `pre_market` / `market_overview` / `valuation_snapshot` |
+| 基本面 Fundamentals | `tool_fetch_stock_financials`、`tool_fetch_stock_financial_reports` | 估值快照 vs 三大表报告期（可 `provider_preference`） |
+| 参考主数据 Reference | `tool_fetch_a_share_universe`、`tool_fetch_index_constituents`、`tool_get_option_contracts`、`tool_check_trading_status` | 代码表、指数成分、合约、交易时段 |
+| 股东 / 新股 / 资讯（P1） | `tool_fetch_stock_shareholders`、`tool_fetch_ipo_calendar`、`tool_fetch_stock_research_news` | 十大股东与户数、IPO 列表、个股新闻与研报 |
+| 公司行为 Corporate | `tool_fetch_stock_corporate_actions` | 分红、解禁、增发、配股、回购 |
+| 市场结构 Market microstructure | `tool_fetch_margin_trading`、`tool_fetch_block_trades`、`tool_dragon_tiger_list` | 两融、大宗、龙虎榜 |
+| 资金与情绪 Flow & sentiment | `tool_fetch_northbound_flow`、`tool_capital_flow`、`tool_fetch_limit_up_stocks`、`tool_sector_heat_score` | 北向、资金流、涨停与板块 |
+| 会话与合规 Session | `tool_fetch_policy_news`、`tool_fetch_announcement_digest` 等 | Tavily/检索类，与结构化行情分离 |
+
+---
+
 ### 工具分类与接口清单（用于讨论首发暴露范围）
 
 说明：以下 `tool_id` 来自本仓库 `config/tools_manifest.yaml`（运行时以 `config/tools_manifest.json` 注册为准）。
@@ -163,7 +244,7 @@ tools:
 #### 跨资产统一入口（推荐）
 
 - `tool_fetch_market_data`（已注册）
-  - `asset_type=realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot` 维度统一入口（配合 `asset_code/contract_code` 等参数）
+  - `asset_type=index|etf|option|stock`；`view` 含 `realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot`；**股票**另支持 `timeshare|pre_market|market_overview|valuation_snapshot`（`market_overview` 可不填 `asset_code`，可用 `start_date` 作为深交所摘要日期）
 
 #### 兼容入口（merged 三入口）
 
@@ -207,6 +288,23 @@ tools:
 #### 财务指标（Financials）
 
 - `tool_fetch_stock_financials`（已注册）
+- `tool_fetch_stock_financial_reports`（已注册，三大表报告期）
+
+#### A 股主数据与公司行为 / 两融 / 大宗
+
+- `tool_fetch_a_share_universe`（已注册）
+- `tool_fetch_stock_corporate_actions`（已注册）
+- `tool_fetch_margin_trading`（已注册）
+- `tool_fetch_block_trades`（已注册）
+
+#### 股东 / IPO / 指数成分 / 新闻研报（P1）
+
+- `tool_fetch_stock_shareholders`（已注册）
+- `tool_fetch_ipo_calendar`（已注册）
+- `tool_fetch_index_constituents`（已注册）
+- `tool_fetch_stock_research_news`（已注册）
+
+多源工具支持可选参数 **`provider_preference`**（如 `auto|eastmoney|sina|csindex|cninfo|ths|standard`），与内部降级链并存时仅调整尝试顺序。
 
 #### 涨停/板块/龙虎榜/资金流/北向
 
@@ -257,8 +355,9 @@ tools:
 
 ### 首发 MVP 工具（建议优先用）
 
-- `tool_fetch_market_data` — 跨资产统一入口（推荐）
+- `tool_fetch_market_data` — 跨资产统一入口（推荐）；股票场景善用扩展 `view`（分时/盘前/总貌/估值快照）
 - `tool_get_option_contracts` — 根据 underlying 获取期权合约
+- **A 股底座**：需要代码表/财报/公司行为/两融/大宗时，直接使用上表 P0 工具；需要股东/IPO/成份/投研资讯时使用 P1 工具
 - 兼容入口：`tool_fetch_index_data`、`tool_fetch_etf_data`、`tool_fetch_option_data`
 
 ---
@@ -297,6 +396,11 @@ tools:
 - `timestamp`: 数据时间戳/查询时间（字符串）
 - `cache_hit`: 是否命中缓存（`true|false`）
 - `cache_hit_detail`: 缓存命中详情（例如命中了哪些日期/分区）
+
+A 股扩展类工具（P0/P1、`tool_fetch_market_data` 中部分股票视图）在成功或部分成功时，还可能在 JSON 中附带：
+
+- `provider` / `fallback_route`：实际使用的数据来源或路由链（字符串或列表）
+- `attempt_counts`：各上游接口尝试次数（对象），便于 Issue 反馈时说明「哪一段失败」
 
 #### Provider fallback 与重试（来自 `config.yaml`）
 

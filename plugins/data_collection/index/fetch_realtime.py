@@ -8,6 +8,31 @@ import logging
 import pandas as pd
 from typing import Optional, Dict, Any, List, Tuple
 from datetime import datetime
+
+# 主要指数现价的粗粒度合理区间：mootdx quotes 偶发错行/列时会出现类似「个股」量级，据此丢弃并走 AkShare / 1m。
+_INDEX_REALTIME_PRICE_BOUNDS: Dict[str, Tuple[float, float]] = {
+    "000001": (500.0, 12000.0),
+    "399001": (2000.0, 20000.0),
+    "399006": (400.0, 6000.0),
+    "000300": (800.0, 12000.0),
+    "000016": (500.0, 10000.0),
+    "000905": (1000.0, 20000.0),
+    "000852": (2000.0, 20000.0),
+}
+
+
+def _index_snap_price_plausible(index_code: str, snap: Dict[str, Any]) -> bool:
+    try:
+        price = float(snap.get("current_price", 0) or 0)
+    except (TypeError, ValueError):
+        return False
+    if price <= 0:
+        return False
+    bounds = _INDEX_REALTIME_PRICE_BOUNDS.get(index_code)
+    if bounds is None:
+        return True
+    lo, hi = bounds
+    return lo <= price <= hi
 import os
 import sys
 
@@ -205,7 +230,7 @@ def mootdx_index_1m_only(codes: List[str]) -> Dict[str, Dict[str, Any]]:
     try:
         for code in codes:
             one = _mootdx_index_last_1m_bar(client, code)
-            if one is not None:
+            if one is not None and _index_snap_price_plausible(code, one):
                 out[code] = one
     finally:
         try:
@@ -363,7 +388,7 @@ def _extract_index_snapshots_from_df(
         if current_price <= 0:
             continue
 
-        out[index_code_item] = {
+        snap = {
             "current_price": current_price,
             "change": change,
             "change_percent": change_percent,
@@ -374,6 +399,9 @@ def _extract_index_snapshots_from_df(
             "volume": volume,
             "amount": amount,
         }
+        if not _index_snap_price_plausible(index_code_item, snap):
+            continue
+        out[index_code_item] = snap
     return out
 
 
@@ -490,6 +518,11 @@ def fetch_index_realtime(
         quotes_map: Dict[str, Dict[str, Any]] = (
             mootdx_index_quotes_only(index_codes_only) if MOOTDX_AVAILABLE else {}
         )
+        quotes_map = {
+            c: v
+            for c, v in quotes_map.items()
+            if _index_snap_price_plausible(c, v)
+        }
 
         if len(quotes_map) == len(index_codes_only):
             index_rows: List[Dict[str, Any]] = []
@@ -527,6 +560,11 @@ def fetch_index_realtime(
                 ak_snap = _extract_index_snapshots_from_df(
                     df_ak, missing_after_quotes, index_mapping
                 )
+                ak_snap = {
+                    c: v
+                    for c, v in ak_snap.items()
+                    if _index_snap_price_plausible(c, v)
+                }
 
         missing_after_ak = [c for c in missing_after_quotes if c not in ak_snap]
         bars_map: Dict[str, Dict[str, Any]] = (

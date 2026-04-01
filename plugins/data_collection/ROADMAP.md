@@ -2,6 +2,17 @@
 
 本文档与 [README.md](./README.md) **互指**：README 侧重工具用法与示例；本文档侧重 **OpenClaw 分类**、**Provider 双层降级**、**不支持项**与 **DTO 字段约定**。
 
+## A 股扩展工具分层（速查）
+
+| 分层 | 模块入口 | 对外 `tool_*` | 说明 |
+|------|-----------|---------------|------|
+| P0 | `stock/fundamentals_extended.py` | `tool_fetch_a_share_universe`、`tool_fetch_stock_financial_reports`、`tool_fetch_stock_corporate_actions`、`tool_fetch_margin_trading`、`tool_fetch_block_trades` | 主数据、三大表、公司行为、两融、大宗；部分支持 `provider_preference` |
+| P1 | `stock/reference_p1.py` | `tool_fetch_stock_shareholders`、`tool_fetch_ipo_calendar`、`tool_fetch_index_constituents`、`tool_fetch_stock_research_news` | 股东/IPO/成份/新闻研报 |
+| 股票扩展 view | `stock/unified_stock_views.py`（由 `merged/fetch_market_data` 调用） | 仅用 `tool_fetch_market_data`，`asset_type=stock`，`view`=`timeshare` 等 | 与日线/分钟 K 线工具并列，语义见仓库根 README |
+| 偏好序 | `utils/provider_preference.py` | （入参，非独立工具） | `reorder_provider_chain` / `normalize_provider_preference` |
+
+AkShare 主函数与兜底说明：**附录 F（P0+统一入口视图）、附录 G（P1）**。
+
 ## OpenClaw 分类框架
 
 ### 第一维：标的物（Underlying）
@@ -105,6 +116,35 @@ Pydantic 模型在 Provider 代码落地（Phase B）时与工具入参一并引
 ## 附录 E：IOPV / 折溢价
 
 已实现轻量工具：`etf/fetch_realtime.fetch_etf_iopv_snapshot` / `tool_fetch_etf_iopv_snapshot`（`fund_etf_spot_em`，含 IOPV 与折价率字段）。亦可结合 ETF 日线 + 指数日线间接估算，见 `etf/README.md`。
+
+## 附录 F：A 股扩展能力卡片（P0 · AkShare 主路由）
+
+实现见 `stock/fundamentals_extended.py`、`stock/unified_stock_views.py`。跨包兜底以路线图正文双层降级为准；下列为 **包内主函数** 与 **返回可观测字段**。
+
+| 工具（语义） | AkShare 主函数 | 备选 / 说明 |
+|-------------|----------------|-------------|
+| `tool_fetch_a_share_universe` | `stock_info_a_code_name` | `stock_zh_a_spot_em`（列裁剪）；`provider_preference` 调整顺序 |
+| `tool_fetch_stock_financial_reports` | `stock_*_sheet_by_report_em`（三张表） | `stock_financial_report_sina`；`provider_preference` |
+| `tool_fetch_stock_corporate_actions` | `stock_dividend_cninfo` / `stock_restricted_release_queue_em` / `stock_qbzf_em` / `stock_allotment_cninfo` / `stock_repurchase_em` | 按 `action_kind` 分支 |
+| `tool_fetch_margin_trading` | `stock_margin_sse` / `stock_margin_szse` / `stock_margin_detail_*` / `stock_margin_underlying_info_szse` | 按 `market`+`data_kind` |
+| `tool_fetch_block_trades` | `stock_dzjy_*` | 按 `block_kind` |
+| `tool_fetch_market_data` · stock · `timeshare` | `stock_intraday_em` | `stock_intraday_sina` |
+| `tool_fetch_market_data` · stock · `pre_market` | `stock_zh_a_hist_pre_min_em` | — |
+| `tool_fetch_market_data` · stock · `market_overview` | `stock_sse_summary` + `stock_szse_summary` | 任一失败仍可能返回部分 `data` |
+| `tool_fetch_market_data` · stock · `valuation_snapshot` | 委托 `tool_fetch_stock_financials` | 与估值快照字段对齐 |
+
+统一返回（新工具）：`success`、`message`、`data`、`source`、`provider`、`fallback_route`、`attempt_counts`（及可选 `count`）。
+
+## 附录 G：A 股参考类扩展（P1 · `stock/reference_p1.py`）
+
+| 工具 | AkShare 主函数（按参数分支） | 多源 / 说明 |
+|------|------------------------------|-------------|
+| `tool_fetch_stock_shareholders` | `stock_main_stock_holder` / `stock_circulate_stock_holder` / `stock_share_change_cninfo`+`stock_shareholder_change_ths` / `stock_fund_stock_holder` | 户数控 `holder_count`：`cninfo`↔`ths`，`provider_preference` |
+| `tool_fetch_ipo_calendar` | `stock_ipo_declare_em`、`stock_new_ipo_cninfo`、`stock_ipo_review_em`、`stock_ipo_tutor_em`、`stock_ipo_info`、`stock_ipo_summary_cninfo` | 按 `ipo_kind` |
+| `tool_fetch_index_constituents` | `index_stock_cons_weight_csindex`（可选）、`index_stock_cons_csindex`、`index_stock_cons_sina`、`index_stock_cons` | `provider_preference` 调整顺序 |
+| `tool_fetch_stock_research_news` | `stock_news_em`、`stock_research_report_em`、`stock_news_main_cx` | 按 `content_kind` |
+
+**L4 测试**：`tests/test_dto_snapshots_l4.py` + `tests/fixtures/l4/*.json` 锁定部分工具输出列名集合。
 
 ## 进度与下一步（Repo 工程化清单）
 

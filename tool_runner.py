@@ -418,6 +418,42 @@ TOOL_MAP: Dict[str, ToolSpec] = {
         module_path="plugins.data_collection.financials",
         function_name="tool_fetch_stock_financials",
     ),
+    "tool_fetch_a_share_universe": ToolSpec(
+        module_path="plugins.data_collection.stock.fundamentals_extended",
+        function_name="tool_fetch_a_share_universe",
+    ),
+    "tool_fetch_stock_financial_reports": ToolSpec(
+        module_path="plugins.data_collection.stock.fundamentals_extended",
+        function_name="tool_fetch_stock_financial_reports",
+    ),
+    "tool_fetch_stock_corporate_actions": ToolSpec(
+        module_path="plugins.data_collection.stock.fundamentals_extended",
+        function_name="tool_fetch_stock_corporate_actions",
+    ),
+    "tool_fetch_margin_trading": ToolSpec(
+        module_path="plugins.data_collection.stock.fundamentals_extended",
+        function_name="tool_fetch_margin_trading",
+    ),
+    "tool_fetch_block_trades": ToolSpec(
+        module_path="plugins.data_collection.stock.fundamentals_extended",
+        function_name="tool_fetch_block_trades",
+    ),
+    "tool_fetch_stock_shareholders": ToolSpec(
+        module_path="plugins.data_collection.stock.reference_p1",
+        function_name="tool_fetch_stock_shareholders",
+    ),
+    "tool_fetch_ipo_calendar": ToolSpec(
+        module_path="plugins.data_collection.stock.reference_p1",
+        function_name="tool_fetch_ipo_calendar",
+    ),
+    "tool_fetch_index_constituents": ToolSpec(
+        module_path="plugins.data_collection.stock.reference_p1",
+        function_name="tool_fetch_index_constituents",
+    ),
+    "tool_fetch_stock_research_news": ToolSpec(
+        module_path="plugins.data_collection.stock.reference_p1",
+        function_name="tool_fetch_stock_research_news",
+    ),
     "tool_quantitative_screening": ToolSpec(
         module_path="analysis.quantitative_screening",
         function_name="tool_quantitative_screening",

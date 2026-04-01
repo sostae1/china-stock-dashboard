@@ -1,0 +1,4 @@
+{
+  "tool": "tool_fetch_index_constituents",
+  "mock_columns": ["成分代码", "成分名称", "权重"]
+}

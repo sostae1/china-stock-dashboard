@@ -681,6 +681,297 @@
       }
     },
     {
+      "id": "tool_fetch_a_share_universe",
+      "label": "获取A股证券主数据",
+      "description": "沪深京 A 股代码与简称列表；优先 AkShare stock_info_a_code_name，失败降级东财全市场快照（列裁剪）。可选 max_rows 限制行数（0 表示不限制）。provider_preference=auto|standard|eastmoney 调整尝试顺序。返回含 source/fallback_route/attempt_counts。",
+      "description_short": "A 股代码表 / 主数据列表。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "max_rows": {
+            "type": "number",
+            "description": "最多返回行数，0 不限制（大数据量慎用）",
+            "default": 0
+          },
+          "provider_preference": {
+            "type": "string",
+            "description": "auto|standard|eastmoney（em）— 多源尝试顺序",
+            "default": "auto"
+          }
+        }
+      }
+    },
+    {
+      "id": "tool_fetch_stock_financial_reports",
+      "label": "获取A股财务报表",
+      "description": "按报告期的资产负债表/利润表/现金流量表。东财报告期表优先，可选新浪 stock_financial_report_sina 降级。statement_type=balance|income|cashflow。provider_preference=auto|eastmoney|sina。",
+      "description_short": "三大财务报表（报告期）。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stock_code": {
+            "type": "string",
+            "description": "6 位股票代码，如 600000",
+            "default": "600000"
+          },
+          "statement_type": {
+            "type": "string",
+            "description": "balance|income|cashflow",
+            "default": "balance"
+          },
+          "provider_preference": {
+            "type": "string",
+            "description": "auto|eastmoney|sina",
+            "default": "auto"
+          }
+        },
+        "required": [
+          "stock_code"
+        ]
+      }
+    },
+    {
+      "id": "tool_fetch_stock_corporate_actions",
+      "label": "获取A股公司行为",
+      "description": "分红(dividend)、限售解禁(restricted_unlock)、增发管道(issuance)、配股(allotment)、回购(buyback)。部分 kind 需要 stock_code；issuance/buyback 可全市场后自行过滤。",
+      "description_short": "分红/解禁/增发/配股/回购。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action_kind": {
+            "type": "string",
+            "description": "dividend|restricted_unlock|issuance|allotment|buyback"
+          },
+          "stock_code": {
+            "type": "string",
+            "description": "6 位代码，部分 kind 必填",
+            "default": ""
+          },
+          "start_date": {
+            "type": "string",
+            "description": "allotment 用，YYYYMMDD",
+            "default": ""
+          },
+          "end_date": {
+            "type": "string",
+            "description": "allotment 用，YYYYMMDD",
+            "default": ""
+          }
+        },
+        "required": [
+          "action_kind"
+        ]
+      }
+    },
+    {
+      "id": "tool_fetch_margin_trading",
+      "label": "获取融资融券数据",
+      "description": "两融汇总/明细/深市标的。market=sh|sz；data_kind=summary|detail|underlying_sz；detail 需 date=YYYYMMDD；沪市 summary 可用 start_date/end_date。",
+      "description_short": "融资融券（沪深）。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "market": {
+            "type": "string",
+            "description": "sh|sz",
+            "default": "sh"
+          },
+          "data_kind": {
+            "type": "string",
+            "description": "summary|detail|underlying_sz",
+            "default": "summary"
+          },
+          "date": {
+            "type": "string",
+            "description": "YYYYMMDD，深市 summary 与两市 detail",
+            "default": ""
+          },
+          "start_date": {
+            "type": "string",
+            "description": "沪市融资余额区间起",
+            "default": ""
+          },
+          "end_date": {
+            "type": "string",
+            "description": "沪市融资余额区间止",
+            "default": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "tool_fetch_block_trades",
+      "label": "获取A股大宗交易",
+      "description": "东财大宗。block_kind=sctj|mrtj|mrmx|hygtj|yybph；mrtj/mrmx 用 start_date/end_date；hygtj/yybph 用 window（如 近三月）。",
+      "description_short": "大宗交易统计与明细。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "block_kind": {
+            "type": "string",
+            "description": "sctj|mrtj|mrmx|hygtj|yybph",
+            "default": "mrtj"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "YYYYMMDD",
+            "default": ""
+          },
+          "end_date": {
+            "type": "string",
+            "description": "YYYYMMDD",
+            "default": ""
+          },
+          "window": {
+            "type": "string",
+            "description": "hygtj/yybph 时间窗，如 近三月",
+            "default": "近三月"
+          }
+        }
+      }
+    },
+    {
+      "id": "tool_fetch_stock_shareholders",
+      "label": "获取A股股东与持股",
+      "description": "holder_kind=top10|top10_float|holder_count|holder_change_ths|fund_holder。户数控 holder_count 支持 cninfo 与同花顺双源，provider_preference=auto|cninfo|ths。返回 records 与路由元数据。",
+      "description_short": "十大股东/户数/基金持股等。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stock_code": {
+            "type": "string",
+            "description": "6 位代码",
+            "default": "600000"
+          },
+          "holder_kind": {
+            "type": "string",
+            "description": "top10|top10_float|holder_count|holder_change_ths|fund_holder",
+            "default": "top10"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "holder_count 用，YYYYMMDD",
+            "default": "20091227"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "holder_count 用，YYYYMMDD",
+            "default": "20991231"
+          },
+          "provider_preference": {
+            "type": "string",
+            "description": "auto|cninfo|ths（仅 holder_count 多源时生效）",
+            "default": "auto"
+          },
+          "max_rows": {
+            "type": "number",
+            "description": "限制返回行数，0 不限制",
+            "default": 0
+          }
+        },
+        "required": [
+          "stock_code"
+        ]
+      }
+    },
+    {
+      "id": "tool_fetch_ipo_calendar",
+      "label": "获取新股IPO数据",
+      "description": "ipo_kind=declare_em|new_list_cninfo|review_em|tutor_em|stock_detail|stock_summary。后两者需 stock_code。provider_preference 调整同源多接口顺序（预留）。",
+      "description_short": "新股申报/上市/辅导/个股IPO摘要。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "ipo_kind": {
+            "type": "string",
+            "description": "declare_em|new_list_cninfo|review_em|tutor_em|stock_detail|stock_summary",
+            "default": "declare_em"
+          },
+          "stock_code": {
+            "type": "string",
+            "description": "stock_detail|stock_summary 用 6 位代码",
+            "default": "600000"
+          },
+          "provider_preference": {
+            "type": "string",
+            "default": "auto"
+          },
+          "max_rows": {
+            "type": "number",
+            "default": 0
+          }
+        },
+        "required": [
+          "ipo_kind"
+        ]
+      }
+    },
+    {
+      "id": "tool_fetch_index_constituents",
+      "label": "获取指数成份股",
+      "description": "指数代码如 000300、399001。include_weight 时优先拉中证权重。多源：中证→新浪→东财 index_stock_cons。provider_preference=auto|csindex|sina|eastmoney。",
+      "description_short": "指数成分与可选权重。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "index_code": {
+            "type": "string",
+            "description": "指数代码，如 000300",
+            "default": "000300"
+          },
+          "include_weight": {
+            "type": "boolean",
+            "description": "是否优先尝试成份权重（中证）",
+            "default": false
+          },
+          "provider_preference": {
+            "type": "string",
+            "default": "auto"
+          },
+          "max_rows": {
+            "type": "number",
+            "default": 0
+          }
+        },
+        "required": [
+          "index_code"
+        ]
+      }
+    },
+    {
+      "id": "tool_fetch_stock_research_news",
+      "label": "获取个股新闻与研报",
+      "description": "content_kind=news|research|main_feed（主新闻流无需有效 stock_code）。东财结构化为主。provider_preference=auto|eastmoney。",
+      "description_short": "个股新闻/研报/主新闻流。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content_kind": {
+            "type": "string",
+            "description": "news|research|main_feed",
+            "default": "news"
+          },
+          "stock_code": {
+            "type": "string",
+            "description": "news/research 用 6 位代码",
+            "default": "600000"
+          },
+          "provider_preference": {
+            "type": "string",
+            "default": "auto"
+          },
+          "max_rows": {
+            "type": "number",
+            "description": "最大行数",
+            "default": 200
+          }
+        },
+        "required": [
+          "content_kind"
+        ]
+      }
+    },
+    {
       "id": "tool_fetch_stock_historical",
       "label": "获取个股历史K线",
       "description": "获取A股个股历史K线数据（日线/周线/月线）。",
@@ -1184,7 +1475,7 @@
     {
       "id": "tool_fetch_market_data",
       "label": "获取市场数据（跨资产统一入口）",
-      "description": "Cross-asset unified entry. asset_type= index|etf|option|stock; view=realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot. Returns the underlying merged tool result.",
+      "description": "Cross-asset unified entry. asset_type= index|etf|option|stock; view 含 realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot； stock 扩展 timeshare（当日分时）|pre_market（盘前）|market_overview（沪深市场总貌，可不填 asset_code）|valuation_snapshot（估值快照，委托财务指标）。",
       "description_short": "跨资产统一入口（推荐）",
       "parameters": {
         "type": "object",
@@ -1196,7 +1487,7 @@
           },
           "asset_code": {
             "type": "string",
-            "description": "index_code / etf_code / stock_code（可选）",
+            "description": "index_code / etf_code / stock_code（market_overview 可选空）",
             "default": ""
           },
           "contract_code": {
@@ -1206,12 +1497,12 @@
           },
           "view": {
             "type": "string",
-            "description": "realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot",
+            "description": "realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot|timeshare|pre_market|market_overview|valuation_snapshot",
             "default": "realtime"
           },
           "period": {
             "type": "string",
-            "description": "minute周期（如 1|5|15|30|60，可选）"
+            "description": "个股 historical 为 daily|weekly|monthly；minute 为 1|5|15|30|60 等"
           },
           "start_date": {
             "type": "string",

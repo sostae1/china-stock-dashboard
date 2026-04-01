@@ -61,6 +61,19 @@ class TestToolRunnerDispatch(unittest.TestCase):
         self.assertFalse(res.get("success", True))
         self.assertIn("不支持 index.view=bad", res.get("message", ""))
 
+    def test_tool_fetch_market_data_stock_market_overview_no_asset_code(self):
+        res = _run_tool(
+            "tool_fetch_market_data",
+            {
+                "asset_type": "stock",
+                "asset_code": "",
+                "view": "market_overview",
+            },
+        )
+        # 联网失败时 success 为 false；结构应含 message 键
+        self.assertIn("message", res)
+        self.assertIn("success", res)
+
 
 if __name__ == "__main__":
     unittest.main()

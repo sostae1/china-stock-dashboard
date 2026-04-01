@@ -1,7 +1,7 @@
 {
   "id": "openclaw-data-china-stock",
   "name": "OpenClaw Data China Stock",
-  "description": "A-share/ETF/Option market data collection plugin for OpenClaw.",
+  "description": "A-share / ETF / option market data for OpenClaw: unified tool_fetch_market_data, P0/P1 A-share domain tools (universe, financial statements, corporate actions, margin, block trades; shareholders, IPO, index constituents, news/research), stock views (timeshare, pre_market, market_overview, valuation_snapshot), multi-source fallback and optional provider_preference.",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

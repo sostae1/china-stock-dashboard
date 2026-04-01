@@ -10,11 +10,46 @@ An open-source, free **OpenClaw code plugin** that exposes a unified set of `too
 
 ### Highlights
 
-- **Unified entry**: Prefer `tool_fetch_market_data` across index / ETF / stock / option assets (`view` such as `realtime`, `historical`, `minute`, `opening`, `greeks`, etc.).
+- **Unified entry**: Prefer `tool_fetch_market_data` across index / ETF / stock / option assets; stocks also support `timeshare`, `pre_market`, `market_overview`, and `valuation_snapshot` views.
 - **Multi-source resilience**: AkShare, Sina, Eastmoney, optional Tushare, plus circuit breaker / retries as configured—reducing single-point outages in Agent workflows.
 - **Cache you control**: Parquet **writes** are off by default; enable `data_cache.enabled=true` in `config.yaml` only when you want local read/write caching.
 - **Retail-oriented tools**: limit-up lists, dragon-tiger, northbound flow, sector heat, option Greeks, trading-status helpers, and more (as registered in `config/tools_manifest.json`).
-- **Predictable JSON**: Most tools return objects with `success`, `data`, `message`, `source` (and optional cache metadata).
+- **Predictable JSON**: Most tools return objects with `success`, `data`, `message`, `source` (and optional cache metadata). A-share extended tools usually add `provider`, `fallback_route`, and `attempt_counts` for observability.
+
+---
+
+### A-share extended tool system (P0 / P1 and unified entry)
+
+This section summarizes **new or strengthened** A-share capabilities (see `config/tools_manifest.json`). Design: **one tool per domain, parameters for sub-modes**—not one OpenClaw tool per raw AkShare endpoint. Optional **`provider_preference`** reorders multi-source attempts alongside the internal fallback chain.
+
+#### Layers and tools
+
+| Layer | Tool ID | Role | Key parameters (excerpt) |
+|-------|---------|------|--------------------------|
+| **P0** | `tool_fetch_a_share_universe` | CSI A-share code/name master list | `max_rows`; `provider_preference`: `auto` / `standard` / `eastmoney` |
+| **P0** | `tool_fetch_stock_financial_reports` | Balance / income / cashflow statements by report period | `statement_type`: `balance` / `income` / `cashflow`; `provider_preference`: `auto` / `eastmoney` / `sina` |
+| **P0** | `tool_fetch_stock_corporate_actions` | Dividends, unlocks, issuance, allotment, buyback | `action_kind`: `dividend` / `restricted_unlock` / `issuance` / `allotment` / `buyback`; some modes need `stock_code` or dates |
+| **P0** | `tool_fetch_margin_trading` | Margin trading (SSE/SZSE summary, detail, SZSE underlying list) | `market`: `sh` / `sz`; `data_kind`: `summary` / `detail` / `underlying_sz`; `date` / `start_date` / `end_date` by kind |
+| **P0** | `tool_fetch_block_trades` | Block trades (stats, A-share daily lines, active names, broker rankings) | `block_kind`: `sctj` / `mrtj` / `mrmx` / `hygtj` / `yybph`; `start_date` / `end_date` / `window` |
+| **P1** | `tool_fetch_stock_shareholders` | Top holders, float holders, holder count, fund holders | `holder_kind`: `top10` / `top10_float` / `holder_count` / `holder_change_ths` / `fund_holder`; holder-count mode: `provider_preference`: `cninfo` / `ths` |
+| **P1** | `tool_fetch_ipo_calendar` | IPO pipeline: filings, new listings, review board, tutoring, per-stock IPO summary | `ipo_kind`: `declare_em` / `new_list_cninfo` / `review_em` / `tutor_em` / `stock_detail` / `stock_summary`; last two need `stock_code` |
+| **P1** | `tool_fetch_index_constituents` | Index members; optional CSI weight | `index_code`; `include_weight`; `provider_preference`: `auto` / `csindex` / `sina` / `eastmoney` |
+| **P1** | `tool_fetch_stock_research_news` | Stock news, research reports, main CX feed | `content_kind`: `news` / `research` / `main_feed`; `main_feed` does not require a symbol; `max_rows` |
+
+Complements existing **`tool_fetch_stock_financials`** (valuation snapshot) vs **`tool_fetch_stock_financial_reports`** (report-period statements).
+
+#### Stock-only `view` values on `tool_fetch_market_data`
+
+When **`asset_type=stock`**, besides `realtime` / `historical` / `minute` / `opening`:
+
+| `view` | Meaning | Typical args |
+|--------|---------|--------------|
+| `timeshare` | Intraday timeseries for the current session | `asset_code` |
+| `pre_market` | Pre-market reference / minute | `asset_code`; `start_date` / `end_date` (YYYYMMDD) |
+| `market_overview` | Light aggregate market snapshot | `start_date` optional; `asset_code` optional |
+| `valuation_snapshot` | Quick valuation / key metrics | `asset_code` |
+
+**Implementation / manifests**: `plugins/data_collection/stock/fundamentals_extended.py`, `stock/reference_p1.py`, `stock/unified_stock_views.py`, `utils/provider_preference.py`; parameters in `config/tools_manifest.yaml` / `.json`. Capability cards: [plugins/data_collection/ROADMAP.md](plugins/data_collection/ROADMAP.md) appendices F–G.
 
 ---
 
@@ -43,6 +78,14 @@ pip install -r requirements.txt
 ```
 
 How you mount this folder as an extension depends on your OpenClaw setup (e.g., copy/link into `extensions` and allowlist in `openclaw.json`). Run `openclaw plugins install --help` to see whether **path-based** or **linked** installs are supported on your machine.
+
+### Testing
+
+- **Unit tests (no network)**: `python3 -m unittest discover -s tests -p 'test_*.py' -v`
+- **Full-tool smoke (optional, may hit the network)**: `python3 scripts/test_all_tools.py --manifest config/tools_manifest.json --report tool_test_report.json` (use `--limit` / `--disable-network` as needed). By default, `tool_fetch_market_data` is also run several extra times for stock-only views (`timeshare`, `pre_market`, `market_overview`, `valuation_snapshot`); those runs use `max(--timeout-seconds, --extra-stock-market-view-min-timeout)` (default min **120s**) so intraday/timeshare is not killed at 45s. Pass `--no-extra-stock-market-views` to skip for speed. A single subprocess timeout is recorded as a failed row and does **not** abort the script.
+- **L4 column-contract tests (mock, no network)**: `tests/test_dto_snapshots_l4.py` and `tests/fixtures/l4/*.json` lock `data[0]` keys for selected tools; update fixtures when upstream columns change.
+- **Report diff (release gate)**: `python3 scripts/compare_tool_reports.py <baseline.json> <current.json>` exits `1` if failures increase; set `COMPARE_STRICT=0` to print only. Optional baseline file and CI step: see `.github/workflows/unittest.yml`.
+- Capability cards: [plugins/data_collection/ROADMAP.md](plugins/data_collection/ROADMAP.md) appendices F–G.
 
 ---
 
@@ -91,7 +134,19 @@ tools:
       contract_code: "10010910"
 ```
 
-**More examples**: `tool_fetch_limit_up_stocks`, `tool_fetch_northbound_flow`, `tool_dragon_tiger_list`—see the full list below.
+**Stock intraday timeshare (`view` on unified entry):**
+
+```yaml
+tools:
+  - name: tool_fetch_market_data
+    params:
+      asset_type: stock
+      view: timeshare
+      asset_code: "600000"
+      mode: production
+```
+
+**More examples**: `tool_fetch_a_share_universe`, `tool_fetch_index_constituents`, `tool_fetch_limit_up_stocks`, `tool_fetch_northbound_flow`, `tool_dragon_tiger_list`—see **A-share extended tool system** above and the full list below.
 
 ### Tushare fallback
 
@@ -108,6 +163,7 @@ With `data_cache.enabled=false` (default), the plugin may **read** existing on-d
 ## What you get
 
 - Index / ETF / **Stock** / Option market data (realtime, historical, minute, opening, Greeks).
+- **A-share foundation extensions**: master list, three financial statements, corporate actions, margin & block trades; P1 shareholders / IPO / index constituents / news & research; stock `view` extras on `tool_fetch_market_data` (`timeshare`, `pre_market`, `market_overview`, `valuation_snapshot`) as listed in the manifest.
 - Option contracts (by underlying).
 - Optional capabilities: pre-market/policy/news, sector rotation, limit-up pool, northbound flow, etc.
 - Optional local Parquet cache reads.
@@ -153,6 +209,21 @@ This plugin is for **data collection and technical research only**. It is not in
 
 ---
 
+## Data-domain overview (aligned with ROADMAP)
+
+| Domain | Example tools | Notes |
+|--------|---------------|-------|
+| Quote | `tool_fetch_market_data`, `tool_fetch_stock_*` | Stock extras: `timeshare`, `pre_market`, `market_overview`, `valuation_snapshot` |
+| Fundamentals | `tool_fetch_stock_financials`, `tool_fetch_stock_financial_reports` | Snapshot vs report-period statements; optional `provider_preference` |
+| Reference | `tool_fetch_a_share_universe`, `tool_fetch_index_constituents`, `tool_get_option_contracts` | Universe, index constituents, contracts, sessions |
+| Shareholders / IPO / news (P1) | `tool_fetch_stock_shareholders`, `tool_fetch_ipo_calendar`, `tool_fetch_stock_research_news` | Holders, IPO tables, news & research |
+| Corporate | `tool_fetch_stock_corporate_actions` | Dividends, unlocks, issuance, buybacks |
+| Market microstructure | `tool_fetch_margin_trading`, `tool_fetch_block_trades`, `tool_dragon_tiger_list` | Margin, block trades, dragon-tiger |
+| Flow & sentiment | `tool_fetch_northbound_flow`, `tool_capital_flow`, limit-up/sector tools | |
+| Session | `tool_fetch_policy_news`, digest tools | Tavily / search-style |
+
+---
+
 ## MVP tool categories & interface list (release exposure)
 
 Notes:
@@ -162,7 +233,7 @@ Notes:
 ### Cross-asset unified entry (recommended)
 
 - `tool_fetch_market_data` (Available)
-  - `asset_type=realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot`
+  - `asset_type=index|etf|option|stock`; `view` includes `realtime|historical|minute|opening|greeks|global_spot|iopv_snapshot` plus stock-only `timeshare|pre_market|market_overview|valuation_snapshot`
 
 ### Compatibility entries (merged three entries)
 
@@ -206,6 +277,23 @@ Notes:
 ### Financials (Financials)
 
 - `tool_fetch_stock_financials` (Available)
+- `tool_fetch_stock_financial_reports` (Available)
+
+### A-share universe / corporate / margin / block trades
+
+- `tool_fetch_a_share_universe` (Available)
+- `tool_fetch_stock_corporate_actions` (Available)
+- `tool_fetch_margin_trading` (Available)
+- `tool_fetch_block_trades` (Available)
+
+### Shareholders / IPO / index constituents / news & research (P1)
+
+- `tool_fetch_stock_shareholders` (Available)
+- `tool_fetch_ipo_calendar` (Available)
+- `tool_fetch_index_constituents` (Available)
+- `tool_fetch_stock_research_news` (Available)
+
+Optional **`provider_preference`** (`auto`, `eastmoney`, `sina`, `csindex`, `cninfo`, `ths`, `standard`, …) reorders multi-source attempts alongside the internal fallback chain.
 
 ### Limit-up / sector heat / dragon-tiger / capital flow / northbound
 
@@ -256,8 +344,9 @@ Notes:
 
 ### MVP tools (try these first)
 
-- `tool_fetch_market_data` — primary cross-asset entry  
+- `tool_fetch_market_data` — primary cross-asset entry; for stocks, use extra `view` values (`timeshare`, `pre_market`, `market_overview`, `valuation_snapshot`) when needed  
 - `tool_get_option_contracts` — list contracts by underlying  
+- **A-share base**: P0 tools for universe, financial statements, corporate actions, margin, block trades; P1 for shareholders, IPO, index constituents, news/research (see **A-share extended tool system** above)  
 - Compatibility: `tool_fetch_index_data`, `tool_fetch_etf_data`, `tool_fetch_option_data`  
 
 ---
@@ -293,6 +382,11 @@ Some tools additionally provide (when available):
 - `timestamp`: data timestamp / query time (string)
 - `cache_hit`: whether cache was used (`true|false`)
 - `cache_hit_detail`: extra cache hit diagnostics (e.g., which dates/partitions were hit)
+
+A-share extended tools (P0/P1 and some stock views on `tool_fetch_market_data`) may also return:
+
+- `provider` / `fallback_route`: effective data source or ordered route list
+- `attempt_counts`: attempt counts per upstream route (object), useful for support / debugging
 
 ### Provider fallback and retries (from `config.yaml`)
 

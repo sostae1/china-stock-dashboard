@@ -25,3 +25,12 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_*.py'
 
+      - name: Optional tool-report regression (needs tool_test_report_baseline.json)
+        run: |
+          if [ -f tool_test_report_baseline.json ]; then
+            python scripts/test_all_tools.py --limit 35 --disable-network --report /tmp/tool_report_current.json || true
+            python scripts/compare_tool_reports.py tool_test_report_baseline.json /tmp/tool_report_current.json
+          else
+            echo "No tool_test_report_baseline.json; skip report comparison."
+          fi
+

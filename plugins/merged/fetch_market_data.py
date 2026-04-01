@@ -158,7 +158,15 @@ def tool_fetch_market_data(
         from plugins.data_collection.stock.fetch_realtime import tool_fetch_stock_realtime
         from plugins.data_collection.stock.fetch_historical import tool_fetch_stock_historical
         from plugins.data_collection.stock.fetch_minute import tool_fetch_stock_minute
-        from plugins.data_collection.stock.fetch_realtime import tool_fetch_stock_realtime as _realtime
+        from plugins.data_collection.stock.unified_stock_views import (
+            fetch_stock_market_overview,
+            fetch_stock_pre_market_view,
+            fetch_stock_timeshare_view,
+            fetch_stock_valuation_snapshot_view,
+        )
+
+        if view_n == "market_overview":
+            return fetch_stock_market_overview(trade_date=(start_date or end_date or "") or "")
 
         if not asset_code:
             return {"success": False, "message": "缺少 asset_code（stock_code）", "data": None}
@@ -166,7 +174,11 @@ def tool_fetch_market_data(
         if view_n == "realtime":
             return tool_fetch_stock_realtime(stock_code=asset_code, mode=mode, include_depth=True)
         if view_n == "historical":
-            period_v = "daily"
+            period_v = (period or "daily").strip().lower()
+            if period_v.isdigit():
+                period_v = "daily"
+            if period_v not in ("daily", "weekly", "monthly"):
+                period_v = "daily"
             return tool_fetch_stock_historical(
                 stock_code=asset_code,
                 period=period_v,
@@ -185,6 +197,12 @@ def tool_fetch_market_data(
                 mode=mode,
                 use_cache=True,
             )
+        if view_n == "timeshare":
+            return fetch_stock_timeshare_view(asset_code)
+        if view_n == "pre_market":
+            return fetch_stock_pre_market_view(asset_code)
+        if view_n == "valuation_snapshot":
+            return fetch_stock_valuation_snapshot_view(asset_code)
 
         return {"success": False, "message": f"不支持 stock.view={view}", "data": None}
 

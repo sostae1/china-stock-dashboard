@@ -1,6 +1,6 @@
 # 数据采集插件
 
-本目录为 `openclaw-data-china-stock` 的数据采集实现：以宽基 ETF 与上交所 ETF 期权行情为主，并扩展 A 股个股、板块、涨停、资金流向、龙虎榜、财务指标等数据，供 OpenClaw / Agent 工作流调用。多数模块融合公开实现与成熟抓取逻辑，通过 AkShare、新浪、东方财富等公开接口拉取数据；是否写入本地 Parquet/JSON 缓存由 `data_cache.enabled` 控制。
+本目录为 `openclaw-data-china-stock` 的数据采集实现：以宽基 ETF 与上交所 ETF 期权行情为主，并扩展 **A 股个股**、**P0/P1 A 股底座工具**（主数据、三大表、公司行为、两融、大宗；股东、IPO、指数成份、新闻/研报）、**统一入口股票扩展 view**（分时、盘前、市场总貌、估值快照），以及板块、涨停、资金流向、龙虎榜、财务快照等数据，供 OpenClaw / Agent 工作流调用。多数模块融合公开实现与成熟抓取逻辑，通过 AkShare、新浪、东方财富等公开接口拉取数据；多源路径支持可选 **`provider_preference`** 与返回中的 `fallback_route` / `attempt_counts`（见 [ROADMAP.md](./ROADMAP.md)）。是否写入本地 Parquet/JSON 缓存由 `data_cache.enabled` 控制。
 
 **详细路线图与 Provider 矩阵**见 [ROADMAP.md](./ROADMAP.md)（与本文档互链）。
 
@@ -37,6 +37,10 @@
 | **option/** | `tool_fetch_option_realtime`、`tool_fetch_option_greeks`、`tool_fetch_option_minute` | |
 | **futures/** | `tool_fetch_a50_data` | A50 等 |
 | **stock/** | `tool_fetch_stock_realtime`、`tool_fetch_stock_historical`、`tool_fetch_stock_minute`、`tool_stock_data_fetcher`、`tool_stock_monitor` | 日线/分钟/实时 Provider 链见 [ROADMAP.md](./ROADMAP.md) |
+| **stock/fundamentals_extended.py** | `tool_fetch_a_share_universe`、`tool_fetch_stock_financial_reports`、`tool_fetch_stock_corporate_actions`、`tool_fetch_margin_trading`、`tool_fetch_block_trades` | AkShare 主数据 / 三大表 / 公司行为 / 两融 / 大宗；部分支持 `provider_preference` |
+| **stock/reference_p1.py** | `tool_fetch_stock_shareholders`、`tool_fetch_ipo_calendar`、`tool_fetch_index_constituents`、`tool_fetch_stock_research_news` | P1 股东 / IPO / 指数成分 / 新闻研报 |
+| **utils/provider_preference.py** | （被上述模块使用） | `normalize_provider_preference`、`reorder_provider_chain` |
+| **stock/unified_stock_views.py** | （供 `merged.fetch_market_data`）`timeshare` / `pre_market` / `market_overview` / `valuation_snapshot` | 统一入口股票扩展 view |
 | **financials.py** | `tool_fetch_stock_financials` | PE/PB/ROE 等 |
 | **limit_up/** | `tool_fetch_limit_up_stocks`、`tool_sector_heat_score`、`tool_write_limit_up_with_sector`、`tool_limit_up_daily_flow` | 涨停回马枪数据与日报 |
 | **dragon_tiger.py** | `tool_dragon_tiger_list` | 龙虎榜 |
@@ -59,7 +63,7 @@
 |------|----------|
 | 盘前晨报 / 政策·大宗·公告 / 行业要闻 | `morning_brief_fetchers.py` |
 | 指数 / ETF / 期权 / A50 | `merged` + `index/`、`etf/`、`option/`、`futures/`；或根目录 `fetch_*_data.py` 简版 |
-| 个股 | `stock/`、`financials.py` |
+| 个股 | `stock/`、`financials.py`、`stock/fundamentals_extended.py` |
 | 涨停 / 板块热度 / 日报 | `limit_up/`、`sector.py` |
 | 北向 / 资金 / 龙虎榜 | `northbound.py`、`capital_flow.py`、`dragon_tiger.py` |
 | 交易时段 / 可交易性 / 批量 | `utils/` |

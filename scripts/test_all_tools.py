@@ -120,6 +120,30 @@ def _heuristic_value(param_name: str) -> Any:
         return "test"
     if k in ("assume_tradable_if_unknown",):
         return False
+    if k in ("action_kind",):
+        return "dividend"
+    if k in ("statement_type",):
+        return "balance"
+    if k in ("block_kind",):
+        return "mrtj"
+    if k in ("data_kind",):
+        return "summary"
+    if k in ("market",):
+        return "sh"
+    if k in ("holder_kind",):
+        return "top10"
+    if k in ("ipo_kind",):
+        return "declare_em"
+    if k in ("index_code",):
+        return "000300"
+    if k in ("content_kind",):
+        return "news"
+    if k in ("provider_preference",):
+        return "auto"
+    if k in ("include_weight",):
+        return False
+    if k in ("max_rows",):
+        return 0
     return ""
 
 
@@ -281,6 +305,45 @@ def _patch_args_for_read_tools(
             out["date"] = date
         return out
 
+    if tool_id == "tool_fetch_a_share_universe":
+        out["max_rows"] = min(int(out.get("max_rows") or 50), 200)
+
+    if tool_id == "tool_fetch_stock_financial_reports":
+        out.setdefault("stock_code", "600000")
+        out.setdefault("statement_type", "balance")
+
+    if tool_id == "tool_fetch_stock_corporate_actions":
+        out.setdefault("action_kind", "dividend")
+        out["stock_code"] = out.get("stock_code") or "600000"
+
+    if tool_id == "tool_fetch_margin_trading":
+        out.setdefault("market", "sh")
+        out.setdefault("data_kind", "summary")
+        out.setdefault("start_date", "20240101")
+        out.setdefault("end_date", "20240105")
+
+    if tool_id == "tool_fetch_block_trades":
+        out.setdefault("block_kind", "mrtj")
+        out.setdefault("start_date", "20240105")
+        out.setdefault("end_date", "20240105")
+
+    if tool_id == "tool_fetch_stock_shareholders":
+        out.setdefault("stock_code", "600000")
+        out.setdefault("holder_kind", "top10")
+
+    if tool_id == "tool_fetch_ipo_calendar":
+        out.setdefault("ipo_kind", "declare_em")
+        out["max_rows"] = min(int(out.get("max_rows") or 80), 200)
+
+    if tool_id == "tool_fetch_index_constituents":
+        out.setdefault("index_code", "000300")
+        out["max_rows"] = min(int(out.get("max_rows") or 300), 500)
+
+    if tool_id == "tool_fetch_stock_research_news":
+        out.setdefault("content_kind", "news")
+        out.setdefault("stock_code", "600000")
+        out["max_rows"] = min(int(out.get("max_rows") or 30), 100)
+
     # Others: keep best-effort defaults
     return out
 
@@ -306,13 +369,40 @@ def _run_tool(
 ) -> ToolRunResult:
     args_json = json.dumps(args, ensure_ascii=False)
     start = datetime.now(timezone.utc)
-    proc = subprocess.run(
-        [sys.executable, str(tool_runner_path), tool_name, args_json],
-        cwd=str(tool_runner_path.parent),
-        capture_output=True,
-        text=True,
-        timeout=timeout_seconds,
-    )
+
+    def _decode_out(val: Any) -> str:
+        if val is None:
+            return ""
+        if isinstance(val, str):
+            return val.strip()
+        if isinstance(val, bytes):
+            return val.decode("utf-8", errors="replace").strip()
+        return str(val).strip()
+
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(tool_runner_path), tool_name, args_json],
+            cwd=str(tool_runner_path.parent),
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+        )
+    except subprocess.TimeoutExpired as exc:
+        end = datetime.now(timezone.utc)
+        duration_ms = int((end - start).total_seconds() * 1000)
+        stdout = _decode_out(exc.stdout)
+        stderr = _decode_out(exc.stderr)
+        return ToolRunResult(
+            tool_id=tool_name,
+            ok=False,
+            rc=None,
+            duration_ms=duration_ms,
+            stdout=stdout,
+            stderr=stderr,
+            result_json=None,
+            error_message=f"TimeoutExpired after {timeout_seconds}s",
+        )
+
     end = datetime.now(timezone.utc)
     duration_ms = int((end - start).total_seconds() * 1000)
 
@@ -360,6 +450,57 @@ def _tool_id_list(tools: List[Dict[str, Any]]) -> List[str]:
     return ids
 
 
+def _extra_tool_fetch_market_data_stock_views(*, disable_network: bool) -> List[Tuple[str, Dict[str, Any]]]:
+    """
+    manifest 里 tool_fetch_market_data 只有一条；默认启发式多为 index+realtime。
+    补充股票扩展 view 各跑一遍，便于与 README / ROADMAP 对齐。
+    """
+    rows: List[Tuple[str, Dict[str, Any]]] = [
+        (
+            "stock.timeshare",
+            {
+                "asset_type": "stock",
+                "view": "timeshare",
+                "asset_code": "600000",
+                "mode": "test",
+            },
+        ),
+        (
+            "stock.pre_market",
+            {
+                "asset_type": "stock",
+                "view": "pre_market",
+                "asset_code": "600000",
+                "start_date": "20240105",
+                "end_date": "20240105",
+                "mode": "test",
+            },
+        ),
+        (
+            "stock.market_overview",
+            {
+                "asset_type": "stock",
+                "view": "market_overview",
+                "start_date": "20240105",
+                "mode": "test",
+            },
+        ),
+        (
+            "stock.valuation_snapshot",
+            {
+                "asset_type": "stock",
+                "view": "valuation_snapshot",
+                "asset_code": "600000",
+                "mode": "test",
+            },
+        ),
+    ]
+    out: List[Tuple[str, Dict[str, Any]]] = []
+    for label, args in rows:
+        out.append((label, _apply_disable_network_overrides(dict(args), disable_network=disable_network)))
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", type=str, default=str(ROOT / "config" / "tools_manifest.json"))
@@ -367,6 +508,17 @@ def main() -> int:
     ap.add_argument("--timeout-seconds", type=int, default=90)
     ap.add_argument("--limit", type=int, default=0, help="0 means all")
     ap.add_argument("--disable-network", action="store_true", help="Set disable_network/* params to true when supported")
+    ap.add_argument(
+        "--no-extra-stock-market-views",
+        action="store_true",
+        help="Do not add extra tool_fetch_market_data runs for stock timeshare/pre_market/market_overview/valuation_snapshot",
+    )
+    ap.add_argument(
+        "--extra-stock-market-view-min-timeout",
+        type=int,
+        default=120,
+        help="Minimum timeout (seconds) for extra tool_fetch_market_data stock views; actual timeout is max(--timeout-seconds, this). Default 120 (timeshare 常超 45s).",
+    )
     ap.add_argument("--report", type=str, default=str(ROOT / "tool_test_report.json"))
     args = ap.parse_args()
 
@@ -391,29 +543,39 @@ def main() -> int:
             patched_args.setdefault("watchlist", ["600000"])
             patched_args.setdefault("triggers", [])
 
-        r = _run_tool(
-            tool_runner_path=tool_runner_path,
-            tool_name=tool_id,
-            args=patched_args,
-            timeout_seconds=args.timeout_seconds,
-        )
-        if tool_id.startswith("tool_read_") and r.error_message == "cache_miss":
-            r.ok = True
-        if r.ok:
-            ok_cnt += 1
+        run_plan: List[Tuple[Dict[str, Any], Optional[str]]] = [(patched_args, None)]
+        if tool_id == "tool_fetch_market_data" and not args.no_extra_stock_market_views:
+            for scen, xargs in _extra_tool_fetch_market_data_stock_views(disable_network=args.disable_network):
+                run_plan.append((xargs, scen))
 
-        results.append(
-            {
-                "tool_id": r.tool_id,
-                "ok": r.ok,
-                "rc": r.rc,
-                "duration_ms": r.duration_ms,
-                "args": patched_args,
-                "error_message": r.error_message,
-                "result": r.result_json if r.result_json is not None else None,
-            }
-        )
-        print(f"[{tool_id}] ok={r.ok} rc={r.rc} duration_ms={r.duration_ms} error={r.error_message}")
+        for exec_args, scen in run_plan:
+            eff_timeout = args.timeout_seconds
+            if scen:
+                eff_timeout = max(args.timeout_seconds, args.extra_stock_market_view_min_timeout)
+            r = _run_tool(
+                tool_runner_path=tool_runner_path,
+                tool_name=tool_id,
+                args=exec_args,
+                timeout_seconds=eff_timeout,
+            )
+            if tool_id.startswith("tool_read_") and r.error_message == "cache_miss":
+                r.ok = True
+            if r.ok:
+                ok_cnt += 1
+
+            display_id = tool_id if not scen else f"{tool_id}[{scen}]"
+            results.append(
+                {
+                    "tool_id": display_id,
+                    "ok": r.ok,
+                    "rc": r.rc,
+                    "duration_ms": r.duration_ms,
+                    "args": exec_args,
+                    "error_message": r.error_message,
+                    "result": r.result_json if r.result_json is not None else None,
+                }
+            )
+            print(f"[{display_id}] ok={r.ok} rc={r.rc} duration_ms={r.duration_ms} error={r.error_message}")
 
     report = {
         "generated_at": _utc_now_iso(),
@@ -422,7 +584,7 @@ def main() -> int:
         "disable_network": args.disable_network,
         "timeout_seconds": args.timeout_seconds,
         "limit": args.limit,
-        "total_tools": len(run_ids),
+        "total_tools": len(results),
         "ok_tools": ok_cnt,
         "fail_tools": len(run_ids) - ok_cnt,
         "results": results,

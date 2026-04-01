@@ -1,0 +1,4 @@
+{
+  "tool": "tool_fetch_stock_shareholders",
+  "mock_columns": ["股东名称", "持股数量", "占总股本比例"]
+}
