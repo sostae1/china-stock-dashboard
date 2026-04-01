@@ -61,7 +61,7 @@
 
 ### 安装
 
-**当前发布版本（npm / ClawHub 以 registry 为准）：`0.2.0`**
+**当前发布版本（npm / ClawHub 以 registry 为准）：`0.2.1`**
 
 **从 ClawHub / 注册表安装（推荐）**
 

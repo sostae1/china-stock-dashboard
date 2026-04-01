@@ -55,7 +55,7 @@ When **`asset_type=stock`**, besides `realtime` / `historical` / `minute` / `ope
 
 ### Installation
 
-**Published version (check registry): `0.2.0`**
+**Published version (check registry): `0.2.1`**
 
 **From ClawHub / registry (recommended)**
 
