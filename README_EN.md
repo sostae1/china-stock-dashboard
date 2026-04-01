@@ -55,6 +55,8 @@ When **`asset_type=stock`**, besides `realtime` / `historical` / `minute` / `ope
 
 ### Installation
 
+**Published version (check registry): `0.2.0`**
+
 **From ClawHub / registry (recommended)**
 
 If one command fails, try the other (depends on OpenClaw version and CLI):

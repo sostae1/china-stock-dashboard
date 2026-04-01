@@ -1,7 +1,7 @@
 # 开源 OpenClaw A 股数据插件：指数 / ETF / 个股 / 期权统一接口，已上架 ClawHub
 
 
-做 A 股 / ETF / 挂牌期权数据的朋友，最近我把插件 `openclaw-data-china-stock`（v0.1.2）正式维护在 ClawHub 上了，MIT 开源。
+做 A 股 / ETF / 挂牌期权数据的朋友，最近我把插件 `openclaw-data-china-stock`（v0.2.0）正式维护在 ClawHub 上了，MIT 开源。
 
 如果你也在用 OpenClaw 或在搭 Agent / Workflow，这个插件的目标很直接：
 

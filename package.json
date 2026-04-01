@@ -1,7 +1,7 @@
 {
   "name": "@shaoxing-xie/openclaw-data-china-stock",
-  "version": "0.1.2",
-  "description": "A-share/ETF/Option data collection plugin for OpenClaw (ClawHub)",
+  "version": "0.2.0",
+  "description": "A-share / ETF / option data for OpenClaw: unified market_data, P0/P1 A-share tools, stock views, multi-source fallback.",
   "type": "module",
   "main": "index.ts",
   "files": [
