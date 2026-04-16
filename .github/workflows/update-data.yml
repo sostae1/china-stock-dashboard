@@ -1,38 +1,22 @@
-name: Update Stock Data
-
+﻿name: Update Stock Data
 on:
   schedule:
-    # 每30分钟更新一次（交易时间）
-    - cron: '0,30 1,2,3,5,6,7,9 * * 1-5'  # 北京时间 9:00-15:00 (UTC+8)
-  workflow_dispatch:  # 手动触发
-  push:
-    branches: [main]
-    paths: ['backend.py', 'plugins/**']
-
+    - cron: '0,30 1,2,3,5,6,7,9 * * 1-5'
+  workflow_dispatch:
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          
-      - name: Run backend to generate data
-        run: |
-          python backend.py
+      - run: pip install -r requirements.txt
+      - run: python backend.py
+      - run: |
           cp snapshot_v5.json docs/
-          
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update stock data [skip ci]"
-          git push
+          cp index.html docs/
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Update stock data [skip ci]'
+          file_pattern: 'docs/*'

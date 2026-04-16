@@ -1,18 +1,4 @@
-# Core dependencies for tool_runner and core data tools.
-# Versions are intentionally left unpinned to reduce install friction across environments.
-
-pydantic
-PyYAML
-requests
-numpy
-pytz
-pandas
-pyarrow
-
-# Data providers (used by data_collection tools)
-akshare
-tushare
-yfinance
-mootdx
-efinance
-
+akshare==1.18.54
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+requests>=2.31.0

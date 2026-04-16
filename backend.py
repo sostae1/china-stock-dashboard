@@ -93,13 +93,15 @@ def get_zt_from_plugin():
     TOOL = r"C:\Users\Administrator\.qclaw\workspace\china-stock-data\tool_runner.py"
     try:
         r = subprocess.run(["python", TOOL, "tool_fetch_limit_up_stocks"],
-                        capture_output=True, text=True, timeout=20)
+                        capture_output=True, timeout=20)
         if r.stdout:
-            d = json.loads(r.stdout)
+            # tool_runner.py outputs GBK on Windows, decode explicitly
+            text = r.stdout.decode('gbk', errors='replace')
+            d = json.loads(text)
             if d.get("success"):
                 return d.get("data", [])
-    except:
-        pass
+    except Exception as e:
+        print(f"  get_zt_from_plugin error: {e}")
     return []
 
 # ─── 热门板块（从tool_sector_heat_score获取）────────────────
@@ -108,10 +110,11 @@ def get_sector_heat():
     try:
         r = subprocess.run(
             ["python", r"C:\Users\Administrator\.qclaw\workspace\china-stock-data\tool_runner.py", "tool_sector_heat_score"],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, timeout=30
         )
         if r.stdout:
-            d = json.loads(r.stdout)
+            text = r.stdout.decode('utf-8', errors='replace')
+            d = json.loads(text)
             if d.get("success"):
                 sectors = d.get("sectors", [])
                 result = {}
