@@ -1,0 +1,407 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>A鑲″疄鏃剁湅鏉?/title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --neon-red:#ff2d55;--neon-green:#00ff88;--neon-cyan:#00d4ff;--neon-yellow:#ffe600;
+  --dark:#05080f;--card:rgba(8,15,25,.95);--border:rgba(0,212,255,.2);
+  --tab-h:60px;--header-h:56px;--stats-h:88px;
+}
+html{font-size:16px}
+body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);color:#fff;
+  min-height:100vh;overflow-x:hidden}
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;
+  background:radial-gradient(ellipse at top,rgba(0,212,255,.08) 0%,transparent 50%),
+    radial-gradient(ellipse at bottom right,rgba(255,45,85,.08) 0%,transparent 50%);
+  pointer-events:none;z-index:0}
+
+/* 鍐呭鍖?*/
+.main{position:relative;z-index:1;
+  padding-top:var(--header-h);
+  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  min-height:100vh}
+
+/* 澶撮儴 */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;
+  height:var(--header-h);background:rgba(5,8,15,.97);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-red));
+  border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:18px;height:18px;fill:#fff}
+.logo-text{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:2px;
+  background:linear-gradient(90deg,var(--neon-cyan),#fff);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent}
+.live{display:flex;align-items:center;gap:8px}
+.live-dot{width:7px;height:7px;background:var(--neon-green);border-radius:50%;
+  box-shadow:0 0 8px var(--neon-green);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.time{font-family:'Orbitron',monospace;font-size:12px;color:var(--neon-cyan)}
+
+/* 缁熻鏉?*/
+.stats{position:fixed;top:var(--header-h);left:0;right:0;z-index:99;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border)}
+.stat{background:rgba(5,8,15,.97);padding:10px 8px;text-align:center}
+.stat-num{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;line-height:1}
+.stat-num.red{color:var(--neon-red)}
+.stat-num.green{color:var(--neon-green)}
+.stat-num.cyan{color:var(--neon-cyan)}
+.stat-num.yellow{color:var(--neon-yellow)}
+.stat-lab{font-size:9px;color:rgba(255,255,255,.4);margin-top:3px}
+
+/* Tab 鍐呭 */
+.tab-content{position:fixed;top:calc(var(--header-h) + var(--stats-h));
+  left:0;right:0;bottom:var(--tab-h);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  display:none;scroll-behavior:smooth}
+.tab-content.active{display:block}
+
+/* 鍒楄〃鍗＄墖 */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:13px 14px;margin-bottom:8px;position:relative;
+  transition:border-color .2s}
+.card:active{opacity:.8}
+.card.hot{border-color:rgba(255,45,85,.4)}
+
+.rank{position:absolute;top:10px;right:12px;
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.35);background:rgba(255,255,255,.04);
+  padding:2px 7px;border-radius:6px;min-width:30px;text-align:center}
+.rank.gold{color:var(--neon-yellow);background:rgba(255,230,0,.1)}
+.rank.red-g{color:var(--neon-red);background:rgba(255,45,85,.1)}
+
+.stock-name{font-size:16px;font-weight:700;color:#fff;display:inline}
+.stock-code{font-family:'Orbitron',monospace;font-size:10px;color:rgba(255,255,255,.35);margin-left:7px}
+.board{font-size:11px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.04);
+  padding:2px 8px;border-radius:20px;margin-left:8px}
+
+/* 鏈堟定骞呭ぇ鏁板瓧 */
+.month-val{font-family:'Orbitron',monospace;font-size:40px;font-weight:900;
+  color:var(--neon-yellow);line-height:1;margin-top:4px;
+  text-shadow:0 0 20px rgba(255,230,0,.3)}
+.month-unit{font-size:14px;color:var(--neon-yellow);margin-left:2px}
+
+/* 浠锋牸琛?*/
+.price-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.price-box{flex:1}
+.price-label{font-size:9px;color:rgba(255,255,255,.4);margin-bottom:2px}
+.price-num{font-family:'Orbitron',monospace;font-size:22px;font-weight:900}
+.price-num.up{color:var(--neon-red)}
+.price-num.down{color:var(--neon-green)}
+.price-unit{font-size:10px;color:rgba(255,255,255,.4)}
+.today-badge{min-width:88px;text-align:center;
+  background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.2);
+  border-radius:10px;padding:8px}
+.today-badge.down{background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.2)}
+.today-value{font-family:'Orbitron',monospace;font-size:17px;font-weight:700}
+.today-value.up{color:var(--neon-red)}
+.today-value.down{color:var(--neon-green)}
+.today-label{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* 杩炴澘寰界珷 */
+.lianban{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  color:#fff;background:linear-gradient(135deg,var(--neon-red),#ff6b6b);
+  padding:3px 9px;border-radius:10px;margin-left:8px;
+  box-shadow:0 0 10px rgba(255,45,85,.3);display:inline-block}
+.lianban-2{background:linear-gradient(135deg,#ff9500,#ff6b6b)}
+.lianban-3plus{background:linear-gradient(135deg,#9b00ff,#ff2d55);box-shadow:0 0 15px rgba(155,0,255,.4)}
+
+/* 娑ㄥ仠鏃堕棿 */
+.zt-time{font-family:'Orbitron',monospace;font-size:10px;color:rgba(255,255,255,.3);margin-top:7px;text-align:right}
+
+/* 娑ㄥ仠鍘熷洜鏍囩 */
+.reason-tag{font-size:11px;color:var(--neon-cyan);background:rgba(0,212,255,.08);
+  border:1px solid rgba(0,212,255,.2);padding:2px 9px;border-radius:20px;
+  display:inline-block;margin-top:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 鍒锋柊鎸夐挳 */
+.refresh-btn{position:fixed;bottom:calc(var(--tab-h) + 12px);right:14px;
+  width:44px;height:44px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-red));
+  border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,212,255,.3);z-index:98;cursor:pointer}
+.refresh-btn:active{transform:scale(.9)}
+.refresh-btn svg{width:20px;height:20px;fill:#fff}
+.refresh-btn.loading svg{animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 搴曢儴 Tab */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  height:var(--tab-h);
+  background:rgba(5,8,15,.97);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding-bottom:env(safe-area-inset-bottom, 0px)}
+.tab-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;border:none;background:transparent;
+  color:rgba(255,255,255,.35);transition:color .2s;padding:6px 0}
+.tab-btn.active{color:var(--neon-cyan)}
+.tab-btn svg{width:20px;height:20px;fill:currentColor}
+.tab-label{font-size:10px;font-weight:600;letter-spacing:.5px}
+.tab-btn.active .tab-label{font-weight:700}
+
+/* 鍔犺浇/绌?*/
+.loading,.empty{padding:60px 20px;text-align:center;
+  font-family:'Orbitron',monospace;font-size:11px;
+  color:rgba(255,255,255,.3);letter-spacing:2px}
+
+/* 鐑棬鏉垮潡 */
+.bsec-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.5);
+  margin:14px 0 8px;padding-left:8px;
+  border-left:3px solid var(--neon-red)}
+.bitem{display:flex;align-items:center;gap:12px;padding:11px 14px;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+.bitem-rank{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;
+  color:var(--neon-yellow);min-width:20px;text-align:center}
+.bitem-name{flex:1;font-size:14px;font-weight:600}
+.bitem-pct{font-family:'Orbitron',monospace;font-size:14px;font-weight:700}
+.bitem-pct.up{color:var(--neon-red)}
+.bitem-pct.down{color:var(--neon-green)}
+.bitem-count{font-size:11px;color:var(--neon-yellow);font-family:'Orbitron',monospace}
+.bitem-phase{font-size:10px;color:rgba(255,255,255,.4);margin-left:4px;padding:2px 6px;background:rgba(255,255,255,.05);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<div class="main">
+  <!-- 澶撮儴 -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
+      <span class="logo-text">ASTOCK</span>
+    </div>
+    <div class="live">
+      <div class="live-dot"></div>
+      <span class="time" id="clock">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- 缁熻鏉?-->
+  <div class="stats">
+    <div class="stat"><div class="stat-num yellow" id="s-month">-</div><div class="stat-lab">鏈堟定骞?/div></div>
+    <div class="stat"><div class="stat-num red" id="s-zt">-</div><div class="stat-lab">浠婃棩娑ㄥ仠</div></div>
+    <div class="stat"><div class="stat-num cyan" id="s-con">-</div><div class="stat-lab">杩炴澘鑲?/div></div>
+    <div class="stat"><div class="stat-num green" id="s-time">--:--</div><div class="stat-lab">鏇存柊鏃堕棿</div></div>
+  </div>
+
+  <!-- Tab1: 鏈堟定骞?-->
+  <div class="tab-content active" id="tab-month"></div>
+
+  <!-- Tab2: 浠婃棩娑ㄥ仠 -->
+  <div class="tab-content" id="tab-zt"></div>
+
+  <!-- Tab3: 杩炴澘鑲?-->
+  <div class="tab-content" id="tab-con"></div>
+
+  <!-- Tab4: 鐑棬鏉垮潡 -->
+  <div class="tab-content" id="tab-sector"></div>
+</div>
+
+<!-- 搴曢儴Tab -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="month">
+    <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+    <span class="tab-label">鏈堟定骞?/span>
+  </button>
+  <button class="tab-btn" data-tab="zt">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+    <span class="tab-label">娑ㄥ仠</span>
+  </button>
+  <button class="tab-btn" data-tab="con">
+    <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+    <span class="tab-label">杩炴澘</span>
+  </button>
+  <button class="tab-btn" data-tab="sector">
+    <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+    <span class="tab-label">鏉垮潡</span>
+  </button>
+</div>
+
+<!-- 鍒锋柊鎸夐挳 -->
+<button class="refresh-btn" id="refresh-btn">
+  <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+</button>
+
+<script>
+(function(){
+var DATA='snapshot_v5.json',refreshing=false,ALL=null;
+
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+function fmtP(v){return v?(+v).toFixed(2):'--'}
+function fmtPct(v){return(v>=0?'+':'')+(v?+v:0).toFixed(2)}
+function cls(v){return v>=0?'up':'down'}
+
+// Tab 鍒囨崲
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.onclick=function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+    document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+    this.classList.add('active');
+    document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+  };
+});
+
+// 鏃堕挓
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour12:false})}
+tick();setInterval(tick,1000);
+
+// 鏈堟定骞呭垪琛?
+function renderMonth(list){
+  var el=document.getElementById('tab-month');
+  if(!list||!list.length){el.innerHTML='<div class="empty">鏆傛棤鏁版嵁</div>';return}
+  var h='';
+  for(var i=0;i<list.length;i++){
+    var s=list[i],today=s.today_pct||0;
+    var hot=s.pct>=30;
+    var lbCls=s.rank===1?' gold':s.rank<=3?' red-g':'';
+    h+='<div class="card'+(hot?' hot':'')+'">'+
+      '<span class="rank'+lbCls+'">#'+s.rank+'</span>'+
+      '<div><span class="stock-name">'+esc(s.name)+'</span>'+
+        '<span class="stock-code">'+esc(s.code)+'</span>'+
+        '<span class="board">'+esc(s.board||'--')+'</span></div>'+
+      '<div class="month-val">'+fmtPct(s.pct)+'<span class="month-unit">%</span></div>'+
+      '<div class="price-row">'+
+        '<div class="price-box">'+
+          '<div class="price-label">瀹炴椂浠锋牸</div>'+
+          '<span class="price-num '+cls(today)+'">'+fmtP(s.price)+' <span class="price-unit">鍏?/span></span>'+
+        '</div>'+
+        '<div class="today-badge '+cls(today)+'">'+
+          '<div class="today-value '+cls(today)+'">'+fmtPct(today)+'%</div>'+
+          '<div class="today-label">浠婃棩娑ㄥ箙</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+  el.innerHTML=h;
+}
+
+// 娑ㄥ仠鍒楄〃
+function renderZt(list){
+  var el=document.getElementById('tab-zt');
+  if(!list||!list.length){el.innerHTML='<div class="empty">浼戝競涓?/div>';return}
+  var h='';
+  for(var i=0;i<list.length;i++){
+    var s=list[i],pct=+s.change_pct||0,price=+s.price||0,con=s.continuous_limit_up_count||0;
+    var lbCls=con>=3?' lianban-3plus':con>=2?' lianban-2':'';
+    var reason = s.reason || s.board_name || '--';
+    h+='<div class="card'+(con>=2?' hot':'')+'">'+
+      '<span class="rank">#'+(i+1)+'</span>'+
+      '<div><span class="stock-name">'+esc(s.name||s.code)+'</span>'+
+        '<span class="stock-code">'+esc(s.code)+'</span>'+
+        (con>=2?'<span class="lianban'+lbCls+'">'+con+'杩炴澘</span>':'')+
+      '</div>'+
+      '<div class="reason-tag">'+esc(reason)+'</div>'+
+      '<div class="price-row">'+
+        '<div class="price-box">'+
+          '<div class="price-label">娑ㄥ仠浠?/div>'+
+          '<span class="price-num up">'+fmtP(price)+' <span class="price-unit">鍏?/span></span>'+
+        '</div>'+
+        '<div class="today-badge">'+
+          '<div class="today-value up">'+fmtPct(pct)+'%</div>'+
+          '<div class="today-label">娑ㄥ箙</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="zt-time">'+esc(s.limit_time||'--')+'</div>'+
+    '</div>';
+  }
+  el.innerHTML=h;
+}
+
+// 杩炴澘鍒楄〃
+function renderCon(list){
+  var el=document.getElementById('tab-con');
+  if(!list||!list.length){el.innerHTML='<div class="empty">鏆傛棤杩炴澘鏁版嵁</div>';return}
+  var con=list.filter(function(s){return(s.continuous_limit_up_count||0)>=2});
+  if(!con.length){el.innerHTML='<div class="empty">鏆傛棤杩炴澘鏁版嵁</div>';return}
+  con.sort(function(a,b){return(b.continuous_limit_up_count||0)-(a.continuous_limit_up_count||0)});
+  var h='';
+  for(var i=0;i<con.length;i++){
+    var s=con[i],pct=+s.change_pct||0,price=+s.price||0,conN=s.continuous_limit_up_count||2;
+    var lbCls=conN>=3?' lianban-3plus':conN>=2?' lianban-2':'';
+    h+='<div class="card hot">'+
+      '<span class="rank gold">TOP'+(i+1)+'</span>'+
+      '<div><span class="stock-name">'+esc(s.name||s.code)+'</span>'+
+        '<span class="stock-code">'+esc(s.code)+'</span>'+
+        '<span class="lianban'+lbCls+'">'+conN+'杩炴澘</span></div>'+
+      '<div class="price-row">'+
+        '<div class="price-box">'+
+          '<div class="price-label">娑ㄥ仠浠?/div>'+
+          '<span class="price-num up">'+fmtP(price)+' <span class="price-unit">鍏?/span></span>'+
+        '</div>'+
+        '<div class="today-badge">'+
+          '<div class="today-value up">'+fmtPct(pct)+'%</div>'+
+          '<div class="today-label">娑ㄥ箙</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+  el.innerHTML=h;
+}
+
+// 鐑棬鏉垮潡
+function renderSector(){
+  var el=document.getElementById('tab-sector');
+  if(!ALL||!ALL.sector_hot||!ALL.sector_hot.length){
+    el.innerHTML='<div class="empty">鏆傛棤鏉垮潡鏁版嵁</div>';return}
+  // 鎸夋定骞呮帓搴忥紙闄嶅簭锛?
+  var sorted=ALL.sector_hot.slice(0,15).sort(function(a,b){return(b.pct||0)-(a.pct||0)});
+  var h='<div class="bsec-title">鐑棬鏉垮潡锛堟寜娑ㄥ箙鎺掑簭锛?/div>';
+  sorted.forEach(function(s,i){
+    var count=s.limit_up_count||s.count||0;
+    h+='<div class="bitem">'+
+      '<span class="bitem-rank">TOP'+(i+1)+'</span>'+
+      '<span class="bitem-name">'+esc(s.name||'--')+'</span>'+
+      '<span class="bitem-count">'+count+'鍙定鍋?/span>'+
+      '<span class="bitem-pct '+(s.pct>=0?'up':'down')+'">'+fmtPct(s.pct||0)+'%</span>'+
+      (s.phase?'<span class="bitem-phase">'+esc(s.phase)+'</span>':'')+
+    '</div>';
+  });
+  el.innerHTML=h;
+}
+
+// 鍔犺浇鏁版嵁
+function load(){
+  var x=new XMLHttpRequest();
+  x.open('GET',DATA+'?t='+Date.now(),true);
+  x.onload=function(){
+    if(x.status!==200)return;
+    try{
+      var d=JSON.parse(x.responseText);
+      ALL=d;
+      var zt=d.zt_today||[];
+      var con=zt.filter(function(s){return(s.continuous_limit_up_count||0)>=2}).length;
+      document.getElementById('s-month').textContent=(d.month_top||[]).length||0;
+      document.getElementById('s-zt').textContent=zt.length||0;
+      document.getElementById('s-con').textContent=con||0;
+      var t=(d.updated_at||'').substr(11,5)||'--:--';
+      document.getElementById('s-time').textContent=t;
+      renderMonth(d.month_top);
+      renderZt(zt);
+      renderCon(zt);
+      renderSector();
+    }catch(e){console.error(e)}
+    refreshing=false;
+    document.getElementById('refresh-btn').classList.remove('loading');
+  };
+  x.onerror=function(){refreshing=false;document.getElementById('refresh-btn').classList.remove('loading')};
+  x.send();
+}
+
+document.getElementById('refresh-btn').onclick=function(){
+  if(refreshing)return;refreshing=true;this.classList.add('loading');load()};
+load();
+setInterval(function(){if(!refreshing)load()},30000);
+})();
+</script>
+</body>
+</html>

@@ -10,6 +10,27 @@ tool_test_report*.json
 *.db
 *.sqlite3
 
+# 忽略根目录的测试和调试文件
+/test_*.py
+/debug_*.py
+/check_*.py
+/verify_*.py
+/find_*.py
+/analyze_*.py
+/kill_*.py
+/deploy_static.py
+/runner_loop.py
+/daemon_refresh.py
+/wait_data.py
+/write_*.py
+/run_*.py
+/*.log
+/*.bat
+/server.py
+
+# 但保留docs/目录的文件
+!docs/
+
 # Python
 __pycache__/
 *.pyc

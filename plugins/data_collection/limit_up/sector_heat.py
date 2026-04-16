@@ -174,6 +174,7 @@ def tool_sector_heat_score(
             "score": score,
             "limit_up_count": count,
             "avg_change": round(avg_change, 2),
+            "change_percent": round(change_pct, 2) if change_pct is not None else None,  # 板块真实涨幅
             "net_flow": net_inflow,
             "phase": phase,
             "max_continuous": max_continuous,
