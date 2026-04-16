@@ -1,0 +1,456 @@
+{
+  "updated_at": "2026-04-15 21:57:58",
+  "month_top": [],
+  "zt_today": [
+    {
+      "name": "博云新材",
+      "code": "002297",
+      "pct": 10.0,
+      "board": "航空装备",
+      "reason": "航空装备",
+      "price": 14.62,
+      "today_pct": 10.01
+    },
+    {
+      "name": "申通快递",
+      "code": "002468",
+      "pct": 10.0,
+      "board": "物流",
+      "reason": "物流",
+      "price": 16.39,
+      "today_pct": 10.0
+    },
+    {
+      "name": "大胜达",
+      "code": "603687",
+      "pct": 10.0,
+      "board": "包装印刷",
+      "reason": "包装印刷",
+      "price": 18.04,
+      "today_pct": 10.0
+    },
+    {
+      "name": "航天工程",
+      "code": "603698",
+      "pct": 10.0,
+      "board": "专用设备",
+      "reason": "专用设备",
+      "price": 39.53,
+      "today_pct": 9.99
+    },
+    {
+      "name": "圣阳股份",
+      "code": "002580",
+      "pct": 10.0,
+      "board": "电池",
+      "reason": "电池",
+      "price": 25.27,
+      "today_pct": 10.01
+    },
+    {
+      "name": "长源东谷",
+      "code": "603950",
+      "pct": 10.0,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "price": 59.84,
+      "today_pct": 10.0
+    },
+    {
+      "name": "汇通能源",
+      "code": "600605",
+      "pct": 10.0,
+      "board": "一般零售",
+      "reason": "一般零售",
+      "price": 32.33,
+      "today_pct": 10.0
+    },
+    {
+      "name": "中工国际",
+      "code": "002051",
+      "pct": 10.0,
+      "board": "专业工程",
+      "reason": "专业工程",
+      "price": 11.9,
+      "today_pct": 9.98
+    },
+    {
+      "name": "天邦食品",
+      "code": "002124",
+      "pct": 10.0,
+      "board": "养殖业",
+      "reason": "养殖业",
+      "price": 3.14,
+      "today_pct": 10.18
+    },
+    {
+      "name": "瑞康医药",
+      "code": "002589",
+      "pct": 10.0,
+      "board": "医药商业",
+      "reason": "医药商业",
+      "price": 3.59,
+      "today_pct": 10.12
+    },
+    {
+      "name": "禾望电气",
+      "code": "603063",
+      "pct": 10.0,
+      "board": "风电设备",
+      "reason": "风电设备",
+      "price": 38.03,
+      "today_pct": 10.01
+    },
+    {
+      "name": "立达信",
+      "code": "605365",
+      "pct": 10.0,
+      "board": "照明设备",
+      "reason": "照明设备",
+      "price": 23.67,
+      "today_pct": 9.99
+    },
+    {
+      "name": "居然智家",
+      "code": "000785",
+      "pct": 10.0,
+      "board": "一般零售",
+      "reason": "一般零售",
+      "price": 2.7,
+      "today_pct": 10.2
+    },
+    {
+      "name": "福蓉科技",
+      "code": "603327",
+      "pct": 10.0,
+      "board": "消费电子",
+      "reason": "消费电子",
+      "price": 10.54,
+      "today_pct": 10.02
+    },
+    {
+      "name": "吉比特",
+      "code": "603444",
+      "pct": 10.0,
+      "board": "游戏Ⅱ",
+      "reason": "游戏Ⅱ",
+      "price": 393.34,
+      "today_pct": 10.0
+    },
+    {
+      "name": "交建股份",
+      "code": "603815",
+      "pct": 10.0,
+      "board": "基础建设",
+      "reason": "基础建设",
+      "price": 6.36,
+      "today_pct": 10.03
+    },
+    {
+      "name": "行动教育",
+      "code": "605098",
+      "pct": 10.0,
+      "board": "教育",
+      "reason": "教育",
+      "price": 60.15,
+      "today_pct": 10.0
+    },
+    {
+      "name": "奥尼电子",
+      "code": "301189",
+      "pct": 20.0,
+      "board": "消费电子",
+      "reason": "消费电子",
+      "price": 86.39,
+      "today_pct": 20.0
+    },
+    {
+      "name": "春秋电子",
+      "code": "603890",
+      "pct": 10.0,
+      "board": "消费电子",
+      "reason": "消费电子",
+      "price": 18.71,
+      "today_pct": 9.99
+    },
+    {
+      "name": "汉缆股份",
+      "code": "002498",
+      "pct": 10.0,
+      "board": "电网设备",
+      "reason": "电网设备",
+      "price": 8.5,
+      "today_pct": 9.96
+    },
+    {
+      "name": "华源控股",
+      "code": "002787",
+      "pct": 10.0,
+      "board": "包装印刷",
+      "reason": "包装印刷",
+      "price": 16.68,
+      "today_pct": 10.03
+    },
+    {
+      "name": "帝欧水华",
+      "code": "002798",
+      "pct": 10.0,
+      "board": "家居用品",
+      "reason": "家居用品",
+      "price": 6.67,
+      "today_pct": 10.07
+    },
+    {
+      "name": "键邦股份",
+      "code": "603285",
+      "pct": 10.0,
+      "board": "化学制品",
+      "reason": "化学制品",
+      "price": 34.65,
+      "today_pct": 10.0
+    },
+    {
+      "name": "乐凯胶片",
+      "code": "600135",
+      "pct": 10.0,
+      "board": "塑料",
+      "reason": "塑料",
+      "price": 11.2,
+      "today_pct": 10.02
+    },
+    {
+      "name": "健信超导",
+      "code": "688805",
+      "pct": 20.0,
+      "board": "医疗器械",
+      "reason": "医疗器械",
+      "price": 56.92,
+      "today_pct": 20.01
+    },
+    {
+      "name": "海正药业",
+      "code": "600267",
+      "pct": 10.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 11.39,
+      "today_pct": 10.05
+    },
+    {
+      "name": "金陵药业",
+      "code": "000919",
+      "pct": 10.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 8.26,
+      "today_pct": 9.99
+    },
+    {
+      "name": "哈药股份",
+      "code": "600664",
+      "pct": 10.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 4.44,
+      "today_pct": 9.9
+    },
+    {
+      "name": "和胜股份",
+      "code": "002824",
+      "pct": 10.0,
+      "board": "工业金属",
+      "reason": "工业金属",
+      "price": 29.62,
+      "today_pct": 9.99
+    },
+    {
+      "name": "泰坦股份",
+      "code": "003036",
+      "pct": 10.0,
+      "board": "专用设备",
+      "reason": "专用设备",
+      "price": 29.7,
+      "today_pct": 10.0
+    },
+    {
+      "name": "华菱线缆",
+      "code": "001208",
+      "pct": 10.0,
+      "board": "电网设备",
+      "reason": "电网设备",
+      "price": 21.4,
+      "today_pct": 10.03
+    },
+    {
+      "name": "沃格光电",
+      "code": "603773",
+      "pct": 10.0,
+      "board": "光学光电",
+      "reason": "光学光电",
+      "price": 49.52,
+      "today_pct": 10.0
+    },
+    {
+      "name": "丽江股份",
+      "code": "002033",
+      "pct": 10.0,
+      "board": "旅游及景",
+      "reason": "旅游及景",
+      "price": 9.94,
+      "today_pct": 9.96
+    },
+    {
+      "name": "梦天家居",
+      "code": "603216",
+      "pct": 10.0,
+      "board": "家居用品",
+      "reason": "家居用品",
+      "price": 33.17,
+      "today_pct": 10.02
+    },
+    {
+      "name": "万朗磁塑",
+      "code": "603150",
+      "pct": 10.0,
+      "board": "塑料",
+      "reason": "塑料",
+      "price": 57.53,
+      "today_pct": 10.0
+    },
+    {
+      "name": "鹭燕医药",
+      "code": "002788",
+      "pct": 10.0,
+      "board": "医药商业",
+      "reason": "医药商业",
+      "price": 15.95,
+      "today_pct": 10.0
+    },
+    {
+      "name": "双鹭药业",
+      "code": "002038",
+      "pct": 10.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 8.07,
+      "today_pct": 9.95
+    },
+    {
+      "name": "博瑞医药",
+      "code": "688166",
+      "pct": 20.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 57.66,
+      "today_pct": 20.0
+    },
+    {
+      "name": "罗曼股份",
+      "code": "605289",
+      "pct": 10.0,
+      "board": "专业工程",
+      "reason": "专业工程",
+      "price": 126.61,
+      "today_pct": 10.0
+    },
+    {
+      "name": "新宝股份",
+      "code": "002705",
+      "pct": 10.0,
+      "board": "小家电",
+      "reason": "小家电",
+      "price": 17.34,
+      "today_pct": 10.03
+    },
+    {
+      "name": "利通电子",
+      "code": "603629",
+      "pct": 10.0,
+      "board": "消费电子",
+      "reason": "消费电子",
+      "price": 87.95,
+      "today_pct": 10.01
+    },
+    {
+      "name": "京投发展",
+      "code": "600683",
+      "pct": 10.0,
+      "board": "房地产开",
+      "reason": "房地产开",
+      "price": 9.91,
+      "today_pct": 9.99
+    },
+    {
+      "name": "起帆电缆",
+      "code": "605222",
+      "pct": 10.0,
+      "board": "电网设备",
+      "reason": "电网设备",
+      "price": 25.8,
+      "today_pct": 10.02
+    },
+    {
+      "name": "北大医药",
+      "code": "000788",
+      "pct": 10.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 6.77,
+      "today_pct": 10.08
+    },
+    {
+      "name": "宏柏新材",
+      "code": "605366",
+      "pct": 10.0,
+      "board": "化学制品",
+      "reason": "化学制品",
+      "price": 13.41,
+      "today_pct": 10.01
+    },
+    {
+      "name": "津药药业",
+      "code": "600488",
+      "pct": 10.0,
+      "board": "化学制药",
+      "reason": "化学制药",
+      "price": 6.84,
+      "today_pct": 9.97
+    },
+    {
+      "name": "康恩贝",
+      "code": "600572",
+      "pct": 10.0,
+      "board": "中药Ⅱ",
+      "reason": "中药Ⅱ",
+      "price": 4.8,
+      "today_pct": 10.09
+    },
+    {
+      "name": "华人健康",
+      "code": "301408",
+      "pct": 20.0,
+      "board": "医药商业",
+      "reason": "医药商业",
+      "price": 20.78,
+      "today_pct": 19.98
+    },
+    {
+      "name": "飞亚达",
+      "code": "000026",
+      "pct": 10.0,
+      "board": "饰品",
+      "reason": "饰品",
+      "price": 17.82,
+      "today_pct": 10.0
+    },
+    {
+      "name": "盛视科技",
+      "code": "002990",
+      "pct": 10.0,
+      "board": "计算机设",
+      "reason": "计算机设",
+      "price": 42.11,
+      "today_pct": 10.01
+    }
+  ]
+}

@@ -1,0 +1,447 @@
+{
+  "updated_at": "2026-04-11 11:15:18",
+  "month_top": [],
+  "zt_today": [
+    {
+      "name": "远大控股",
+      "code": "000626",
+      "pct": 10.0,
+      "board": "物流",
+      "reason": "物流",
+      "price": 8.61,
+      "today_pct": 9.96
+    },
+    {
+      "name": "中嘉博创",
+      "code": "000889",
+      "pct": 10.0,
+      "board": "通信服务",
+      "reason": "通信服务",
+      "price": 4.35,
+      "today_pct": 10.13
+    },
+    {
+      "name": "欧晶科技",
+      "code": "001269",
+      "pct": 10.0,
+      "board": "光伏设备",
+      "reason": "光伏设备",
+      "price": 23.18,
+      "today_pct": 10.01
+    },
+    {
+      "name": "中恒电气",
+      "code": "002364",
+      "pct": 10.0,
+      "board": "其他电源",
+      "reason": "其他电源",
+      "price": 35.12,
+      "today_pct": 9.99
+    },
+    {
+      "name": "青山纸业",
+      "code": "600103",
+      "pct": 10.0,
+      "board": "造纸",
+      "reason": "造纸",
+      "price": 3.91,
+      "today_pct": 10.14
+    },
+    {
+      "name": "睿能科技",
+      "code": "603933",
+      "pct": 10.0,
+      "board": "其他电子",
+      "reason": "其他电子",
+      "price": 24.53,
+      "today_pct": 10.0
+    },
+    {
+      "name": "长源东谷",
+      "code": "603950",
+      "pct": 10.0,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "price": 49.37,
+      "today_pct": 10.0
+    },
+    {
+      "name": "彩虹股份",
+      "code": "600707",
+      "pct": 10.0,
+      "board": "光学光电",
+      "reason": "光学光电",
+      "price": 7.02,
+      "today_pct": 10.03
+    },
+    {
+      "name": "华远控股",
+      "code": "600743",
+      "pct": 10.0,
+      "board": "一般零售",
+      "reason": "一般零售",
+      "price": 2.65,
+      "today_pct": 9.96
+    },
+    {
+      "name": "中国动力",
+      "code": "600482",
+      "pct": 10.0,
+      "board": "其他电源",
+      "reason": "其他电源",
+      "price": 40.44,
+      "today_pct": 10.01
+    },
+    {
+      "name": "长江通信",
+      "code": "600345",
+      "pct": 10.0,
+      "board": "通信设备",
+      "reason": "通信设备",
+      "price": 54.36,
+      "today_pct": 10.0
+    },
+    {
+      "name": "惠而浦",
+      "code": "600983",
+      "pct": 10.0,
+      "board": "白色家电",
+      "reason": "白色家电",
+      "price": 11.17,
+      "today_pct": 10.05
+    },
+    {
+      "name": "金 融 街",
+      "code": "000402",
+      "pct": 10.0,
+      "board": "房地产开",
+      "reason": "房地产开",
+      "price": 2.78,
+      "today_pct": 9.88
+    },
+    {
+      "name": "新朋股份",
+      "code": "002328",
+      "pct": 10.0,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "price": 10.11,
+      "today_pct": 10.01
+    },
+    {
+      "name": "德业股份",
+      "code": "605117",
+      "pct": 10.0,
+      "board": "光伏设备",
+      "reason": "光伏设备",
+      "price": 139.6,
+      "today_pct": 10.0
+    },
+    {
+      "name": "盈方微",
+      "code": "000670",
+      "pct": 10.0,
+      "board": "其他电子",
+      "reason": "其他电子",
+      "price": 8.15,
+      "today_pct": 9.99
+    },
+    {
+      "name": "新澳股份",
+      "code": "603889",
+      "pct": 10.0,
+      "board": "纺织制造",
+      "reason": "纺织制造",
+      "price": 8.75,
+      "today_pct": 10.06
+    },
+    {
+      "name": "来伊份",
+      "code": "603777",
+      "pct": 10.0,
+      "board": "休闲食品",
+      "reason": "休闲食品",
+      "price": 16.97,
+      "today_pct": 9.98
+    },
+    {
+      "name": "国轩高科",
+      "code": "002074",
+      "pct": 10.0,
+      "board": "电池",
+      "reason": "电池",
+      "price": 38.81,
+      "today_pct": 10.01
+    },
+    {
+      "name": "五方光电",
+      "code": "002962",
+      "pct": 10.0,
+      "board": "光学光电",
+      "reason": "光学光电",
+      "price": 16.91,
+      "today_pct": 10.02
+    },
+    {
+      "name": "奥美医疗",
+      "code": "002950",
+      "pct": 10.0,
+      "board": "医疗器械",
+      "reason": "医疗器械",
+      "price": 13.56,
+      "today_pct": 9.98
+    },
+    {
+      "name": "大东南",
+      "code": "002263",
+      "pct": 10.0,
+      "board": "塑料",
+      "reason": "塑料",
+      "price": 4.9,
+      "today_pct": 10.11
+    },
+    {
+      "name": "石大胜华",
+      "code": "603026",
+      "pct": 10.0,
+      "board": "电池",
+      "reason": "电池",
+      "price": 85.16,
+      "today_pct": 10.0
+    },
+    {
+      "name": "联翔股份",
+      "code": "603272",
+      "pct": 10.0,
+      "board": "家居用品",
+      "reason": "家居用品",
+      "price": 37.02,
+      "today_pct": 10.01
+    },
+    {
+      "name": "万泽股份",
+      "code": "000534",
+      "pct": 10.0,
+      "board": "生物制品",
+      "reason": "生物制品",
+      "price": 45.68,
+      "today_pct": 9.99
+    },
+    {
+      "name": "南华期货",
+      "code": "603093",
+      "pct": 10.0,
+      "board": "多元金融",
+      "reason": "多元金融",
+      "price": 19.31,
+      "today_pct": 10.03
+    },
+    {
+      "name": "山东玻纤",
+      "code": "605006",
+      "pct": 10.0,
+      "board": "玻璃玻纤",
+      "reason": "玻璃玻纤",
+      "price": 10.12,
+      "today_pct": 10.0
+    },
+    {
+      "name": "宁波精达",
+      "code": "603088",
+      "pct": 10.0,
+      "board": "通用设备",
+      "reason": "通用设备",
+      "price": 13.44,
+      "today_pct": 9.98
+    },
+    {
+      "name": "凯盛新能",
+      "code": "600876",
+      "pct": 10.0,
+      "board": "玻璃玻纤",
+      "reason": "玻璃玻纤",
+      "price": 9.94,
+      "today_pct": 9.96
+    },
+    {
+      "name": "泰坦股份",
+      "code": "003036",
+      "pct": 10.0,
+      "board": "专用设备",
+      "reason": "专用设备",
+      "price": 26.48,
+      "today_pct": 10.01
+    },
+    {
+      "name": "上海洗霸",
+      "code": "603200",
+      "pct": 10.0,
+      "board": "环境治理",
+      "reason": "环境治理",
+      "price": 61.71,
+      "today_pct": 10.0
+    },
+    {
+      "name": "沃格光电",
+      "code": "603773",
+      "pct": 10.0,
+      "board": "光学光电",
+      "reason": "光学光电",
+      "price": 43.14,
+      "today_pct": 9.99
+    },
+    {
+      "name": "联德股份",
+      "code": "605060",
+      "pct": 10.0,
+      "board": "通用设备",
+      "reason": "通用设备",
+      "price": 59.03,
+      "today_pct": 10.01
+    },
+    {
+      "name": "文峰股份",
+      "code": "601010",
+      "pct": 10.0,
+      "board": "一般零售",
+      "reason": "一般零售",
+      "price": 2.42,
+      "today_pct": 10.0
+    },
+    {
+      "name": "亿晶光电",
+      "code": "600537",
+      "pct": 10.0,
+      "board": "光伏设备",
+      "reason": "光伏设备",
+      "price": 4.07,
+      "today_pct": 10.0
+    },
+    {
+      "name": "出版传媒",
+      "code": "601999",
+      "pct": 10.0,
+      "board": "出版",
+      "reason": "出版",
+      "price": 8.46,
+      "today_pct": 10.01
+    },
+    {
+      "name": "豪美新材",
+      "code": "002988",
+      "pct": 10.0,
+      "board": "工业金属",
+      "reason": "工业金属",
+      "price": 35.38,
+      "today_pct": 10.01
+    },
+    {
+      "name": "南京医药",
+      "code": "600713",
+      "pct": 10.0,
+      "board": "医药商业",
+      "reason": "医药商业",
+      "price": 6.05,
+      "today_pct": 10.0
+    },
+    {
+      "name": "华升股份",
+      "code": "600156",
+      "pct": 10.0,
+      "board": "纺织制造",
+      "reason": "纺织制造",
+      "price": 8.15,
+      "today_pct": 9.99
+    },
+    {
+      "name": "美能能源",
+      "code": "001299",
+      "pct": 10.0,
+      "board": "燃气Ⅱ",
+      "reason": "燃气Ⅱ",
+      "price": 15.32,
+      "today_pct": 9.98
+    },
+    {
+      "name": "双枪科技",
+      "code": "001211",
+      "pct": 10.0,
+      "board": "家居用品",
+      "reason": "家居用品",
+      "price": 30.68,
+      "today_pct": 10.0
+    },
+    {
+      "name": "珠海中富",
+      "code": "000659",
+      "pct": 10.0,
+      "board": "包装印刷",
+      "reason": "包装印刷",
+      "price": 4.3,
+      "today_pct": 9.97
+    },
+    {
+      "name": "永鼎股份",
+      "code": "600105",
+      "pct": 10.0,
+      "board": "通信设备",
+      "reason": "通信设备",
+      "price": 38.1,
+      "today_pct": 9.99
+    },
+    {
+      "name": "正和生态",
+      "code": "605069",
+      "pct": 10.0,
+      "board": "环境治理",
+      "reason": "环境治理",
+      "price": 12.36,
+      "today_pct": 9.96
+    },
+    {
+      "name": "天普股份",
+      "code": "605255",
+      "pct": 10.0,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "price": 105.31,
+      "today_pct": 10.0
+    },
+    {
+      "name": "凌云股份",
+      "code": "600480",
+      "pct": 10.0,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "price": 10.79,
+      "today_pct": 9.99
+    },
+    {
+      "name": "雄韬股份",
+      "code": "002733",
+      "pct": 10.0,
+      "board": "电池",
+      "reason": "电池",
+      "price": 30.25,
+      "today_pct": 10.0
+    },
+    {
+      "name": "隆基机械",
+      "code": "002363",
+      "pct": 10.0,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "price": 8.67,
+      "today_pct": 10.03
+    },
+    {
+      "name": "汇嘉时代",
+      "code": "603101",
+      "pct": 10.0,
+      "board": "一般零售",
+      "reason": "一般零售",
+      "price": 8.83,
+      "today_pct": 9.96
+    }
+  ]
+}
