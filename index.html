@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>A鑲″疄鏃剁湅鏉?/title>
+<title>A股实时看板</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -20,13 +20,13 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
     radial-gradient(ellipse at bottom right,rgba(255,45,85,.08) 0%,transparent 50%);
   pointer-events:none;z-index:0}
 
-/* 鍐呭鍖?*/
+/* 内容区 */
 .main{position:relative;z-index:1;
   padding-top:var(--header-h);
   padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
   min-height:100vh}
 
-/* 澶撮儴 */
+/* 头部 */
 .header{position:fixed;top:0;left:0;right:0;z-index:100;
   height:var(--header-h);background:rgba(5,8,15,.97);
   backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
@@ -45,7 +45,7 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .time{font-family:'Orbitron',monospace;font-size:12px;color:var(--neon-cyan)}
 
-/* 缁熻鏍?*/
+/* 统计栏 */
 .stats{position:fixed;top:var(--header-h);left:0;right:0;z-index:99;
   display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--border)}
@@ -57,7 +57,7 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 .stat-num.yellow{color:var(--neon-yellow)}
 .stat-lab{font-size:9px;color:rgba(255,255,255,.4);margin-top:3px}
 
-/* Tab 鍐呭 */
+/* Tab 内容 */
 .tab-content{position:fixed;top:calc(var(--header-h) + var(--stats-h));
   left:0;right:0;bottom:var(--tab-h);
   overflow-y:auto;-webkit-overflow-scrolling:touch;
@@ -65,7 +65,7 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
   display:none;scroll-behavior:smooth}
 .tab-content.active{display:block}
 
-/* 鍒楄〃鍗＄墖 */
+/* 列表卡片 */
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;
   padding:13px 14px;margin-bottom:8px;position:relative;
   transition:border-color .2s}
@@ -84,13 +84,13 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 .board{font-size:11px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.04);
   padding:2px 8px;border-radius:20px;margin-left:8px}
 
-/* 鏈堟定骞呭ぇ鏁板瓧 */
+/* 月涨幅大数字 */
 .month-val{font-family:'Orbitron',monospace;font-size:40px;font-weight:900;
   color:var(--neon-yellow);line-height:1;margin-top:4px;
   text-shadow:0 0 20px rgba(255,230,0,.3)}
 .month-unit{font-size:14px;color:var(--neon-yellow);margin-left:2px}
 
-/* 浠锋牸琛?*/
+/* 价格行 */
 .price-row{display:flex;align-items:center;gap:10px;margin-top:10px}
 .price-box{flex:1}
 .price-label{font-size:9px;color:rgba(255,255,255,.4);margin-bottom:2px}
@@ -107,7 +107,7 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 .today-value.down{color:var(--neon-green)}
 .today-label{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px}
 
-/* 杩炴澘寰界珷 */
+/* 连板徽章 */
 .lianban{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
   color:#fff;background:linear-gradient(135deg,var(--neon-red),#ff6b6b);
   padding:3px 9px;border-radius:10px;margin-left:8px;
@@ -115,15 +115,15 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 .lianban-2{background:linear-gradient(135deg,#ff9500,#ff6b6b)}
 .lianban-3plus{background:linear-gradient(135deg,#9b00ff,#ff2d55);box-shadow:0 0 15px rgba(155,0,255,.4)}
 
-/* 娑ㄥ仠鏃堕棿 */
+/* 涨停时间 */
 .zt-time{font-family:'Orbitron',monospace;font-size:10px;color:rgba(255,255,255,.3);margin-top:7px;text-align:right}
 
-/* 娑ㄥ仠鍘熷洜鏍囩 */
+/* 涨停原因标签 */
 .reason-tag{font-size:11px;color:var(--neon-cyan);background:rgba(0,212,255,.08);
   border:1px solid rgba(0,212,255,.2);padding:2px 9px;border-radius:20px;
   display:inline-block;margin-top:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* 鍒锋柊鎸夐挳 */
+/* 刷新按钮 */
 .refresh-btn{position:fixed;bottom:calc(var(--tab-h) + 12px);right:14px;
   width:44px;height:44px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-red));
   border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
@@ -133,7 +133,7 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 .refresh-btn.loading svg{animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* 搴曢儴 Tab */
+/* 底部 Tab */
 .tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;
   height:var(--tab-h);
   background:rgba(5,8,15,.97);
@@ -149,12 +149,12 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 .tab-label{font-size:10px;font-weight:600;letter-spacing:.5px}
 .tab-btn.active .tab-label{font-weight:700}
 
-/* 鍔犺浇/绌?*/
+/* 加载/空 */
 .loading,.empty{padding:60px 20px;text-align:center;
   font-family:'Orbitron',monospace;font-size:11px;
   color:rgba(255,255,255,.3);letter-spacing:2px}
 
-/* 鐑棬鏉垮潡 */
+/* 热门板块 */
 .bsec-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.5);
   margin:14px 0 8px;padding-left:8px;
   border-left:3px solid var(--neon-red)}
@@ -174,7 +174,7 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
 <div class="bg"></div>
 
 <div class="main">
-  <!-- 澶撮儴 -->
+  <!-- 头部 -->
   <div class="header">
     <div class="logo">
       <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
@@ -186,48 +186,48 @@ body{font-family:'Rajdhani','Noto Sans SC',sans-serif;background:var(--dark);col
     </div>
   </div>
 
-  <!-- 缁熻鏍?-->
+  <!-- 统计栏 -->
   <div class="stats">
-    <div class="stat"><div class="stat-num yellow" id="s-month">-</div><div class="stat-lab">鏈堟定骞?/div></div>
-    <div class="stat"><div class="stat-num red" id="s-zt">-</div><div class="stat-lab">浠婃棩娑ㄥ仠</div></div>
-    <div class="stat"><div class="stat-num cyan" id="s-con">-</div><div class="stat-lab">杩炴澘鑲?/div></div>
-    <div class="stat"><div class="stat-num green" id="s-time">--:--</div><div class="stat-lab">鏇存柊鏃堕棿</div></div>
+    <div class="stat"><div class="stat-num yellow" id="s-month">-</div><div class="stat-lab">月涨幅</div></div>
+    <div class="stat"><div class="stat-num red" id="s-zt">-</div><div class="stat-lab">今日涨停</div></div>
+    <div class="stat"><div class="stat-num cyan" id="s-con">-</div><div class="stat-lab">连板股</div></div>
+    <div class="stat"><div class="stat-num green" id="s-time">--:--</div><div class="stat-lab">更新时间</div></div>
   </div>
 
-  <!-- Tab1: 鏈堟定骞?-->
+  <!-- Tab1: 月涨幅 -->
   <div class="tab-content active" id="tab-month"></div>
 
-  <!-- Tab2: 浠婃棩娑ㄥ仠 -->
+  <!-- Tab2: 今日涨停 -->
   <div class="tab-content" id="tab-zt"></div>
 
-  <!-- Tab3: 杩炴澘鑲?-->
+  <!-- Tab3: 连板股 -->
   <div class="tab-content" id="tab-con"></div>
 
-  <!-- Tab4: 鐑棬鏉垮潡 -->
+  <!-- Tab4: 热门板块 -->
   <div class="tab-content" id="tab-sector"></div>
 </div>
 
-<!-- 搴曢儴Tab -->
+<!-- 底部Tab -->
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="month">
     <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-    <span class="tab-label">鏈堟定骞?/span>
+    <span class="tab-label">月涨幅</span>
   </button>
   <button class="tab-btn" data-tab="zt">
     <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-    <span class="tab-label">娑ㄥ仠</span>
+    <span class="tab-label">涨停</span>
   </button>
   <button class="tab-btn" data-tab="con">
     <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-    <span class="tab-label">杩炴澘</span>
+    <span class="tab-label">连板</span>
   </button>
   <button class="tab-btn" data-tab="sector">
     <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
-    <span class="tab-label">鏉垮潡</span>
+    <span class="tab-label">板块</span>
   </button>
 </div>
 
-<!-- 鍒锋柊鎸夐挳 -->
+<!-- 刷新按钮 -->
 <button class="refresh-btn" id="refresh-btn">
   <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4 5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
 </button>
@@ -241,7 +241,7 @@ function fmtP(v){return v?(+v).toFixed(2):'--'}
 function fmtPct(v){return(v>=0?'+':'')+(v?+v:0).toFixed(2)}
 function cls(v){return v>=0?'up':'down'}
 
-// Tab 鍒囨崲
+// Tab 切换
 document.querySelectorAll('.tab-btn').forEach(function(btn){
   btn.onclick=function(){
     document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
@@ -251,13 +251,14 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
   };
 });
 
-// 鏃堕挓
+// 时钟
 function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour12:false})}
 tick();setInterval(tick,1000);
 
-// 鏈堟定骞呭垪琛?function renderMonth(list){
+// 月涨幅列表
+function renderMonth(list){
   var el=document.getElementById('tab-month');
-  if(!list||!list.length){el.innerHTML='<div class="empty">鏆傛棤鏁版嵁</div>';return}
+  if(!list||!list.length){el.innerHTML='<div class="empty">暂无数据</div>';return}
   var h='';
   for(var i=0;i<list.length;i++){
     var s=list[i],today=s.today_pct||0;
@@ -271,12 +272,12 @@ tick();setInterval(tick,1000);
       '<div class="month-val">'+fmtPct(s.pct)+'<span class="month-unit">%</span></div>'+
       '<div class="price-row">'+
         '<div class="price-box">'+
-          '<div class="price-label">瀹炴椂浠锋牸</div>'+
-          '<span class="price-num '+cls(today)+'">'+fmtP(s.price)+' <span class="price-unit">鍏?/span></span>'+
+          '<div class="price-label">实时价格</div>'+
+          '<span class="price-num '+cls(today)+'">'+fmtP(s.price)+' <span class="price-unit">元</span></span>'+
         '</div>'+
         '<div class="today-badge '+cls(today)+'">'+
           '<div class="today-value '+cls(today)+'">'+fmtPct(today)+'%</div>'+
-          '<div class="today-label">浠婃棩娑ㄥ箙</div>'+
+          '<div class="today-label">今日涨幅</div>'+
         '</div>'+
       '</div>'+
     '</div>';
@@ -284,10 +285,10 @@ tick();setInterval(tick,1000);
   el.innerHTML=h;
 }
 
-// 娑ㄥ仠鍒楄〃
+// 涨停列表
 function renderZt(list){
   var el=document.getElementById('tab-zt');
-  if(!list||!list.length){el.innerHTML='<div class="empty">浼戝競涓?/div>';return}
+  if(!list||!list.length){el.innerHTML='<div class="empty">休市中</div>';return}
   var h='';
   for(var i=0;i<list.length;i++){
     var s=list[i],pct=+s.change_pct||0,price=+s.price||0,con=s.continuous_limit_up_count||0;
@@ -297,17 +298,17 @@ function renderZt(list){
       '<span class="rank">#'+(i+1)+'</span>'+
       '<div><span class="stock-name">'+esc(s.name||s.code)+'</span>'+
         '<span class="stock-code">'+esc(s.code)+'</span>'+
-        (con>=2?'<span class="lianban'+lbCls+'">'+con+'杩炴澘</span>':'')+
+        (con>=2?'<span class="lianban'+lbCls+'">'+con+'连板</span>':'')+
       '</div>'+
       '<div class="reason-tag">'+esc(reason)+'</div>'+
       '<div class="price-row">'+
         '<div class="price-box">'+
-          '<div class="price-label">娑ㄥ仠浠?/div>'+
-          '<span class="price-num up">'+fmtP(price)+' <span class="price-unit">鍏?/span></span>'+
+          '<div class="price-label">涨停价</div>'+
+          '<span class="price-num up">'+fmtP(price)+' <span class="price-unit">元</span></span>'+
         '</div>'+
         '<div class="today-badge">'+
           '<div class="today-value up">'+fmtPct(pct)+'%</div>'+
-          '<div class="today-label">娑ㄥ箙</div>'+
+          '<div class="today-label">涨幅</div>'+
         '</div>'+
       '</div>'+
       '<div class="zt-time">'+esc(s.limit_time||'--')+'</div>'+
@@ -316,12 +317,12 @@ function renderZt(list){
   el.innerHTML=h;
 }
 
-// 杩炴澘鍒楄〃
+// 连板列表
 function renderCon(list){
   var el=document.getElementById('tab-con');
-  if(!list||!list.length){el.innerHTML='<div class="empty">鏆傛棤杩炴澘鏁版嵁</div>';return}
+  if(!list||!list.length){el.innerHTML='<div class="empty">暂无连板数据</div>';return}
   var con=list.filter(function(s){return(s.continuous_limit_up_count||0)>=2});
-  if(!con.length){el.innerHTML='<div class="empty">鏆傛棤杩炴澘鏁版嵁</div>';return}
+  if(!con.length){el.innerHTML='<div class="empty">暂无连板数据</div>';return}
   con.sort(function(a,b){return(b.continuous_limit_up_count||0)-(a.continuous_limit_up_count||0)});
   var h='';
   for(var i=0;i<con.length;i++){
@@ -331,15 +332,15 @@ function renderCon(list){
       '<span class="rank gold">TOP'+(i+1)+'</span>'+
       '<div><span class="stock-name">'+esc(s.name||s.code)+'</span>'+
         '<span class="stock-code">'+esc(s.code)+'</span>'+
-        '<span class="lianban'+lbCls+'">'+conN+'杩炴澘</span></div>'+
+        '<span class="lianban'+lbCls+'">'+conN+'连板</span></div>'+
       '<div class="price-row">'+
         '<div class="price-box">'+
-          '<div class="price-label">娑ㄥ仠浠?/div>'+
-          '<span class="price-num up">'+fmtP(price)+' <span class="price-unit">鍏?/span></span>'+
+          '<div class="price-label">涨停价</div>'+
+          '<span class="price-num up">'+fmtP(price)+' <span class="price-unit">元</span></span>'+
         '</div>'+
         '<div class="today-badge">'+
           '<div class="today-value up">'+fmtPct(pct)+'%</div>'+
-          '<div class="today-label">娑ㄥ箙</div>'+
+          '<div class="today-label">涨幅</div>'+
         '</div>'+
       '</div>'+
     '</div>';
@@ -347,19 +348,20 @@ function renderCon(list){
   el.innerHTML=h;
 }
 
-// 鐑棬鏉垮潡
+// 热门板块
 function renderSector(){
   var el=document.getElementById('tab-sector');
   if(!ALL||!ALL.sector_hot||!ALL.sector_hot.length){
-    el.innerHTML='<div class="empty">鏆傛棤鏉垮潡鏁版嵁</div>';return}
-  // 鎸夋定骞呮帓搴忥紙闄嶅簭锛?  var sorted=ALL.sector_hot.slice(0,15).sort(function(a,b){return(b.pct||0)-(a.pct||0)});
-  var h='<div class="bsec-title">鐑棬鏉垮潡锛堟寜娑ㄥ箙鎺掑簭锛?/div>';
+    el.innerHTML='<div class="empty">暂无板块数据</div>';return}
+  // 按涨幅排序（降序）
+  var sorted=ALL.sector_hot.slice(0,15).sort(function(a,b){return(b.pct||0)-(a.pct||0)});
+  var h='<div class="bsec-title">热门板块（按涨幅排序）</div>';
   sorted.forEach(function(s,i){
     var count=s.limit_up_count||s.count||0;
     h+='<div class="bitem">'+
       '<span class="bitem-rank">TOP'+(i+1)+'</span>'+
       '<span class="bitem-name">'+esc(s.name||'--')+'</span>'+
-      '<span class="bitem-count">'+count+'鍙定鍋?/span>'+
+      '<span class="bitem-count">'+count+'只涨停</span>'+
       '<span class="bitem-pct '+(s.pct>=0?'up':'down')+'">'+fmtPct(s.pct||0)+'%</span>'+
       (s.phase?'<span class="bitem-phase">'+esc(s.phase)+'</span>':'')+
     '</div>';
@@ -367,7 +369,7 @@ function renderSector(){
   el.innerHTML=h;
 }
 
-// 鍔犺浇鏁版嵁
+// 加载数据
 function load(){
   var x=new XMLHttpRequest();
   x.open('GET',DATA+'?t='+Date.now(),true);
