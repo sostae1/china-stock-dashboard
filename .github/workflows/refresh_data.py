@@ -24,7 +24,6 @@ def safe_str(s):
         return ""
     if isinstance(s, str):
         return s
-    # 尝试解码 GBK（akshare 国内数据常用编码）
     for enc in ('gbk', 'gb2312', 'utf-8', 'latin1'):
         try:
             return s.decode(enc) if isinstance(s, bytes) else str(s)
@@ -44,6 +43,18 @@ def safe_int(v, default=0):
     except (TypeError, ValueError):
         return default
 
+def decode_df(df):
+    """将 DataFrame 列名和字符串内容从 GBK 解码为 UTF-8"""
+    if df is None or df.empty:
+        return df
+    # 解码列名
+    df.columns = [safe_str(c) for c in df.columns]
+    # 解码所有字符串列
+    for col in df.columns:
+        if df[col].dtype == object:
+            df[col] = df[col].apply(safe_str)
+    return df
+
 # ─── 涨停股 ────────────────────────────────────────────────────────────────
 def fetch_limit_up():
     today = date.today().strftime("%Y%m%d")
@@ -52,23 +63,23 @@ def fetch_limit_up():
         return []
     try:
         df = ak.stock_zt_pool_em(date=today)
+        df = decode_df(df)
         if df is None or df.empty:
-            print(f"  -> no data")
+            print("  -> no data")
             return []
-        # 打印列名帮助调试
-        print(f"  -> cols: {list(df.columns)[:8]}")
+        print(f"  -> cols: {list(df.columns)}")
+        print(f"  -> {len(df)} records")
         records = []
         for _, row in df.iterrows():
             try:
-                # 统一字段名（akshare 版本差异容错）
-                name = safe_str(row.get("代码") or row.get("名称") or row.get("股票名称") or "")
                 code = safe_str(row.get("代码") or row.get("股票代码") or "")
+                name = safe_str(row.get("名称") or row.get("股票名称") or "")
                 if not code:
                     continue
-                board = safe_str(
-                    row.get("所属板块") or row.get("行业板块") or
-                    row.get("板块") or row.get("概念板块") or ""
-                )
+                board = safe_str(row.get("所属行业") or row.get("行业") or row.get("所属板块") or "")
+                # 格式化封板时间为 HH:MM:SS
+                raw_time = safe_str(row.get("首次封板时间") or row.get("封板时间") or "")
+                limit_time = f"{raw_time[:2]}:{raw_time[2:4]}:{raw_time[4:6]}" if len(raw_time) >= 6 else raw_time
                 records.append({
                     "name": name,
                     "code": code,
@@ -77,51 +88,60 @@ def fetch_limit_up():
                     "reason": board or "涨停",
                     "price": safe_float(row.get("最新价", 0)),
                     "today_pct": safe_float(row.get("涨幅%", 0)),
-                    "limit_time": safe_str(row.get("首次封板时间", "")),
+                    "limit_time": limit_time,
                     "continuous_limit_up_count": safe_int(row.get("连板数", 0)),
                 })
             except Exception as e:
-                pass
-        print(f"  -> {len(records)} records")
+                print(f"  row error: {e}")
+        print(f"  -> {len(records)} valid records")
         return records
     except Exception as e:
         print(f"  -> FAILED: {e}")
         return []
 
-# ─── 月涨幅 TOP15 ─────────────────────────────────────────────────────────
+# ─── 月涨幅 TOP15（从涨停池中按涨幅排序）────────────────────────────────
 def fetch_month_top():
-    print("[月涨幅] fetching ...")
+    today = date.today().strftime("%Y%m%d")
+    print(f"[月涨幅] fetching {today} ...")
     if not AKSHARE_OK:
         return []
     try:
-        df = ak.stock_spot_em()
+        df = ak.stock_zt_pool_em(date=today)
+        df = decode_df(df)
         if df is None or df.empty:
             print("  -> no data")
             return []
-        print(f"  -> cols: {list(df.columns)[:8]}")
-        # 按涨跌幅排序取前15
-        pct_col = "涨跌幅" if "涨跌幅" in df.columns else "涨跌比例"
+        # 按涨幅排序取前15
+        pct_col = None
+        for c in ["涨幅%", "涨幅", "change_pct", "涨跌幅"]:
+            if c in df.columns:
+                pct_col = c
+                break
+        if pct_col is None:
+            print(f"  -> no pct col found, cols: {list(df.columns)}")
+            return []
         df = df.sort_values(by=pct_col, ascending=False)
         top = []
         for i, (_, row) in enumerate(df.head(15).iterrows()):
             try:
-                code = safe_str(row.get("代码", ""))
-                name = safe_str(row.get("名称", ""))
+                code = safe_str(row.get("代码") or row.get("股票代码") or "")
+                name = safe_str(row.get("名称") or row.get("股票名称") or "")
                 if not code:
                     continue
+                pct = safe_float(row.get(pct_col, 0))
                 top.append({
                     "rank": i + 1,
                     "name": name,
                     "code": code,
-                    "pct": safe_float(row.get(pct_col, 0)),
+                    "pct": pct,
                     "price": safe_float(row.get("最新价", 0)),
-                    "board": "",
-                    "reason": "",
-                    "today_pct": safe_float(row.get(pct_col, 0)),
+                    "board": safe_str(row.get("所属行业") or ""),
+                    "reason": safe_str(row.get("所属行业") or ""),
+                    "today_pct": pct,
                     "base_price": 0.0,
                 })
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  row error: {e}")
         print(f"  -> {len(top)} records")
         return top
     except Exception as e:
@@ -135,17 +155,27 @@ def fetch_sectors():
         return []
     try:
         df = ak.stock_sector_spot()
+        df = decode_df(df)
         if df is None or df.empty:
             print("  -> no data")
             return []
-        print(f"  -> cols: {list(df.columns)[:8]}")
-        pct_col = "涨跌幅" if "涨跌幅" in df.columns else "涨跌比例"
+        pct_col = None
+        for c in ["涨跌幅", "涨幅", "pct", "涨跌比例"]:
+            if c in df.columns:
+                pct_col = c
+                break
+        if pct_col is None:
+            print(f"  -> no pct col, cols: {list(df.columns)}")
+            return []
         df = df.sort_values(by=pct_col, ascending=False)
         sectors = []
         for _, row in df.head(32).iterrows():
             try:
+                name = safe_str(row.get("名称") or row.get("板块名称") or row.get("label") or "")
+                if not name:
+                    continue
                 sectors.append({
-                    "name": safe_str(row.get("板块名称", "")),
+                    "name": name,
                     "score": 30,
                     "pct": safe_float(row.get(pct_col, 0)),
                     "main_net": 0.0,
@@ -153,8 +183,8 @@ def fetch_sectors():
                     "phase": "",
                     "max_continuous": 0,
                 })
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  row error: {e}")
         print(f"  -> {len(sectors)} sectors")
         return sectors
     except Exception as e:
