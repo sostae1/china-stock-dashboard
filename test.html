@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>测试</title></head>
+<body>
+<h1>A股看板测试</h1>
+<div id="info">加载中...</div>
+<script>
+fetch('snapshot_v5.json')
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById('info').innerHTML = 
+      '更新时间: ' + d.updated_at + '<br>' +
+      '月涨幅: ' + d.month_top.length + '只<br>' +
+      '涨停: ' + d.zt_today.length + '只<br>' +
+      '板块: ' + d.sector_hot.length + '个<br>' +
+      '<br>板块涨幅示例: ' + d.sector_hot.slice(0,3).map(s => s.name + ':' + s.pct + '%').join(', ');
+  })
+  .catch(e => {
+    document.getElementById('info').innerHTML = '错误: ' + e.message;
+  });
+</script>
+</body>
+</html>
