@@ -113,7 +113,8 @@ def get_sector_heat():
             capture_output=True, timeout=30
         )
         if r.stdout:
-            text = r.stdout.decode('utf-8', errors='replace')
+            # tool_runner.py outputs GBK on Windows
+            text = r.stdout.decode('gbk', errors='replace')
             d = json.loads(text)
             if d.get("success"):
                 sectors = d.get("sectors", [])
@@ -241,20 +242,22 @@ def run():
     # ── 热门板块（从tool_sector_heat_score获取真实数据）────
     sector_hot = []
     for s in sector_list[:15]:
-        # 使用 change_percent（板块真实涨幅），若无则用 avg_change（涨停股平均涨幅）
-        pct = s.get("change_percent")
-        if pct is None:
-            pct = s.get("avg_change", 0)
+        # 使用 change_percent（板块真实涨幅），无数据则标记为 None
+        pct = s.get("change_percent")  # avg_change 是涨停股均涨幅，不代表板块涨幅，不用作 fallback
         sector_hot.append({
             "name": s.get("name", ""),
             "score": s.get("score", 0),
-            "pct": round(float(pct or 0), 2),
+            "pct": round(float(pct), 2) if pct is not None else None,
             "main_net": round(float(s.get("net_flow") or 0) / 1e8, 2),  # 转为亿元
             "limit_up_count": s.get("limit_up_count", 0),
             "phase": s.get("phase", ""),
             "max_continuous": s.get("max_continuous", 0)
         })
-    print(f"  sector from tool: {len(sector_hot)} sectors, top={sector_hot[:3] if sector_hot else []}")
+    # 安全打印（避免编码问题）
+    try:
+        print(f"  sector from tool: {len(sector_hot)} sectors")
+    except:
+        pass
 
     print(f"Done in {round(time.time()-t0,1)}s | month:{len(month)} zt:{len(zt_list)} sector:{len(sector_hot)}")
     for s in month[:10]:
