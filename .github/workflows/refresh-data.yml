@@ -2,13 +2,10 @@ name: Refresh Stock Data
 
 on:
   schedule:
-    # 上午 9:35（开盘后）和 下午 15:10（收盘后），北京时间 = UTC+8
-    # 9:35 UTC+8 = 01:35 UTC
-    # 15:10 UTC+8 = 07:10 UTC
+    # 涓婂崍 9:35锛堝紑鐩樺悗锛夊拰 涓嬪崍 15:10锛堟敹鐩樺悗锛夛紝鍖椾含鏃堕棿 = UTC+8
     - cron: '35 1 * * 1-5'
     - cron: '10 7 * * 1-5'
   workflow_dispatch:
-    # 支持手动触发
 
 permissions:
   contents: write
@@ -41,10 +38,20 @@ jobs:
         run: |
           if git diff --quiet snapshot_v5.json; then
             echo "No data changes"
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add snapshot_v5.json
             git commit -m "chore: refresh stock data $(date -u '+%Y-%m-%d %H:%M UTC')"
             git push
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
           fi
+
+      - name: Trigger Pages deploy
+        if: env.HAS_CHANGES == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run "Deploy static content to Pages" --ref main
+          echo "Pages deployment triggered"
