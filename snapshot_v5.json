@@ -1,30 +1,19 @@
 {
-  "updated_at": "2026-04-21 13:34:24",
+  "updated_at": "2026-04-21 13:42:06",
   "month_top": [
     {
       "rank": 1,
-      "name": "聚星科技",
-      "code": "920111",
-      "pct": 38.89,
-      "price": 32.0,
+      "name": "冰川网络",
+      "code": "300533",
+      "pct": 20.02,
+      "price": 30.58,
       "board": "",
       "reason": "",
-      "today_pct": 26.68,
-      "base_price": 23.04
+      "today_pct": 20.02,
+      "base_price": 25.48
     },
     {
       "rank": 2,
-      "name": "和林微纳",
-      "code": "688661",
-      "pct": 34.34,
-      "price": 103.44,
-      "board": "",
-      "reason": "",
-      "today_pct": 20.0,
-      "base_price": 77.0
-    },
-    {
-      "rank": 3,
       "name": "海泰科",
       "code": "301022",
       "pct": 20.01,
@@ -35,7 +24,7 @@
       "base_price": 27.83
     },
     {
-      "rank": 4,
+      "rank": 3,
       "name": "方邦股份",
       "code": "688020",
       "pct": 20.0,
@@ -46,7 +35,7 @@
       "base_price": 93.54
     },
     {
-      "rank": 5,
+      "rank": 4,
       "name": "华特气体",
       "code": "688268",
       "pct": 20.0,
@@ -55,6 +44,17 @@
       "reason": "",
       "today_pct": 20.0,
       "base_price": 99.2
+    },
+    {
+      "rank": 5,
+      "name": "和林微纳",
+      "code": "688661",
+      "pct": 20.0,
+      "price": 103.44,
+      "board": "",
+      "reason": "",
+      "today_pct": 20.0,
+      "base_price": 86.2
     },
     {
       "rank": 6,
@@ -157,14 +157,14 @@
     },
     {
       "rank": 15,
-      "name": "冰川网络",
-      "code": "300533",
-      "pct": 9.29,
-      "price": 30.58,
+      "name": "张小泉",
+      "code": "301055",
+      "pct": 12.0,
+      "price": 35.0,
       "board": "",
       "reason": "",
-      "today_pct": 20.02,
-      "base_price": 27.98
+      "today_pct": 12.0,
+      "base_price": 31.25
     }
   ],
   "zt_today": [
