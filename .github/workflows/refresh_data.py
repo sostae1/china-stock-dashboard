@@ -143,11 +143,11 @@ def fetch_month_top():
         skipped_bj = 0
         
         for idx, (_, row) in enumerate(candidates.iterrows()):
-            code = safe_str(row.get("代码", ""))
-            name = safe_str(row.get("名称", ""))
-            current_price = safe_float(row.get("最新价", 0))
-            today_pct = safe_float(row.get("涨跌幅", 0))
-            board = safe_str(row.get("所属行业", ""))
+            code = safe_str(get_col(row, ["代码", "股票代码"], ""))
+            name = safe_str(get_col(row, ["名称", "股票名称"], ""))
+            current_price = safe_float(get_col(row, ["最新价", "现价", "当前价"], 0))
+            today_pct = safe_float(get_col(row, ["涨跌幅", "涨幅"], 0))
+            board = safe_str(get_col(row, ["所属行业", "行业", "板块"], ""))
             
             if not code or current_price <= 0:
                 continue
