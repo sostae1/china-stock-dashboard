@@ -1,55 +1,33 @@
 {
-  "updated_at": "2026-04-21 12:24:10",
+  "updated_at": "2026-04-21 13:34:24",
   "month_top": [
     {
       "rank": 1,
-      "name": "N盛合",
-      "code": "688820",
-      "pct": 723.7,
-      "price": 76.65,
-      "board": "",
-      "reason": "",
-      "today_pct": 289.48,
-      "base_price": 19.68
-    },
-    {
-      "rank": 2,
-      "name": "N福恩",
-      "code": "001312",
-      "pct": 165.8,
-      "price": 30.57,
-      "board": "",
-      "reason": "",
-      "today_pct": 66.32,
-      "base_price": 18.38
-    },
-    {
-      "rank": 3,
       "name": "聚星科技",
       "code": "920111",
-      "pct": 66.7,
+      "pct": 38.89,
       "price": 32.0,
       "board": "",
       "reason": "",
       "today_pct": 26.68,
-      "base_price": 25.26
+      "base_price": 23.04
     },
     {
-      "rank": 4,
-      "name": "冰川网络",
-      "code": "300533",
-      "pct": 50.05,
-      "price": 30.58,
+      "rank": 2,
+      "name": "和林微纳",
+      "code": "688661",
+      "pct": 34.34,
+      "price": 103.44,
       "board": "",
       "reason": "",
-      "today_pct": 20.02,
-      "base_price": 25.48
+      "today_pct": 20.0,
+      "base_price": 77.0
     },
     {
-      "rank": 5,
+      "rank": 3,
       "name": "海泰科",
       "code": "301022",
-      "pct": 50.03,
+      "pct": 20.01,
       "price": 33.4,
       "board": "",
       "reason": "",
@@ -57,10 +35,10 @@
       "base_price": 27.83
     },
     {
-      "rank": 6,
+      "rank": 4,
       "name": "方邦股份",
       "code": "688020",
-      "pct": 50.0,
+      "pct": 20.0,
       "price": 112.25,
       "board": "",
       "reason": "",
@@ -68,10 +46,10 @@
       "base_price": 93.54
     },
     {
-      "rank": 7,
+      "rank": 5,
       "name": "华特气体",
       "code": "688268",
-      "pct": 50.0,
+      "pct": 20.0,
       "price": 119.04,
       "board": "",
       "reason": "",
@@ -79,21 +57,10 @@
       "base_price": 99.2
     },
     {
-      "rank": 8,
-      "name": "和林微纳",
-      "code": "688661",
-      "pct": 50.0,
-      "price": 103.44,
-      "board": "",
-      "reason": "",
-      "today_pct": 20.0,
-      "base_price": 86.2
-    },
-    {
-      "rank": 9,
+      "rank": 6,
       "name": "致尚科技",
       "code": "301486",
-      "pct": 50.0,
+      "pct": 20.0,
       "price": 209.06,
       "board": "",
       "reason": "",
@@ -101,10 +68,10 @@
       "base_price": 174.22
     },
     {
-      "rank": 10,
+      "rank": 7,
       "name": "安诺其",
       "code": "300067",
-      "pct": 49.88,
+      "pct": 19.95,
       "price": 5.05,
       "board": "",
       "reason": "",
@@ -112,10 +79,10 @@
       "base_price": 4.21
     },
     {
-      "rank": 11,
+      "rank": 8,
       "name": "泰和科技",
       "code": "300801",
-      "pct": 39.02,
+      "pct": 15.61,
       "price": 30.88,
       "board": "",
       "reason": "",
@@ -123,10 +90,10 @@
       "base_price": 26.71
     },
     {
-      "rank": 12,
+      "rank": 9,
       "name": "纳百川",
       "code": "301667",
-      "pct": 37.67,
+      "pct": 15.07,
       "price": 115.9,
       "board": "",
       "reason": "",
@@ -134,10 +101,10 @@
       "base_price": 100.72
     },
     {
-      "rank": 13,
+      "rank": 10,
       "name": "德福科技",
       "code": "301511",
-      "pct": 37.6,
+      "pct": 15.04,
       "price": 60.81,
       "board": "",
       "reason": "",
@@ -145,10 +112,10 @@
       "base_price": 52.86
     },
     {
-      "rank": 14,
+      "rank": 11,
       "name": "杰普特",
       "code": "688025",
-      "pct": 33.92,
+      "pct": 13.57,
       "price": 317.51,
       "board": "",
       "reason": "",
@@ -156,15 +123,48 @@
       "base_price": 279.57
     },
     {
-      "rank": 15,
+      "rank": 12,
       "name": "广钢气体",
       "code": "688548",
-      "pct": 30.62,
+      "pct": 12.25,
       "price": 29.5,
       "board": "",
       "reason": "",
       "today_pct": 12.25,
       "base_price": 26.28
+    },
+    {
+      "rank": 13,
+      "name": "金宏气体",
+      "code": "688106",
+      "pct": 12.2,
+      "price": 32.65,
+      "board": "",
+      "reason": "",
+      "today_pct": 12.2,
+      "base_price": 29.1
+    },
+    {
+      "rank": 14,
+      "name": "晶丰明源",
+      "code": "688368",
+      "pct": 12.01,
+      "price": 156.36,
+      "board": "",
+      "reason": "",
+      "today_pct": 12.01,
+      "base_price": 139.59
+    },
+    {
+      "rank": 15,
+      "name": "冰川网络",
+      "code": "300533",
+      "pct": 9.29,
+      "price": 30.58,
+      "board": "",
+      "reason": "",
+      "today_pct": 20.02,
+      "base_price": 27.98
     }
   ],
   "zt_today": [
