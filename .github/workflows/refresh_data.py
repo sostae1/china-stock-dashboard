@@ -51,9 +51,11 @@ def is_new_stock(name):
     return name.startswith('N') or name.startswith('C')
 
 def is_beijing_stock(code):
-    """判断是否北交所股票(8开头或4开头)"""
+    """判断是否北交所股票(8/4/92/93/94开头)"""
     code = str(code).strip()
-    return code.startswith('8') or code.startswith('4')
+    # 北交所: 8xxx, 4xxx, 92xxxx, 93xxxx, 94xxxx
+    return (code.startswith('8') or code.startswith('4') or 
+            code.startswith('92') or code.startswith('93') or code.startswith('94'))
 
 def is_valid_stock(name, code):
     """判断是否为有效股票(非新股、非北交所)"""
@@ -123,6 +125,7 @@ def fetch_month_top():
             return fetch_month_top_fallback()
         
         print(f"  -> got {len(df)} stocks")
+        print(f"  -> columns: {list(df.columns)}")
         
         # 计算每月1号的日期
         today = date.today()
@@ -264,6 +267,10 @@ def fetch_sectors(zt_list):
             board_limit_up_count[board] = board_limit_up_count.get(board, 0) + 1
     
     print(f"  -> limit_up stats: {len(board_limit_up_count)} boards")
+    # 打印前10个板块统计用于调试
+    sorted_boards = sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True)[:10]
+    for b, c in sorted_boards:
+        print(f"    {b}: {c}")
     
     try:
         df = ak.stock_sector_spot()
@@ -291,6 +298,9 @@ def fetch_sectors(zt_list):
                 "max_continuous": 0,
             })
         print(f"  -> {len(sectors)} sectors")
+        # 打印前5个板块名称用于调试匹配
+        for s in sectors[:5]:
+            print(f"    sector: {s['name']}, limit_up={s['limit_up_count']}")
         return sectors
     except Exception as e:
         print(f"  -> FAILED: {e}")
