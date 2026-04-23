@@ -160,23 +160,20 @@ def fetch_month_top(code_board_map):
             try:
                 hist = ak.stock_zh_a_hist(symbol=code, period="daily",
                                          start_date=start_date, end_date=end_date, adjust="qfq")
-                if hist is not None and len(hist) >= 5:
-                    # 至少5个交易日才用月涨幅数据
+                if hist is not None and len(hist) >= 2:
+                    # 按日期升序排序：iloc[0]=月初价，iloc[-1]=今日
                     hist = hist.sort_values(by="日期", ascending=True)
                     base_price = safe_float(hist.iloc[0]["开盘"])
+                    if base_price <= 0:
+                        base_price = safe_float(hist.iloc[0]["最低"])
                     if base_price > 0:
                         month_pct = (current_price - base_price) / base_price * 100
-                    else:
-                        base_price = safe_float(hist.iloc[0]["最低"])
-                        if base_price > 0:
-                            month_pct = (current_price - base_price) / base_price * 100
-                    if month_pct is not None:
                         hist_ok += 1
             except:
                 pass
 
             if month_pct is None:
-                # 历史数据不足，用今日涨幅代替
+                # 兜底：历史数据获取失败，用今日涨幅近似
                 month_pct = today_pct
                 base_price = current_price / (1 + today_pct/100) if today_pct else current_price
                 hist_short += 1
