@@ -6,7 +6,7 @@ GitHub Actions 数据刷新脚本 v5
 1. 月涨幅从每月1号起计算
 2. 排除新股(N开头)和北交所股票
 3. 板块涨停数统计：直接从涨停股数据统计，不用名称匹配
-4. 月涨幅个股行业字段
+4. 改进 board 字段提取
 """
 import json, time, os, sys
 from datetime import date, datetime, timedelta
@@ -42,11 +42,11 @@ def safe_int(v, default=0):
         return default
 
 def get_col(row, names, default=""):
+    """从 pandas row 中尝试获取列值"""
     for n in names:
-        if n in row.index:
-            v = row[n]
-            if v is not None and not (isinstance(v, float) and str(v) == 'nan'):
-                return v
+        v = row.get(n)
+        if v is not None and not (isinstance(v, float) and str(v) == 'nan'):
+            return v
     return default
 
 def is_new_stock(name):
@@ -54,8 +54,8 @@ def is_new_stock(name):
 
 def is_beijing_stock(code):
     code = str(code).strip()
-    return code.startswith('8') or code.startswith('4') or \
-           code.startswith('92') or code.startswith('93') or code.startswith('94')
+    return (code.startswith('8') or code.startswith('4') or
+            code.startswith('92') or code.startswith('93') or code.startswith('94'))
 
 # ─── 涨停股 ────────────────────────────────────────────────────────────────
 def fetch_limit_up():
@@ -68,8 +68,7 @@ def fetch_limit_up():
         if df is None or df.empty:
             print("  -> no data")
             return []
-        print(f"  -> {len(df)} records")
-        print(f"  -> columns: {list(df.columns)}")
+        print(f"  -> {len(df)} records, cols: {list(df.columns)}")
 
         records = []
         for _, row in df.iterrows():
@@ -106,10 +105,6 @@ def fetch_limit_up():
 
 # ─── 月涨幅 TOP15 ───────────────────────────────────────────────────────────
 def fetch_month_top():
-    """
-    月涨幅TOP15 - 从每月1号起计算
-    排除新股(N开头)和北交所股票
-    """
     print("[月涨幅] fetching all stocks ...")
     if not AKSHARE_OK:
         return []
@@ -120,8 +115,7 @@ def fetch_month_top():
             print("  -> no data")
             return fetch_month_top_fallback()
 
-        print(f"  -> got {len(df)} stocks")
-        print(f"  -> columns: {list(df.columns)}")
+        print(f"  -> got {len(df)} stocks, cols: {list(df.columns)}")
 
         today = date.today()
         first_day = today.replace(day=1)
@@ -145,7 +139,6 @@ def fetch_month_top():
 
             if not code or current_price <= 0:
                 continue
-
             if is_new_stock(name):
                 skipped_new += 1
                 continue
@@ -182,12 +175,14 @@ def fetch_month_top():
 
             if len(results) >= 15:
                 break
-
             if (idx + 1) % 20 == 0:
                 print(f"  -> {idx+1}/200, valid={len(results)}, skip_new={skipped_new}, skip_bj={skipped_bj}")
             time.sleep(0.05)
 
         print(f"  -> final: {len(results)} records (skipped new={skipped_new}, bj={skipped_bj})")
+        print(f"  -> top5 detail:")
+        for r in results[:5]:
+            print(f"    {r['name']}({r['code']}): board='{r['board']}' pct={r['pct']}% today={r['today_pct']}%")
 
         results.sort(key=lambda x: x["pct"], reverse=True)
         top15 = []
@@ -220,7 +215,6 @@ def fetch_month_top_fallback():
     for s in zt[:30]:
         if is_new_stock(s["name"]) or is_beijing_stock(s["code"]):
             continue
-
         top15.append({
             "rank": len(top15) + 1,
             "name": s["name"],
@@ -238,13 +232,9 @@ def fetch_month_top_fallback():
 
 # ─── 板块数据 ──────────────────────────────────────────────────────────────
 def fetch_sectors(zt_list):
-    """
-    板块数据：涨停数直接从涨停股数据统计
-    不再依赖名称匹配，直接用涨停股的board_name统计
-    """
     print("[板块] fetching ...")
 
-    # ── Step 1: 从涨停股直接统计每个行业的涨停数量 ──
+    # Step 1: 从涨停股直接统计每个行业的涨停数量
     board_limit_up_count = {}
     board_limit_up_stocks = {}
     for stock in zt_list:
@@ -259,7 +249,6 @@ def fetch_sectors(zt_list):
     for b, c in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True)[:10]:
         print(f"    {b}: {c}只")
 
-    # ── Step 2: 获取板块涨幅数据 ──
     sectors = []
     matched_boards = set()
 
@@ -267,18 +256,15 @@ def fetch_sectors(zt_list):
         df = ak.stock_sector_spot()
         if df is not None and not df.empty:
             df = df.sort_values(by="涨跌幅", ascending=False)
-
             for _, row in df.head(32).iterrows():
                 name = safe_str(get_col(row, ["板块", "名称"], ""))
                 if not name:
                     continue
                 pct = safe_float(get_col(row, ["涨跌幅", "涨幅"], 0))
 
-                # 精确匹配涨停股的行业名
                 limit_count = board_limit_up_count.get(name, 0)
                 matched_board = name if limit_count > 0 else None
 
-                # 模糊匹配：去掉"行业"后缀
                 if limit_count == 0:
                     for board_name, cnt in board_limit_up_count.items():
                         if board_name in matched_boards:
@@ -303,18 +289,13 @@ def fetch_sectors(zt_list):
                     "phase": "",
                     "max_continuous": 0,
                 })
-
-        print(f"  -> matched {len(matched_boards)} sectors with limit_up")
-
     except Exception as e:
         print(f"  -> sector_spot FAILED: {e}")
 
-    # ── Step 3: 如果有未匹配的涨停行业，追加到列表末尾 ──
-    # 这样保证所有有涨停股的行业都能显示
+    # Step 3: 未匹配的涨停行业追加到列表
     unmatched = []
     for board_name, cnt in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True):
         if board_name not in matched_boards:
-            # 计算该行业涨停股的平均涨幅
             stocks_in_board = board_limit_up_stocks.get(board_name, [])
             total_pct = sum(s["change_pct"] for s in zt_list if s.get("board_name") == board_name)
             avg_pct = total_pct / cnt if cnt > 0 else 0
@@ -330,7 +311,7 @@ def fetch_sectors(zt_list):
 
     if unmatched:
         print(f"  -> adding {len(unmatched)} unmatched boards")
-        sectors.extend(unmatched[:10])  # 最多加10个
+        sectors.extend(unmatched[:10])
 
     print(f"  -> total {len(sectors)} sectors")
     return sectors[:40]
