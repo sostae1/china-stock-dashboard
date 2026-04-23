@@ -1,44 +1,22 @@
 {
-  "updated_at": "2026-04-23 05:06:19",
+  "updated_at": "2026-04-23 07:16:21",
   "month_top": [
     {
       "rank": 1,
-      "name": "移为通信",
-      "code": "300590",
-      "pct": 20.03,
-      "price": 14.56,
-      "board": "通信设备",
-      "reason": "通信设备",
-      "today_pct": 20.03,
+      "name": "大连电瓷",
+      "code": "002606",
+      "pct": 24.94,
+      "price": 13.34,
+      "board": "电网设备",
+      "reason": "电网设备",
+      "today_pct": 9.98,
       "base_price": 12.13
     },
     {
       "rank": 2,
-      "name": "怡达股份",
-      "code": "300721",
-      "pct": 20.01,
-      "price": 17.69,
-      "board": "化学制品",
-      "reason": "化学制品",
-      "today_pct": 20.01,
-      "base_price": 14.74
-    },
-    {
-      "rank": 3,
-      "name": "华绿生物",
-      "code": "300970",
-      "pct": 20.0,
-      "price": 42.0,
-      "board": "种植业",
-      "reason": "种植业",
-      "today_pct": 20.0,
-      "base_price": 35.0
-    },
-    {
-      "rank": 4,
       "name": "安诺其",
       "code": "300067",
-      "pct": 19.97,
+      "pct": 49.92,
       "price": 7.27,
       "board": "化学制品",
       "reason": "化学制品",
@@ -46,10 +24,131 @@
       "base_price": 6.06
     },
     {
+      "rank": 3,
+      "name": "怡达股份",
+      "code": "300721",
+      "pct": 50.03,
+      "price": 17.69,
+      "board": "化学制品",
+      "reason": "化学制品",
+      "today_pct": 20.01,
+      "base_price": 14.74
+    },
+    {
+      "rank": 4,
+      "name": "福鞍股份",
+      "code": "603315",
+      "pct": 25.07,
+      "price": 19.53,
+      "board": "环境治理",
+      "reason": "环境治理",
+      "today_pct": 10.03,
+      "base_price": 17.75
+    },
+    {
       "rank": 5,
+      "name": "苏州高新",
+      "code": "600736",
+      "pct": 24.97,
+      "price": 8.37,
+      "board": "房地产开",
+      "reason": "房地产开",
+      "today_pct": 9.99,
+      "base_price": 7.61
+    },
+    {
+      "rank": 6,
+      "name": "水发燃气",
+      "code": "603318",
+      "pct": 24.97,
+      "price": 10.35,
+      "board": "燃气Ⅱ",
+      "reason": "燃气Ⅱ",
+      "today_pct": 9.99,
+      "base_price": 9.41
+    },
+    {
+      "rank": 7,
+      "name": "通达电气",
+      "code": "603390",
+      "pct": 25.08,
+      "price": 13.27,
+      "board": "汽车零部",
+      "reason": "汽车零部",
+      "today_pct": 10.03,
+      "base_price": 12.06
+    },
+    {
+      "rank": 8,
+      "name": "移为通信",
+      "code": "300590",
+      "pct": 50.08,
+      "price": 14.56,
+      "board": "通信设备",
+      "reason": "通信设备",
+      "today_pct": 20.03,
+      "base_price": 12.13
+    },
+    {
+      "rank": 9,
+      "name": "金 螳 螂",
+      "code": "002081",
+      "pct": 24.8,
+      "price": 5.43,
+      "board": "装修装饰",
+      "reason": "装修装饰",
+      "today_pct": 9.92,
+      "base_price": 4.94
+    },
+    {
+      "rank": 10,
+      "name": "亿道信息",
+      "code": "001314",
+      "pct": 25.01,
+      "price": 48.5,
+      "board": "消费电子",
+      "reason": "消费电子",
+      "today_pct": 10.0,
+      "base_price": 44.09
+    },
+    {
+      "rank": 11,
+      "name": "昊华能源",
+      "code": "601101",
+      "pct": 24.97,
+      "price": 9.36,
+      "board": "煤炭开采",
+      "reason": "煤炭开采",
+      "today_pct": 9.99,
+      "base_price": 8.51
+    },
+    {
+      "rank": 12,
+      "name": "中新集团",
+      "code": "601512",
+      "pct": 24.95,
+      "price": 11.35,
+      "board": "房地产开",
+      "reason": "房地产开",
+      "today_pct": 9.98,
+      "base_price": 10.32
+    },
+    {
+      "rank": 13,
+      "name": "杭电股份",
+      "code": "603618",
+      "pct": 25.04,
+      "price": 31.41,
+      "board": "电网设备",
+      "reason": "电网设备",
+      "today_pct": 10.02,
+      "base_price": 28.55
+    },
+    {
+      "rank": 14,
       "name": "旗天科技",
       "code": "300061",
-      "pct": 19.95,
+      "pct": 49.88,
       "price": 9.8,
       "board": "广告营销",
       "reason": "广告营销",
@@ -57,114 +156,15 @@
       "base_price": 8.17
     },
     {
-      "rank": 6,
-      "name": "线上线下",
-      "code": "300959",
-      "pct": 16.22,
-      "price": 103.38,
-      "board": "",
-      "reason": "",
-      "today_pct": 16.22,
-      "base_price": 88.95
-    },
-    {
-      "rank": 7,
-      "name": "杭州园林",
-      "code": "300649",
-      "pct": 14.57,
-      "price": 19.19,
-      "board": "",
-      "reason": "",
-      "today_pct": 14.57,
-      "base_price": 16.75
-    },
-    {
-      "rank": 8,
-      "name": "佳华科技",
-      "code": "688051",
-      "pct": 14.08,
-      "price": 38.72,
-      "board": "",
-      "reason": "",
-      "today_pct": 14.08,
-      "base_price": 33.94
-    },
-    {
-      "rank": 9,
-      "name": "铜牛信息",
-      "code": "300895",
-      "pct": 13.29,
-      "price": 68.61,
-      "board": "",
-      "reason": "",
-      "today_pct": 13.29,
-      "base_price": 60.56
-    },
-    {
-      "rank": 10,
-      "name": "西部牧业",
-      "code": "300106",
-      "pct": 12.74,
-      "price": 10.71,
-      "board": "",
-      "reason": "",
-      "today_pct": 12.74,
-      "base_price": 9.5
-    },
-    {
-      "rank": 11,
-      "name": "美新科技",
-      "code": "301588",
-      "pct": 11.54,
-      "price": 26.58,
-      "board": "",
-      "reason": "",
-      "today_pct": 11.54,
-      "base_price": 23.83
-    },
-    {
-      "rank": 12,
-      "name": "贝达药业",
-      "code": "300558",
-      "pct": 10.89,
-      "price": 48.98,
-      "board": "",
-      "reason": "",
-      "today_pct": 10.89,
-      "base_price": 44.17
-    },
-    {
-      "rank": 13,
-      "name": "杰恩股份",
-      "code": "300668",
-      "pct": 10.69,
-      "price": 63.76,
-      "board": "",
-      "reason": "",
-      "today_pct": 10.69,
-      "base_price": 57.6
-    },
-    {
-      "rank": 14,
-      "name": "综艺股份",
-      "code": "600770",
-      "pct": 10.07,
-      "price": 6.34,
-      "board": "综合Ⅱ",
-      "reason": "综合Ⅱ",
-      "today_pct": 10.07,
-      "base_price": 5.76
-    },
-    {
       "rank": 15,
-      "name": "齐心集团",
-      "code": "002301",
-      "pct": 10.04,
-      "price": 7.45,
-      "board": "文娱用品",
-      "reason": "文娱用品",
-      "today_pct": 10.04,
-      "base_price": 6.77
+      "name": "兆驰股份",
+      "code": "002429",
+      "pct": 24.98,
+      "price": 13.1,
+      "board": "黑色家电",
+      "reason": "黑色家电",
+      "today_pct": 9.99,
+      "base_price": 11.91
     }
   ],
   "zt_today": [
@@ -323,6 +323,28 @@
       "continuous_limit_up_count": 1
     },
     {
+      "name": "兆驰股份",
+      "code": "002429",
+      "change_pct": 9.991602897644043,
+      "board_name": "黑色家电",
+      "reason": "黑色家电",
+      "price": 13.1,
+      "today_pct": 9.991602897644043,
+      "limit_time": "09:35:57",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "绿发电力",
+      "code": "000537",
+      "change_pct": 10.009443283081055,
+      "board_name": "电力",
+      "reason": "电力",
+      "price": 11.65,
+      "today_pct": 10.009443283081055,
+      "limit_time": "09:37:06",
+      "continuous_limit_up_count": 1
+    },
+    {
       "name": "华源控股",
       "code": "002787",
       "change_pct": 10.016977310180664,
@@ -331,6 +353,17 @@
       "price": 19.44,
       "today_pct": 10.016977310180664,
       "limit_time": "09:37:09",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "法尔胜",
+      "code": "000890",
+      "change_pct": 9.973752975463867,
+      "board_name": "环保设备",
+      "reason": "环保设备",
+      "price": 16.76,
+      "today_pct": 9.973752975463867,
+      "limit_time": "09:37:18",
       "continuous_limit_up_count": 1
     },
     {
@@ -354,6 +387,17 @@
       "today_pct": 10.013531684875488,
       "limit_time": "09:39:45",
       "continuous_limit_up_count": 2
+    },
+    {
+      "name": "应流股份",
+      "code": "603308",
+      "change_pct": 10.006627082824707,
+      "board_name": "通用设备",
+      "reason": "通用设备",
+      "price": 83.0,
+      "today_pct": 10.006627082824707,
+      "limit_time": "09:41:44",
+      "continuous_limit_up_count": 1
     },
     {
       "name": "浙文互联",
@@ -541,13 +585,145 @@
       "today_pct": 10.028818130493164,
       "limit_time": "11:26:12",
       "continuous_limit_up_count": 1
+    },
+    {
+      "name": "晶科科技",
+      "code": "601778",
+      "change_pct": 9.938838005065918,
+      "board_name": "电力",
+      "reason": "电力",
+      "price": 7.19,
+      "today_pct": 9.938838005065918,
+      "limit_time": "13:11:50",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "汇绿生态",
+      "code": "001267",
+      "change_pct": 10.00216007232666,
+      "board_name": "通信设备",
+      "reason": "通信设备",
+      "price": 50.92,
+      "today_pct": 10.00216007232666,
+      "limit_time": "13:20:09",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "大族激光",
+      "code": "002008",
+      "change_pct": 10.002123832702637,
+      "board_name": "自动化设",
+      "reason": "自动化设",
+      "price": 103.6,
+      "today_pct": 10.002123832702637,
+      "limit_time": "13:21:51",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "东望时代",
+      "code": "600052",
+      "change_pct": 10.096153259277344,
+      "board_name": "电力",
+      "reason": "电力",
+      "price": 4.58,
+      "today_pct": 10.096153259277344,
+      "limit_time": "13:30:58",
+      "continuous_limit_up_count": 2
+    },
+    {
+      "name": "节能风电",
+      "code": "601016",
+      "change_pct": 10.073710441589355,
+      "board_name": "电力",
+      "reason": "电力",
+      "price": 4.48,
+      "today_pct": 10.073710441589355,
+      "limit_time": "13:36:37",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "广西能源",
+      "code": "600310",
+      "change_pct": 10.0,
+      "board_name": "电力",
+      "reason": "电力",
+      "price": 5.28,
+      "today_pct": 10.0,
+      "limit_time": "13:42:59",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "华电辽能",
+      "code": "600396",
+      "change_pct": 9.955257415771484,
+      "board_name": "电力",
+      "reason": "电力",
+      "price": 9.83,
+      "today_pct": 9.955257415771484,
+      "limit_time": "13:43:22",
+      "continuous_limit_up_count": 3
+    },
+    {
+      "name": "千味央厨",
+      "code": "001215",
+      "change_pct": 10.012674331665039,
+      "board_name": "食品加工",
+      "reason": "食品加工",
+      "price": 43.4,
+      "today_pct": 10.012674331665039,
+      "limit_time": "13:47:18",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "和远气体",
+      "code": "002971",
+      "change_pct": 10.0,
+      "board_name": "化学制品",
+      "reason": "化学制品",
+      "price": 33.88,
+      "today_pct": 10.0,
+      "limit_time": "13:49:30",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "中贝通信",
+      "code": "603220",
+      "change_pct": 9.993573188781738,
+      "board_name": "通信服务",
+      "reason": "通信服务",
+      "price": 34.23,
+      "today_pct": 9.993573188781738,
+      "limit_time": "13:55:39",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "中原内配",
+      "code": "002448",
+      "change_pct": 9.98116683959961,
+      "board_name": "汽车零部",
+      "reason": "汽车零部",
+      "price": 17.52,
+      "today_pct": 9.98116683959961,
+      "limit_time": "14:07:36",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "美诺华",
+      "code": "603538",
+      "change_pct": 10.0,
+      "board_name": "化学制药",
+      "reason": "化学制药",
+      "price": 55.55,
+      "today_pct": 10.0,
+      "limit_time": "14:24:08",
+      "continuous_limit_up_count": 1
     }
   ],
   "sector_hot": [
     {
-      "name": "开发区",
+      "name": "船舶制造",
       "score": 30,
-      "pct": 1.68,
+      "pct": 3.61,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -556,14 +732,23 @@
     {
       "name": "石油行业",
       "score": 30,
-      "pct": 1.59,
+      "pct": 2.12,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "酿酒行业",
+      "name": "开发区",
+      "score": 30,
+      "pct": 1.39,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "供水供气",
       "score": 30,
       "pct": 1.27,
       "main_net": 0.0,
@@ -572,9 +757,9 @@
       "max_continuous": 0
     },
     {
-      "name": "船舶制造",
+      "name": "酿酒行业",
       "score": 30,
-      "pct": 1.09,
+      "pct": 1.24,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -583,16 +768,25 @@
     {
       "name": "煤炭行业",
       "score": 30,
-      "pct": 0.82,
+      "pct": 1.19,
       "main_net": 0.0,
       "limit_up_count": 1,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "供水供气",
+      "name": "电力行业",
       "score": 30,
-      "pct": 0.75,
+      "pct": 1.1,
+      "main_net": 0.0,
+      "limit_up_count": 7,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "飞机制造",
+      "score": 30,
+      "pct": 1.02,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -601,7 +795,7 @@
     {
       "name": "家电行业",
       "score": 30,
-      "pct": 0.75,
+      "pct": 0.71,
       "main_net": 0.0,
       "limit_up_count": 1,
       "phase": "",
@@ -610,16 +804,25 @@
     {
       "name": "公路桥梁",
       "score": 30,
-      "pct": 0.38,
+      "pct": 0.54,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "飞机制造",
+      "name": "化纤行业",
       "score": 30,
-      "pct": -0.02,
+      "pct": 0.37,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "陶瓷行业",
+      "score": 30,
+      "pct": 0.19,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -628,14 +831,41 @@
     {
       "name": "商业百货",
       "score": 30,
-      "pct": -0.12,
+      "pct": 0.13,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
+      "name": "发电设备",
+      "score": 30,
+      "pct": -0.03,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "房地产",
+      "score": 30,
+      "pct": -0.11,
+      "main_net": 0.0,
+      "limit_up_count": 2,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
       "name": "农药化肥",
+      "score": 30,
+      "pct": -0.2,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "机械行业",
       "score": 30,
       "pct": -0.27,
       "main_net": 0.0,
@@ -646,16 +876,34 @@
     {
       "name": "食品行业",
       "score": 30,
-      "pct": -0.34,
+      "pct": -0.38,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "交通运输",
+      "score": 30,
+      "pct": -0.38,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "化纤行业",
+      "name": "环保行业",
       "score": 30,
-      "pct": -0.34,
+      "pct": -0.39,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "金融行业",
+      "score": 30,
+      "pct": -0.51,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -664,115 +912,7 @@
     {
       "name": "传媒娱乐",
       "score": 30,
-      "pct": -0.35,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "房地产",
-      "score": 30,
-      "pct": -0.61,
-      "main_net": 0.0,
-      "limit_up_count": 2,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "农林牧渔",
-      "score": 30,
-      "pct": -0.71,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "金融行业",
-      "score": 30,
-      "pct": -0.73,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "服装鞋类",
-      "score": 30,
-      "pct": -0.77,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "交通运输",
-      "score": 30,
-      "pct": -0.8,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "机械行业",
-      "score": 30,
-      "pct": -0.81,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "水泥行业",
-      "score": 30,
-      "pct": -0.83,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "综合行业",
-      "score": 30,
-      "pct": -0.87,
-      "main_net": 0.0,
-      "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "环保行业",
-      "score": 30,
-      "pct": -0.89,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "印刷包装",
-      "score": 30,
-      "pct": -0.94,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "摩托车",
-      "score": 30,
-      "pct": -1.03,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "生物制药",
-      "score": 30,
-      "pct": -1.03,
+      "pct": -0.52,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -781,25 +921,70 @@
     {
       "name": "酒店旅游",
       "score": 30,
-      "pct": -1.23,
+      "pct": -0.52,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "建筑建材",
+      "name": "农林牧渔",
       "score": 30,
-      "pct": -1.23,
+      "pct": -0.54,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "陶瓷行业",
+      "name": "水泥行业",
       "score": 30,
-      "pct": -1.28,
+      "pct": -0.54,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "摩托车",
+      "score": 30,
+      "pct": -0.55,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "服装鞋类",
+      "score": 30,
+      "pct": -0.74,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "电器行业",
+      "score": 30,
+      "pct": -0.77,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "生物制药",
+      "score": 30,
+      "pct": -0.81,
+      "main_net": 0.0,
+      "limit_up_count": 0,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "印刷包装",
+      "score": 30,
+      "pct": -1.0,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
@@ -808,27 +993,27 @@
     {
       "name": "医疗器械",
       "score": 30,
-      "pct": -1.45,
+      "pct": -1.01,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "家具行业",
+      "name": "建筑建材",
       "score": 30,
-      "pct": -1.46,
+      "pct": -1.05,
       "main_net": 0.0,
       "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "电力行业",
+      "name": "化学制品",
       "score": 30,
-      "pct": -1.5,
+      "pct": 16.66,
       "main_net": 0.0,
-      "limit_up_count": 1,
+      "limit_up_count": 3,
       "phase": "",
       "max_continuous": 0
     },
@@ -836,15 +1021,6 @@
       "name": "电网设备",
       "score": 30,
       "pct": 10.0,
-      "main_net": 0.0,
-      "limit_up_count": 2,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "化学制品",
-      "score": 30,
-      "pct": 19.99,
       "main_net": 0.0,
       "limit_up_count": 2,
       "phase": "",
@@ -860,6 +1036,24 @@
       "max_continuous": 0
     },
     {
+      "name": "汽车零部",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 2,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "通信设备",
+      "score": 30,
+      "pct": 15.02,
+      "main_net": 0.0,
+      "limit_up_count": 2,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
       "name": "广告营销",
       "score": 30,
       "pct": 14.96,
@@ -869,38 +1063,20 @@
       "max_continuous": 0
     },
     {
-      "name": "环境治理",
+      "name": "通用设备",
       "score": 30,
-      "pct": 10.03,
+      "pct": 9.99,
       "main_net": 0.0,
-      "limit_up_count": 1,
+      "limit_up_count": 2,
       "phase": "",
       "max_continuous": 0
     },
     {
-      "name": "汽车零部",
+      "name": "化学制药",
       "score": 30,
-      "pct": 10.03,
+      "pct": 9.98,
       "main_net": 0.0,
-      "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "通信设备",
-      "score": 30,
-      "pct": 20.03,
-      "main_net": 0.0,
-      "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "装修装饰",
-      "score": 30,
-      "pct": 9.92,
-      "main_net": 0.0,
-      "limit_up_count": 1,
+      "limit_up_count": 2,
       "phase": "",
       "max_continuous": 0
     }
