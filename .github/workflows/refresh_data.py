@@ -193,13 +193,22 @@ def fetch_month_top(code_board_map):
                     
                     # 找到4月份的第一个交易日
                     first_trading_day = None
+                    first_date_str = None
                     for _, row in hist.iterrows():
                         date_str = str(row.get("日期", ""))
-                        if "2026-04" in date_str or date_str.startswith("202604"):
+                        # 支持多种日期格式: 2026-04-07, 20260407, 04-07, 4/7等
+                        is_april = ("2026-04" in date_str or 
+                                   date_str.startswith("202604") or
+                                   date_str.startswith("04-") or
+                                   date_str.startswith("4/") or
+                                   (len(date_str) >= 2 and date_str[0:2] == "04"))
+                        if is_april:
                             first_trading_day = row
+                            first_date_str = date_str
                             break
                     
-                    if first_trading_day is not None:
+                    if first_trading_day is not None and first_date_str:
+                        print(f"      {name}: first trading day = {first_date_str}")
                         # 取4月第一个交易日的开盘价
                         base_price = get_numeric_col(first_trading_day, ["开盘", "开盘价", "open", "Open"], 0)
                         if base_price <= 0:
@@ -210,8 +219,11 @@ def fetch_month_top(code_board_map):
                         if base_price > 0:
                             # 月涨幅 = (当前价 - 4月首日开盘价) / 4月首日开盘价
                             month_pct = (current_price - base_price) / base_price * 100
+                            print(f"      -> base={base_price}, month_pct={month_pct:.2f}%")
+                        else:
+                            print(f"      -> base_price=0, cols={list(first_trading_day.index)}")
             except Exception as e:
-                pass
+                print(f"      {name}: hist error: {e}")
 
             if month_pct is None:
                 # fallback：直接用今日涨幅
