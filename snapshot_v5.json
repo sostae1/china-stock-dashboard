@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-23 10:44:30",
+  "updated_at": "2026-04-23 11:35:12",
   "month_top": [
     {
       "rank": 1,
@@ -25,14 +25,14 @@
     },
     {
       "rank": 3,
-      "name": "杭州园林",
-      "code": "300649",
-      "pct": 29.33,
-      "price": 18.83,
+      "name": "线上线下",
+      "code": "300959",
+      "pct": 31.82,
+      "price": 101.32,
       "board": "",
       "reason": "",
-      "today_pct": 12.42,
-      "base_price": 14.56
+      "today_pct": 13.91,
+      "base_price": 76.86
     },
     {
       "rank": 4,
@@ -47,17 +47,6 @@
     },
     {
       "rank": 5,
-      "name": "佳华科技",
-      "code": "688051",
-      "pct": 26.42,
-      "price": 39.19,
-      "board": "",
-      "reason": "",
-      "today_pct": 15.47,
-      "base_price": 31.0
-    },
-    {
-      "rank": 6,
       "name": "移为通信",
       "code": "300590",
       "pct": 25.52,
@@ -68,40 +57,40 @@
       "base_price": 11.6
     },
     {
-      "rank": 7,
+      "rank": 6,
       "name": "旗天科技",
       "code": "300061",
-      "pct": 18.79,
+      "pct": 19.95,
       "price": 9.8,
       "board": "广告营销",
       "reason": "广告营销",
       "today_pct": 19.95,
-      "base_price": 8.25
+      "base_price": 8.17
+    },
+    {
+      "rank": 7,
+      "name": "佳华科技",
+      "code": "688051",
+      "pct": 15.47,
+      "price": 39.19,
+      "board": "",
+      "reason": "",
+      "today_pct": 15.47,
+      "base_price": 33.94
     },
     {
       "rank": 8,
-      "name": "美新科技",
-      "code": "301588",
-      "pct": 18.42,
-      "price": 26.75,
+      "name": "铜牛信息",
+      "code": "300895",
+      "pct": 13.33,
+      "price": 68.63,
       "board": "",
       "reason": "",
-      "today_pct": 12.25,
-      "base_price": 22.59
+      "today_pct": 13.33,
+      "base_price": 60.56
     },
     {
       "rank": 9,
-      "name": "线上线下",
-      "code": "300959",
-      "pct": 13.91,
-      "price": 101.32,
-      "board": "",
-      "reason": "",
-      "today_pct": 13.91,
-      "base_price": 88.95
-    },
-    {
-      "rank": 10,
       "name": "贝达药业",
       "code": "300558",
       "pct": 12.97,
@@ -112,18 +101,18 @@
       "base_price": 44.17
     },
     {
-      "rank": 11,
-      "name": "东望时代",
-      "code": "600052",
-      "pct": 12.81,
-      "price": 4.58,
-      "board": "电力",
-      "reason": "电力",
-      "today_pct": 10.1,
-      "base_price": 4.06
+      "rank": 10,
+      "name": "杭州园林",
+      "code": "300649",
+      "pct": 12.42,
+      "price": 18.83,
+      "board": "",
+      "reason": "",
+      "today_pct": 12.42,
+      "base_price": 16.75
     },
     {
-      "rank": 12,
+      "rank": 11,
       "name": "盛科通信-U",
       "code": "688702",
       "pct": 12.37,
@@ -132,6 +121,17 @@
       "reason": "",
       "today_pct": 12.37,
       "base_price": 224.79
+    },
+    {
+      "rank": 12,
+      "name": "美新科技",
+      "code": "301588",
+      "pct": 12.25,
+      "price": 26.75,
+      "board": "",
+      "reason": "",
+      "today_pct": 12.25,
+      "base_price": 23.83
     },
     {
       "rank": 13,
@@ -146,6 +146,17 @@
     },
     {
       "rank": 14,
+      "name": "东望时代",
+      "code": "600052",
+      "pct": 10.1,
+      "price": 4.58,
+      "board": "电力",
+      "reason": "电力",
+      "today_pct": 10.1,
+      "base_price": 4.16
+    },
+    {
+      "rank": 15,
       "name": "综艺股份",
       "code": "600770",
       "pct": 10.07,
@@ -154,17 +165,6 @@
       "reason": "综合Ⅱ",
       "today_pct": 10.07,
       "base_price": 5.76
-    },
-    {
-      "rank": 15,
-      "name": "铜牛信息",
-      "code": "300895",
-      "pct": 0.37,
-      "price": 68.63,
-      "board": "",
-      "reason": "",
-      "today_pct": 13.33,
-      "base_price": 68.38
     }
   ],
   "zt_today": [
