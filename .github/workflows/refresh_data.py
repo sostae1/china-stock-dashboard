@@ -133,10 +133,19 @@ def fetch_month_top(code_board_map):
         return []
 
     today = date.today()
-    first_day = today.replace(day=1)
-    start_date = first_day.strftime("%Y%m%d")
+    # 从上月25日开始，确保能拿到本月第一个交易日的数据（处理清明/五一等假期）
+    if today.day <= 10:
+        # 月初：从上个月25日开始
+        if today.month == 1:
+            start_day = date(today.year - 1, 12, 25)
+        else:
+            start_day = date(today.year, today.month - 1, 25)
+    else:
+        # 月中：从本月1日开始
+        start_day = today.replace(day=1)
+    start_date = start_day.strftime("%Y%m%d")
     end_date = today.strftime("%Y%m%d")
-    print(f"  -> range: {start_date} to {end_date}")
+    print(f"  -> range: {start_date} to {end_date} (fetching from 25th of last month to ensure first trading day)")
 
     try:
         df = ak.stock_zh_a_spot_em()
@@ -174,30 +183,38 @@ def fetch_month_top(code_board_map):
             month_pct = None
             base_price = None
 
-            # 获取历史数据：用昨天收盘价做基准
+            # 获取历史数据：用本月第一个交易日的开盘价做基准
             try:
                 hist = ak.stock_zh_a_hist(symbol=code, period="daily",
                                          start_date=start_date, end_date=end_date, adjust="qfq")
                 if hist is not None and len(hist) >= 1:
-                    # 按日期升序：[0]=月初，[-1]=最近（昨天）
+                    # 按日期升序：[0]=最早日期（上月25日或本月1日），找到4月第一个交易日
                     hist = hist.sort_values(by="日期", ascending=True)
-                    last_row = hist.iloc[-1]
-                    # 尝试取昨天收盘价（最可靠）
-                    yday_close = get_numeric_col(last_row, ["收盘", "最新价", "现价", "close", "Close"], 0)
-                    if yday_close <= 0:
-                        yday_close = get_numeric_col(last_row, ["开盘", "开盘价", "open", "Open"], 0)
-                    if yday_close <= 0:
-                        yday_close = get_numeric_col(last_row, ["最低", "最低价", "low", "Low"], 0)
                     
-                    if yday_close > 0:
-                        # 月涨幅 = (当前价 - 昨天收盘) / 昨天收盘
-                        month_pct = (current_price - yday_close) / yday_close * 100
-                        base_price = yday_close
+                    # 找到4月份的第一个交易日
+                    first_trading_day = None
+                    for _, row in hist.iterrows():
+                        date_str = str(row.get("日期", ""))
+                        if "2026-04" in date_str or date_str.startswith("202604"):
+                            first_trading_day = row
+                            break
+                    
+                    if first_trading_day is not None:
+                        # 取4月第一个交易日的开盘价
+                        base_price = get_numeric_col(first_trading_day, ["开盘", "开盘价", "open", "Open"], 0)
+                        if base_price <= 0:
+                            base_price = get_numeric_col(first_trading_day, ["收盘", "close", "Close"], 0)
+                        if base_price <= 0:
+                            base_price = get_numeric_col(first_trading_day, ["最低", "low", "Low"], 0)
+                        
+                        if base_price > 0:
+                            # 月涨幅 = (当前价 - 4月首日开盘价) / 4月首日开盘价
+                            month_pct = (current_price - base_price) / base_price * 100
             except Exception as e:
                 pass
 
             if month_pct is None:
-                # fallback：直接用今日涨幅，base_price 从今日涨幅反推
+                # fallback：直接用今日涨幅
                 month_pct = today_pct
                 base_price = current_price / (1 + today_pct / 100) if today_pct != 0 else current_price
 
