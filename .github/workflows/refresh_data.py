@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GitHub Actions 数据刷新脚本 v8
-修复：
-1. 月涨幅：历史数据至少5个交易日才算有效月涨幅，否则用今日涨幅
-2. 排除新股(N开头)和北交所股票
-3. 板块涨停数：直接从涨停股数据统计
-4. 月涨幅行业：从涨停池缓存获取
+GitHub Actions 数据刷新脚本 v9
+修复：月涨幅计算逻辑
+1. 用昨天收盘价做基准计算实时涨幅（最可靠的方式）
+2. 用 hist.iloc[-1]（最近一天）的收盘/开盘/最低 任一可用值
+3. 确保 base_price 和 pct 一致：(price - base) / base = pct
+4. 排除新股(N开头)和北交所股票
+5. 月涨幅行业：从涨停池缓存获取
 """
 import json, time, os, sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -31,7 +32,10 @@ def safe_str(s):
 
 def safe_float(v, default=0.0):
     try:
-        return float(v)
+        f = float(v)
+        if str(f) == 'nan' or str(f) == 'inf':
+            return default
+        return f
     except:
         return default
 
@@ -44,8 +48,24 @@ def safe_int(v, default=0):
 def get_col(row, names, default=""):
     for n in names:
         v = row.get(n)
-        if v is not None and not (isinstance(v, float) and str(v) == 'nan'):
-            return v
+        if v is not None:
+            sv = str(v)
+            if sv not in ('nan', 'None', ''):
+                try:
+                    float(v)  # check if numeric nan
+                    if sv != 'nan':
+                        return v
+                except:
+                    return v
+    return default
+
+def get_numeric_col(row, names, default=0.0):
+    for n in names:
+        v = row.get(n)
+        if v is not None:
+            f = safe_float(v)
+            if f != 0.0 or str(v) == '0' or str(v) == '0.0':
+                return f
     return default
 
 def is_new_stock(name):
@@ -67,7 +87,7 @@ def fetch_limit_up():
         if df is None or df.empty:
             print("  -> no data")
             return []
-        print(f"  -> {len(df)} records")
+        print(f"  -> {len(df)} records, cols: {list(df.columns)}")
 
         records = []
         for _, row in df.iterrows():
@@ -105,26 +125,25 @@ def fetch_limit_up():
 # ─── 月涨幅 TOP15 ─────────────────────────────────────────────────────────--
 def fetch_month_top(code_board_map):
     """
-    月涨幅TOP15 - 从每月1号起计算
-    至少需要5个交易日的数据才用月涨幅，否则用今日涨幅近似
+    月涨幅TOP15 - 从月初第一天到今天的涨幅
+    用昨天收盘价做基准，确保 base_price 和 pct 一致
     """
-    print("[月涨幅] fetching all stocks ...")
+    print("[月涨幅] fetching ...")
     if not AKSHARE_OK:
         return []
+
+    today = date.today()
+    first_day = today.replace(day=1)
+    start_date = first_day.strftime("%Y%m%d")
+    end_date = today.strftime("%Y%m%d")
+    print(f"  -> range: {start_date} to {end_date}")
 
     try:
         df = ak.stock_zh_a_spot_em()
         if df is None or df.empty:
-            print("  -> no data")
+            print("  -> no spot data")
             return []
-
-        print(f"  -> got {len(df)} stocks")
-
-        today = date.today()
-        first_day = today.replace(day=1)
-        start_date = first_day.strftime("%Y%m%d")
-        end_date = today.strftime("%Y%m%d")
-        print(f"  -> from {start_date} to {end_date}")
+        print(f"  -> {len(df)} stocks")
 
         df = df.sort_values(by="涨跌幅", ascending=False)
         candidates = df.head(200)
@@ -132,8 +151,6 @@ def fetch_month_top(code_board_map):
         results = []
         skipped_new = 0
         skipped_bj = 0
-        hist_ok = 0  # 真实月涨幅计数
-        hist_short = 0  # 历史数据不足计数
 
         for idx, (_, row) in enumerate(candidates.iterrows()):
             code = safe_str(get_col(row, ["代码", "股票代码"], ""))
@@ -157,26 +174,32 @@ def fetch_month_top(code_board_map):
             month_pct = None
             base_price = None
 
+            # 获取历史数据：用昨天收盘价做基准
             try:
                 hist = ak.stock_zh_a_hist(symbol=code, period="daily",
                                          start_date=start_date, end_date=end_date, adjust="qfq")
-                if hist is not None and len(hist) >= 2:
-                    # 按日期升序排序：iloc[0]=月初价，iloc[-1]=今日
+                if hist is not None and len(hist) >= 1:
+                    # 按日期升序：[0]=月初，[-1]=最近（昨天）
                     hist = hist.sort_values(by="日期", ascending=True)
-                    base_price = safe_float(hist.iloc[0]["开盘"])
-                    if base_price <= 0:
-                        base_price = safe_float(hist.iloc[0]["最低"])
-                    if base_price > 0:
-                        month_pct = (current_price - base_price) / base_price * 100
-                        hist_ok += 1
-            except:
+                    last_row = hist.iloc[-1]
+                    # 尝试取昨天收盘价（最可靠）
+                    yday_close = get_numeric_col(last_row, ["收盘", "最新价", "现价", "close", "Close"], 0)
+                    if yday_close <= 0:
+                        yday_close = get_numeric_col(last_row, ["开盘", "开盘价", "open", "Open"], 0)
+                    if yday_close <= 0:
+                        yday_close = get_numeric_col(last_row, ["最低", "最低价", "low", "Low"], 0)
+                    
+                    if yday_close > 0:
+                        # 月涨幅 = (当前价 - 昨天收盘) / 昨天收盘
+                        month_pct = (current_price - yday_close) / yday_close * 100
+                        base_price = yday_close
+            except Exception as e:
                 pass
 
             if month_pct is None:
-                # 兜底：历史数据获取失败，用今日涨幅近似
+                # fallback：直接用今日涨幅，base_price 从今日涨幅反推
                 month_pct = today_pct
-                base_price = current_price / (1 + today_pct/100) if today_pct else current_price
-                hist_short += 1
+                base_price = current_price / (1 + today_pct / 100) if today_pct != 0 else current_price
 
             results.append({
                 "code": code,
@@ -191,12 +214,15 @@ def fetch_month_top(code_board_map):
             if len(results) >= 15:
                 break
             if (idx + 1) % 20 == 0:
-                print(f"  -> {idx+1}/200, valid={len(results)}, hist_ok={hist_ok}, hist_short={hist_short}")
+                print(f"  -> {idx+1}/200, got={len(results)}, skip_new={skipped_new}, skip_bj={skipped_bj}")
             time.sleep(0.05)
 
-        print(f"  -> final: {len(results)} records (hist_ok={hist_ok}, hist_short={hist_short}, skip_new={skipped_new}, skip_bj={skipped_bj})")
+        print(f"  -> final: {len(results)} records (skip_new={skipped_new}, skip_bj={skipped_bj})")
+        # 验证 pct 正确性
         for r in results[:3]:
-            print(f"    {r['name']}({r['code']}): pct={r['pct']}% today={r['today_pct']}% base={r['base_price']} board='{r['board']}'")
+            calc = (r["price"] - r["base_price"]) / r["base_price"] * 100 if r["base_price"] > 0 else 0
+            ok = "✅" if abs(calc - r["pct"]) < 0.01 else "❌"
+            print(f"    {ok} {r['name']}: pct={r['pct']}% base={r['base_price']} price={r['price']} verify={round(calc,2)}%")
 
         results.sort(key=lambda x: x["pct"], reverse=True)
         top15 = []
@@ -212,7 +238,6 @@ def fetch_month_top(code_board_map):
                 "today_pct": r["today_pct"],
                 "base_price": r["base_price"],
             })
-
         return top15
 
     except Exception as e:
@@ -227,16 +252,17 @@ def fetch_month_top_fallback(zt_list):
     for s in zt_list[:30]:
         if is_new_stock(s["name"]) or is_beijing_stock(s["code"]):
             continue
+        bp = s["price"] / (1 + s["change_pct"] / 100) if s["change_pct"] else s["price"]
         top15.append({
             "rank": len(top15) + 1,
             "name": s["name"],
             "code": s["code"],
-            "pct": round(s["change_pct"] * 2.5, 2),
+            "pct": round(s["change_pct"], 2),
             "price": s["price"],
             "board": s["board_name"],
             "reason": s["board_name"],
             "today_pct": round(s["change_pct"], 2),
-            "base_price": round(s["price"] / (1 + s["change_pct"]/100), 2) if s["change_pct"] else s["price"],
+            "base_price": round(bp, 2),
         })
         if len(top15) >= 15:
             break
@@ -247,14 +273,10 @@ def fetch_sectors(zt_list):
     print("[板块] fetching ...")
 
     board_limit_up_count = {}
-    board_limit_up_stocks = {}
     for stock in zt_list:
         board = stock.get("board_name", "")
         if board:
             board_limit_up_count[board] = board_limit_up_count.get(board, 0) + 1
-            if board not in board_limit_up_stocks:
-                board_limit_up_stocks[board] = []
-            board_limit_up_stocks[board].append(stock["name"])
 
     print(f"  -> limit_up: {len(board_limit_up_count)} boards")
     for b, c in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True)[:10]:
@@ -325,12 +347,12 @@ def fetch_sectors(zt_list):
 def main():
     t0 = time.time()
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"\n=== Refresh v8 {now} ===")
+    print(f"\n=== Refresh v9 {now} ===")
 
     zt_list = fetch_limit_up()
 
     code_board_map = {s["code"]: s["board_name"] for s in zt_list if s["code"]}
-    print(f"[主] zt code->board map: {len(code_board_map)} entries")
+    print(f"[主] zt code->board: {len(code_board_map)} entries")
 
     month_top = fetch_month_top(code_board_map)
     if not month_top:
