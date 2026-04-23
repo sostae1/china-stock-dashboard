@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GitHub Actions 数据刷新脚本 v5
+GitHub Actions 数据刷新脚本 v6
 修复：
 1. 月涨幅从每月1号起计算
 2. 排除新股(N开头)和北交所股票
-3. 板块涨停数统计：直接从涨停股数据统计，不用名称匹配
-4. 改进 board 字段提取
+3. 板块涨停数：直接从涨停股数据统计
+4. 月涨幅行业：从涨停池缓存获取（stock_zh_a_spot_em无行业列）
 """
 import json, time, os, sys
 from datetime import date, datetime, timedelta
@@ -42,7 +42,6 @@ def safe_int(v, default=0):
         return default
 
 def get_col(row, names, default=""):
-    """从 pandas row 中尝试获取列值"""
     for n in names:
         v = row.get(n)
         if v is not None and not (isinstance(v, float) and str(v) == 'nan'):
@@ -68,7 +67,7 @@ def fetch_limit_up():
         if df is None or df.empty:
             print("  -> no data")
             return []
-        print(f"  -> {len(df)} records, cols: {list(df.columns)}")
+        print(f"  -> {len(df)} records")
 
         records = []
         for _, row in df.iterrows():
@@ -104,7 +103,10 @@ def fetch_limit_up():
         return []
 
 # ─── 月涨幅 TOP15 ───────────────────────────────────────────────────────────
-def fetch_month_top():
+def fetch_month_top(code_board_map):
+    """月涨幅TOP15 - 从每月1号起计算，排除新股和北交所股票
+    code_board_map: {code: board_name} 映射表，从涨停池构建
+    """
     print("[月涨幅] fetching all stocks ...")
     if not AKSHARE_OK:
         return []
@@ -112,8 +114,8 @@ def fetch_month_top():
     try:
         df = ak.stock_zh_a_spot_em()
         if df is None or df.empty:
-            print("  -> no data")
-            return fetch_month_top_fallback()
+            print("  -> no data, using fallback")
+            return []
 
         print(f"  -> got {len(df)} stocks, cols: {list(df.columns)}")
 
@@ -121,7 +123,7 @@ def fetch_month_top():
         first_day = today.replace(day=1)
         start_date = first_day.strftime("%Y%m%d")
         end_date = today.strftime("%Y%m%d")
-        print(f"  -> calculating from {start_date} to {end_date}")
+        print(f"  -> from {start_date} to {end_date}")
 
         df = df.sort_values(by="涨跌幅", ascending=False)
         candidates = df.head(200)
@@ -145,6 +147,10 @@ def fetch_month_top():
             if is_beijing_stock(code):
                 skipped_bj += 1
                 continue
+
+            # 如果spot没有行业，从缓存获取
+            if not board and code in code_board_map:
+                board = code_board_map[code]
 
             month_pct = None
             base_price = None
@@ -180,9 +186,8 @@ def fetch_month_top():
             time.sleep(0.05)
 
         print(f"  -> final: {len(results)} records (skipped new={skipped_new}, bj={skipped_bj})")
-        print(f"  -> top5 detail:")
         for r in results[:5]:
-            print(f"    {r['name']}({r['code']}): board='{r['board']}' pct={r['pct']}% today={r['today_pct']}%")
+            print(f"    {r['name']}({r['code']}): board='{r['board']}' pct={r['pct']}%")
 
         results.sort(key=lambda x: x["pct"], reverse=True)
         top15 = []
@@ -203,16 +208,14 @@ def fetch_month_top():
 
     except Exception as e:
         print(f"  -> FAILED: {e}")
-        return fetch_month_top_fallback()
-
-def fetch_month_top_fallback():
-    print("[月涨幅] fallback from zt_pool ...")
-    zt = fetch_limit_up()
-    if not zt:
         return []
 
+def fetch_month_top_fallback(zt_list):
+    print("[月涨幅] fallback from zt_pool ...")
+    if not zt_list:
+        return []
     top15 = []
-    for s in zt[:30]:
+    for s in zt_list[:30]:
         if is_new_stock(s["name"]) or is_beijing_stock(s["code"]):
             continue
         top15.append({
@@ -234,7 +237,6 @@ def fetch_month_top_fallback():
 def fetch_sectors(zt_list):
     print("[板块] fetching ...")
 
-    # Step 1: 从涨停股直接统计每个行业的涨停数量
     board_limit_up_count = {}
     board_limit_up_stocks = {}
     for stock in zt_list:
@@ -245,7 +247,7 @@ def fetch_sectors(zt_list):
                 board_limit_up_stocks[board] = []
             board_limit_up_stocks[board].append(stock["name"])
 
-    print(f"  -> limit_up stats: {len(board_limit_up_count)} boards")
+    print(f"  -> limit_up: {len(board_limit_up_count)} boards")
     for b, c in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True)[:10]:
         print(f"    {b}: {c}只")
 
@@ -292,14 +294,12 @@ def fetch_sectors(zt_list):
     except Exception as e:
         print(f"  -> sector_spot FAILED: {e}")
 
-    # Step 3: 未匹配的涨停行业追加到列表
-    unmatched = []
+    # 未匹配的涨停行业追加
     for board_name, cnt in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True):
         if board_name not in matched_boards:
-            stocks_in_board = board_limit_up_stocks.get(board_name, [])
             total_pct = sum(s["change_pct"] for s in zt_list if s.get("board_name") == board_name)
             avg_pct = total_pct / cnt if cnt > 0 else 0
-            unmatched.append({
+            sectors.append({
                 "name": board_name,
                 "score": 30,
                 "pct": round(avg_pct, 2),
@@ -309,10 +309,6 @@ def fetch_sectors(zt_list):
                 "max_continuous": 0,
             })
 
-    if unmatched:
-        print(f"  -> adding {len(unmatched)} unmatched boards")
-        sectors.extend(unmatched[:10])
-
     print(f"  -> total {len(sectors)} sectors")
     return sectors[:40]
 
@@ -320,10 +316,18 @@ def fetch_sectors(zt_list):
 def main():
     t0 = time.time()
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"\n=== Refresh v5 {now} ===")
+    print(f"\n=== Refresh v6 {now} ===")
 
     zt_list = fetch_limit_up()
-    month_top = fetch_month_top()
+
+    # 构建 code -> board 映射表
+    code_board_map = {s["code"]: s["board_name"] for s in zt_list if s["code"]}
+    print(f"[主] zt code->board map: {len(code_board_map)} entries")
+
+    month_top = fetch_month_top(code_board_map)
+    if not month_top:
+        month_top = fetch_month_top_fallback(zt_list)
+
     sectors = fetch_sectors(zt_list)
 
     data = {
