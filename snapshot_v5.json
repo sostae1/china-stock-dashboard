@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-23 09:14:04",
+  "updated_at": "2026-04-23 10:29:55",
   "month_top": [
     {
       "rank": 1,
@@ -157,14 +157,14 @@
     },
     {
       "rank": 15,
-      "name": "综艺股份",
-      "code": "600770",
+      "name": "节能风电",
+      "code": "601016",
       "pct": 10.07,
-      "price": 6.34,
-      "board": "综合Ⅱ",
-      "reason": "综合Ⅱ",
+      "price": 4.48,
+      "board": "电力",
+      "reason": "电力",
       "today_pct": 10.07,
-      "base_price": 5.76
+      "base_price": 4.07
     }
   ],
   "zt_today": [
