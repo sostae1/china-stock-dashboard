@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GitHub Actions 数据刷新脚本 v6
+GitHub Actions 数据刷新脚本 v7
 修复：
-1. 月涨幅从每月1号起计算
+1. 月涨幅：从每月1号起计算，取月初开盘价为基准（hist是倒序，需排序）
 2. 排除新股(N开头)和北交所股票
 3. 板块涨停数：直接从涨停股数据统计
-4. 月涨幅行业：从涨停池缓存获取（stock_zh_a_spot_em无行业列）
+4. 月涨幅行业：从涨停池缓存获取
 """
 import json, time, os, sys
 from datetime import date, datetime, timedelta
@@ -104,8 +104,9 @@ def fetch_limit_up():
 
 # ─── 月涨幅 TOP15 ───────────────────────────────────────────────────────────
 def fetch_month_top(code_board_map):
-    """月涨幅TOP15 - 从每月1号起计算，排除新股和北交所股票
-    code_board_map: {code: board_name} 映射表，从涨停池构建
+    """
+    月涨幅TOP15 - 从每月1号起计算
+    akshare历史数据是倒序(最新在前)，需要按日期升序排序后取第一条为月初价
     """
     print("[月涨幅] fetching all stocks ...")
     if not AKSHARE_OK:
@@ -114,10 +115,10 @@ def fetch_month_top(code_board_map):
     try:
         df = ak.stock_zh_a_spot_em()
         if df is None or df.empty:
-            print("  -> no data, using fallback")
+            print("  -> no data")
             return []
 
-        print(f"  -> got {len(df)} stocks, cols: {list(df.columns)}")
+        print(f"  -> got {len(df)} stocks")
 
         today = date.today()
         first_day = today.replace(day=1)
@@ -148,7 +149,7 @@ def fetch_month_top(code_board_map):
                 skipped_bj += 1
                 continue
 
-            # 如果spot没有行业，从缓存获取
+            # 如果spot没有行业，从涨停池缓存获取
             if not board and code in code_board_map:
                 board = code_board_map[code]
 
@@ -159,10 +160,17 @@ def fetch_month_top(code_board_map):
                 hist = ak.stock_zh_a_hist(symbol=code, period="daily",
                                          start_date=start_date, end_date=end_date, adjust="qfq")
                 if hist is not None and len(hist) >= 2:
+                    # 按日期升序排序：hist.iloc[0]=月初，hist.iloc[-1]=今天
+                    hist = hist.sort_values(by="日期", ascending=True)
                     base_price = safe_float(hist.iloc[0]["开盘"])
                     if base_price > 0:
                         month_pct = (current_price - base_price) / base_price * 100
-            except:
+                    else:
+                        # 取不到开盘价则用最低价
+                        base_price = safe_float(hist.iloc[0]["最低"])
+                        if base_price > 0:
+                            month_pct = (current_price - base_price) / base_price * 100
+            except Exception as e:
                 pass
 
             if month_pct is None:
@@ -185,9 +193,9 @@ def fetch_month_top(code_board_map):
                 print(f"  -> {idx+1}/200, valid={len(results)}, skip_new={skipped_new}, skip_bj={skipped_bj}")
             time.sleep(0.05)
 
-        print(f"  -> final: {len(results)} records (skipped new={skipped_new}, bj={skipped_bj})")
-        for r in results[:5]:
-            print(f"    {r['name']}({r['code']}): board='{r['board']}' pct={r['pct']}%")
+        print(f"  -> final: {len(results)} records (skip_new={skipped_new}, skip_bj={skipped_bj})")
+        for r in results[:3]:
+            print(f"    {r['name']}({r['code']}): pct={r['pct']}% today={r['today_pct']}% base={r['base_price']} board='{r['board']}'")
 
         results.sort(key=lambda x: x["pct"], reverse=True)
         top15 = []
@@ -316,11 +324,10 @@ def fetch_sectors(zt_list):
 def main():
     t0 = time.time()
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"\n=== Refresh v6 {now} ===")
+    print(f"\n=== Refresh v7 {now} ===")
 
     zt_list = fetch_limit_up()
 
-    # 构建 code -> board 映射表
     code_board_map = {s["code"]: s["board_name"] for s in zt_list if s["code"]}
     print(f"[主] zt code->board map: {len(code_board_map)} entries")
 
