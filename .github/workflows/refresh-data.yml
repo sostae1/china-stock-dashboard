@@ -50,8 +50,12 @@ jobs:
 
       - name: Trigger Pages deploy
         if: env.HAS_CHANGES == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run "Deploy static content to Pages" --ref main
+          # 用 GitHub API 触发 Pages 部署，不用 gh 命令
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/pages/deployments \
+            -d '{"environment": "github-pages"}'
           echo "Pages deployment triggered"
