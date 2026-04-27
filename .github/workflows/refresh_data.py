@@ -102,7 +102,7 @@ def fetch_all_stocks_em():
                 all_stocks.append({
                     "code": code,
                     "name": name,
-                    "price": round(price / 100, 2) if price > 100 else price,  # f2可能是分或厘
+                    "price": price,  # f2直接是元，不用除100（已有判断price>100的逻辑会误伤科创高价股）
                     "change_pct": round(pct, 2),
                     "yesterday_close": yesterday_close,
                     "sector": "",
@@ -449,6 +449,30 @@ def main():
     code_board_map = {s["code"]: s["board_name"] for s in zt_list if s["code"]}
     print(f"[主] zt code->board: {len(code_board_map)} entries")
     
+    # 用腾讯实时价格覆盖涨停池（东方财富价格有误/分或厘格式问题）
+    if zt_list:
+        zt_codes = [f"sh{s['code']}" if s["code"].startswith("6") else f"sz{s['code']}"
+                    for s in zt_list]
+        all_rt_zt = {}
+        for i in range(0, len(zt_codes), 50):
+            batch = zt_codes[i:i+50]
+            rt = fetch_tengxun_realtime(batch)
+            all_rt_zt.update(rt)
+        for item in zt_list:
+            code = item["code"]
+            prefix = "sh" if code.startswith("6") else "sz"
+            sym = f"{prefix}{code}"
+            if sym in all_rt_zt:
+                rt_data = all_rt_zt[sym]
+                if rt_data.get("price", 0) > 0:
+                    item["price"] = rt_data["price"]
+                if rt_data.get("change_pct") is not None:
+                    item["change_pct"] = rt_data["change_pct"]
+                if rt_data.get("sector"):
+                    item["board_name"] = rt_data["sector"]
+                    item["reason"] = rt_data["sector"] or "涨停"
+        print(f"[主] zt real-time price updated for {len(all_rt_zt)} stocks")
+
     month_top = fetch_month_top(stocks)
     sectors = fetch_sectors(zt_list)
     
