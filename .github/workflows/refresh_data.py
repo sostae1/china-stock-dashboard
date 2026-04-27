@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GitHub Actions 数据刷新脚本 v10b
-月涨幅计算：Sina财经日K线（原始价格）+ 重试机制
-- 找4月份第一个交易日开盘价
-- 月涨幅 = (现价 - 4月首日开盘) / 4月首日开盘 × 100
-- 候选池：涨停池 + 腾讯批量补充（覆盖月牛股）
+GitHub Actions 数据刷新脚本 v12
+- 数据源全部使用东方财富push2 API + Sina日K线 + 腾讯实时（无需akshare）
+- 东方财富全量A股按涨幅排序（分页获取）
+- 月涨幅：Sina日K线，4月首日开盘价 vs 当前价
 """
 import json, time, os, sys, urllib.request
 from datetime import date, datetime
@@ -13,21 +12,15 @@ from datetime import date, datetime
 import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-AKSHARE_OK = False
-try:
-    import akshare as ak
-    AKSHARE_OK = True
-    print(f"akshare {ak.__version__} loaded")
-except ImportError:
-    print("akshare not installed")
-
-# ─── 工具函数 ────────────────────────────────────────────────────────────────
 def safe_float(v, default=0.0):
     try:
-        f = float(v)
-        if str(f) in ('nan', 'inf'):
+        if isinstance(v, (int, float)):
+            return float(v)
+        s = str(v).strip()
+        if s in ('-', '', 'nan', 'None'):
             return default
-        return f
+        f = float(s)
+        return default if str(f) in ('nan', 'inf') else f
     except:
         return default
 
@@ -44,29 +37,139 @@ def is_new_stock(name):
 
 def is_beijing_stock(code):
     c = safe_str(code)
-    return c.startswith('8') or c.startswith('4') or c.startswith('92') or c.startswith('93') or c.startswith('94')
+    return c.startswith("8") or c.startswith("4") or c.startswith("92") or c.startswith("93") or c.startswith("94")
+
+def http_get(url, timeout=12):
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "Referer": "https://quote.eastmoney.com/"
+            })
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.read().decode("utf-8", errors="replace")
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(0.5)
+    return None
+
+# ─── 东方财富全量A股（按涨幅降序）───────────────────────────────────────────────
+def fetch_all_stocks_em():
+    """
+    用东方财富行情接口获取全量A股，按今日涨幅降序。
+    fs=m:0+t:6(沪主板)+m:0+t:13(科创)+m:1+t:2(深主板)+m:1+t:23(创业板)
+    f2=最新价, f3=涨跌幅, f4=涨跌额, f12=代码, f14=名称
+    返回: [{code, name, price, change_pct, yesterday_close}, ...]
+    """
+    print("[东方财富] fetching all A-stocks by change%...")
+    all_stocks = []
+    total = None
+    
+    for page in range(1, 100):
+        ts = int(time.time() * 1000)
+        url = (f"https://push2.eastmoney.com/api/qt/clist/get"
+               f"?pn={page}&pz=50&po=1&np=1&fltt=2&invt=2&fid=f3"
+               f"&fs=m:0+t:6,m:0+t:13,m:1+t:2,m:1+t:23"
+               f"&fields=f2,f3,f4,f12,f14&_={ts}")
+        
+        raw = http_get(url)
+        if not raw:
+            print(f"  page {page}: network error, stop")
+            break
+        
+        try:
+            d = json.loads(raw)
+            diff = d.get("data", {}).get("diff", [])
+            if total is None:
+                total = d.get("data", {}).get("total", 0)
+                print(f"  total stocks: {total}")
+            if not diff:
+                print(f"  page {page}: empty, done")
+                break
+            for item in diff:
+                code = str(item.get("f12", ""))
+                name = safe_str(item.get("f14", ""))
+                price = safe_float(item.get("f2", 0))
+                pct = safe_float(item.get("f3", 0))
+                if not code or is_new_stock(name) or is_beijing_stock(code):
+                    continue
+                if price <= 0:
+                    continue
+                # 涨跌幅字段f3需要除100
+                pct = pct / 100 if abs(pct) > 100 else pct  # 如果数值>100说明是百分比的百分之一形式
+                yesterday_close = round(price / (1 + pct / 100), 2) if abs(pct) > 0.001 else price
+                
+                all_stocks.append({
+                    "code": code,
+                    "name": name,
+                    "price": round(price / 100, 2) if price > 100 else price,  # f2可能是分或厘
+                    "change_pct": round(pct, 2),
+                    "yesterday_close": yesterday_close,
+                    "sector": "",
+                })
+            
+            if page % 10 == 0:
+                print(f"  page {page}: collected {len(all_stocks)}")
+            
+            if len(diff) < 50:
+                break
+            
+            time.sleep(0.08)
+        except Exception as e:
+            print(f"  page {page}: parse error {e}")
+            break
+    
+    # 按今日涨幅降序
+    all_stocks.sort(key=lambda x: x["change_pct"], reverse=True)
+    print(f"  -> {len(all_stocks)} stocks (sorted by change%)")
+    return all_stocks
+
+# ─── 涨停池 ──────────────────────────────────────────────────────────────────
+def build_zt_pool(stocks):
+    """从全量A股中筛选涨停股（今日涨幅 >= 9.9%，非ST）"""
+    print("[涨停池] filtering ZT stocks...")
+    zt_list = []
+    for s in stocks:
+        pct = s["change_pct"]
+        name = s["name"]
+        is_st = any(k in name for k in ["ST", "S*", "*S", "退"])
+        is_zt = (pct >= 9.9 and not is_st) or (pct >= 4.9 and is_st)
+        if not is_zt:
+            continue
+        
+        zt_list.append({
+            "name": name,
+            "code": s["code"],
+            "change_pct": pct,
+            "board_name": s["sector"],
+            "reason": s["sector"] or "涨停",
+            "price": s["price"],
+            "today_pct": pct,
+            "limit_time": "09:30:00",
+            "continuous_limit_up_count": 1,
+        })
+    
+    zt_list.sort(key=lambda x: x["change_pct"], reverse=True)
+    print(f"  -> {len(zt_list)} ZT stocks")
+    for z in zt_list[:5]:
+        print(f"    {z['name']}({z['code']}): {z['change_pct']}%")
+    return zt_list
 
 # ─── Sina财经日K线 ────────────────────────────────────────────────────────────
 def fetch_sina_kline(code, count=60):
-    """
-    获取新浪财经日K（原始价格，无需复权）
-    返回: [(date_str, open, close), ...]  升序
-    带重试（网络不稳定时偶发失败）
-    """
+    """获取Sina财经日K，返回[(date_str, open, close), ...] 升序"""
     c = str(code)
     prefix = "sz" if not c.startswith("6") else "sh"
     sym = f"{prefix}{c}"
     url = (f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php"
            f"/CN_MarketData.getKLineData?symbol={sym}&scale=240&ma=no&datalen={count}")
     
-    last_err = None
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
             with urllib.request.urlopen(req, timeout=12) as resp:
                 raw = resp.read().decode("utf-8")
             if not raw or raw.strip() == "":
-                last_err = "empty"
                 time.sleep(0.5)
                 continue
             data = json.loads(raw)
@@ -79,25 +182,21 @@ def fetch_sina_kline(code, count=60):
                     if d and o > 0:
                         result.append((d, o, c2))
                 return result
-            else:
-                last_err = f"not-list or empty: {type(data)}"
-        except Exception as e:
-            last_err = f"{type(e).__name__}: {e}"
+        except:
             if attempt < 2:
                 time.sleep(0.5)
-    
-    return []  # 重试3次仍失败
+    return []
 
 def calc_month_pct(code, current_price):
     """
     用Sina财经K线计算月涨幅（4月基准）
+    找4月份第一个交易日开盘价
     返回: (month_pct, base_price, first_april_date) 或 (None, None, None)
     """
     klines = fetch_sina_kline(code, 60)
     if not klines:
         return None, None, None
     
-    # 找4月份第一个交易日
     first_april = None
     for bar in klines:
         d, _, _ = bar
@@ -118,7 +217,7 @@ def calc_month_pct(code, current_price):
 
 # ─── 腾讯实时行情批量查询 ────────────────────────────────────────────────────
 def fetch_tengxun_realtime(codes):
-    """腾讯实时行情批量查询，返回 {symbol: {price, change_pct, name, sector}}"""
+    """腾讯实时行情批量，返回{symbol: {price, change_pct, name, sector}}"""
     if not codes:
         return {}
     results = {}
@@ -149,169 +248,46 @@ def fetch_tengxun_realtime(codes):
                     continue
         except Exception as e:
             print(f"    Tencent batch error: {e}")
-        time.sleep(0.2)
+        time.sleep(0.12)
     return results
 
-# ─── 涨停股 ────────────────────────────────────────────────────────────────
-def fetch_limit_up():
-    today = date.today().strftime("%Y%m%d")
-    print(f"[涨停] fetching {today} ...")
-    if not AKSHARE_OK:
-        print("  -> akshare not available")
-        return []
+# ─── 月涨幅 TOP15 ───────────────────────────────────────────────────────────
+def fetch_month_top(stocks):
+    """
+    月涨幅TOP15 - v12
+    候选池：全量A股按今日涨幅TOP300
+    """
+    print("[月涨幅] starting...")
     
-    try:
-        df = ak.stock_zt_pool_em(date=today)
-        if df is None or df.empty:
-            print("  -> no data")
-            return []
-        print(f"  -> {len(df)} records")
-
-        records = []
-        for _, row in df.iterrows():
-            code = safe_str(row.get("代码") or row.get("股票代码", ""))
-            name = safe_str(row.get("名称") or row.get("股票名称", ""))
-            if not code:
-                continue
-            
-            raw_time = safe_str(row.get("首次封板时间") or "")
-            limit_time = f"{raw_time[:2]}:{raw_time[2:4]}:{raw_time[4:6]}" if len(raw_time) >= 6 else raw_time
-            
-            records.append({
-                "name": name,
-                "code": code,
-                "change_pct": safe_float(row.get("涨跌幅") or row.get("涨幅", 0)),
-                "board_name": safe_str(row.get("所属行业") or row.get("行业", "")),
-                "reason": safe_str(row.get("所属行业") or row.get("行业", "涨停")),
-                "price": safe_float(row.get("最新价", 0)),
-                "today_pct": safe_float(row.get("涨跌幅") or row.get("涨幅", 0)),
-                "limit_time": limit_time,
-                "continuous_limit_up_count": int(safe_float(row.get("连板数", 0))),
-            })
-        print(f"  -> {len(records)} valid")
-        return records
-    except Exception as e:
-        print(f"  -> FAILED: {e}")
-        return []
-
-# ─── 月涨幅 TOP15 ─────────────────────────────────────────────────────────--
-def fetch_month_top_v10(code_board_map):
-    """
-    月涨幅TOP15 - Sina财经K线版 v10b
-    候选池策略（按优先级）：
-    1. akshare全量A股按今日涨幅TOP300（理想情况）
-    2. Fallback：涨停池 + 腾讯批量补充各行业龙头
-    """
-    print("[月涨幅 v10b] starting...")
-
+    # 候选池：取今日涨幅TOP300
     candidates = []
+    for s in stocks:
+        code = s["code"]
+        name = s["name"]
+        if is_new_stock(name) or is_beijing_stock(code):
+            continue
+        if s["price"] <= 0:
+            continue
+        candidates.append({
+            "code": code,
+            "name": name,
+            "today_pct": s["change_pct"],
+            "board": s["sector"],
+            "price": s["price"],
+        })
+        if len(candidates) >= 300:
+            break
     
-    # ── Step 1: akshare候选池（优先）───────────────────────────────────
-    if AKSHARE_OK:
-        try:
-            df = ak.stock_zh_a_spot_em()
-            if df is not None and not df.empty:
-                print(f"  akshare spot: {len(df)} stocks")
-                df = df.sort_values(by="涨跌幅", ascending=False)
-                for _, row in df.head(300).iterrows():
-                    code = safe_str(row.get("代码") or row.get("股票代码", ""))
-                    name = safe_str(row.get("名称") or row.get("股票名称", ""))
-                    today_pct = safe_float(row.get("涨跌幅") or row.get("涨幅", 0))
-                    sector = safe_str(row.get("所属行业") or row.get("行业", ""))
-                    
-                    if not code or is_new_stock(name) or is_beijing_stock(code):
-                        continue
-                    
-                    board = sector
-                    if not board and code in code_board_map:
-                        board = code_board_map[code]
-                    
-                    candidates.append({
-                        "code": code,
-                        "name": name,
-                        "today_pct": today_pct,
-                        "board": board,
-                        "price": None,
-                    })
-                print(f"  -> akshare pool: {len(candidates)} stocks")
-        except Exception as e:
-            print(f"  akshare spot FAILED: {e}")
-
-    # ── Step 2: Fallback候选池 ──────────────────────────────────────────
-    if not candidates:
-        print("  -> using fallback ZT + Tencent pool...")
-        
-        # 涨停池股票
-        zt_codes = list(code_board_map.keys())
-        zt_sh = [f"sh{c}" for c in zt_codes if c.startswith("6")]
-        zt_sz = [f"sz{c}" for c in zt_codes if not c.startswith("6")]
-        
-        all_rt = {}
-        for batch in [zt_sh, zt_sz]:
-            if batch:
-                all_rt.update(fetch_tengxun_realtime(batch))
-        
-        # ZT池 -> 候选
-        for code, board in code_board_map.items():
-            prefix = "sh" if code.startswith("6") else "sz"
-            sym = f"{prefix}{code}"
-            if sym in all_rt:
-                info = all_rt[sym]
-                candidates.append({
-                    "code": code,
-                    "name": info["name"],
-                    "today_pct": info["change_pct"],
-                    "board": board or info.get("sector", ""),
-                    "price": info["price"],
-                })
-        
-        # 腾讯批量补充：按涨幅分段采样（覆盖全市场）
-        # 利用腾讯批量每批50只，分批获取不同涨幅区间
-        sample_codes = []
-        # 取涨停池附近的股票代码段来采样
-        base_codes = [
-            # 创业/深市高涨幅段
-            "sz300970,sz300721,sz300590,sz300067,sz300061,sz300049,sz300095,sz300843",
-            "sz300999,sz300896,sz300888,sz300985,sz300751,sz300760,sz300681,sz300529",
-            "sz300059,sz300124,sz300274,sz300142,sz300759,sz300122,sz300496,sz300408",
-            # 沪市高涨幅段
-            "sh600052,sh600770,sh600736,sh600052,sh600310,sh600726,sh600396,sh600186",
-            "sh600905,sh601016,sh600900,sh601318,sh600519,sh600036,sh601166,sh601398",
-            # 科创板
-            "sh688628,sh688051,sh688702,sh688116,sh688981,sh688012,sh688111,sh688396",
-            "sh688095,sh688599,sh688521,sh688008,sh688126,sh688111,sh688036,sh688083",
-        ]
-        
-        for batch_str in sample_codes:
-            codes = batch_str.replace(" ", "").split(",")
-            rt = fetch_tengxun_realtime(codes)
-            for sym, info in rt.items():
-                real_code = sym[2:]
-                if is_new_stock(info["name"]) or is_beijing_stock(real_code):
-                    continue
-                if real_code not in [c["code"] for c in candidates]:
-                    candidates.append({
-                        "code": real_code,
-                        "name": info["name"],
-                        "today_pct": info["change_pct"],
-                        "board": info.get("sector", ""),
-                        "price": info["price"],
-                    })
-        
-        # 按今日涨幅降序，取TOP100
-        candidates.sort(key=lambda x: x.get("today_pct", 0), reverse=True)
-        candidates = candidates[:100]
-        print(f"  -> fallback pool: {len(candidates)} stocks")
+    print(f"  candidate pool: {len(candidates)} stocks")
     
-    # ── Step 3: 腾讯批量获取所有候选的实时价格 ─────────────────────────
+    # 腾讯批量获取实时价格
     codes_sh = [f"sh{c['code']}" for c in candidates if c["code"].startswith("6")]
-    codes_sz = [f"sz{c['code']}" for c in candidates if c["code"].startswith("0")
-                or c["code"].startswith("3")]
+    codes_sz = [f"sz{c['code']}" for c in candidates if not c["code"].startswith("6")]
     
     all_rt = {}
-    for batch_codes in [codes_sh, codes_sz]:
-        if batch_codes:
-            all_rt.update(fetch_tengxun_realtime(batch_codes))
+    for batch in [codes_sh, codes_sz]:
+        if batch:
+            all_rt.update(fetch_tengxun_realtime(batch))
     
     for c in candidates:
         code = c["code"]
@@ -319,22 +295,17 @@ def fetch_month_top_v10(code_board_map):
         sym = f"{prefix}{code}"
         if sym in all_rt:
             c["price"] = all_rt[sym]["price"]
-            if not c["board"]:
+            if not c["board"] or c["board"] == "":
                 c["board"] = all_rt[sym]["sector"]
     
-    no_price = sum(1 for c in candidates if c["price"] is None or c["price"] <= 0)
-    print(f"  -> realtime price: {len(candidates) - no_price}/{len(candidates)} matched")
-    
-    # ── Step 4: Sina K线计算月涨幅 ────────────────────────────────────
+    # 计算月涨幅
     results = []
     no_kline = 0
-    processed = 0
     
     for i, c in enumerate(candidates):
         code = c["code"]
         price = c["price"]
-        
-        if price is None or price <= 0:
+        if price <= 0:
             continue
         
         month_pct, base_price, first_date = calc_month_pct(code, price)
@@ -356,19 +327,18 @@ def fetch_month_top_v10(code_board_map):
             "board": c["board"],
         })
         
-        processed += 1
-        
-        if processed >= 80:
+        if len(results) >= 150:
+            print(f"  -> processed {len(results)}, stopping at cap")
             break
         
-        if (i + 1) % 20 == 0:
-            print(f"  -> {i+1}/{min(len(candidates), 300)}, got={len(results)}, no_kline={no_kline}")
+        if (i + 1) % 50 == 0:
+            print(f"  -> {i+1}/{len(candidates)}, got={len(results)}, no_kline={no_kline}")
         
-        time.sleep(0.15)
+        time.sleep(0.12)
     
     print(f"  -> done: {len(results)} processed, no_kline={no_kline}")
     
-    # ── Step 5: 排序取TOP15 ───────────────────────────────────────────
+    # 排序取TOP15
     results.sort(key=lambda x: x["pct"], reverse=True)
     
     for r in results[:3]:
@@ -394,51 +364,66 @@ def fetch_month_top_v10(code_board_map):
 
 # ─── 板块数据 ──────────────────────────────────────────────────────────────
 def fetch_sectors(zt_list):
-    print("[板块] fetching ...")
-
+    """板块数据：涨停池统计 + 东方财富板块涨幅"""
+    print("[板块] building...")
+    
     board_limit_up_count = {}
     for stock in zt_list:
         board = stock.get("board_name", "")
         if board:
             board_limit_up_count[board] = board_limit_up_count.get(board, 0) + 1
-
+    
     print(f"  -> limit_up: {len(board_limit_up_count)} boards")
     for b, c in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True)[:8]:
         print(f"    {b}: {c}只")
-
+    
     sectors = []
     matched_boards = set()
-
-    if AKSHARE_OK:
+    
+    # 东方财富板块排行（申万行业）
+    # sw_a = 申万行业, node=1 是一级行业
+    for page in range(1, 5):
+        ts = int(time.time() * 1000)
+        url = (f"https://push2.eastmoney.com/api/qt/clist/get"
+               f"?pn={page}&pz=50&po=1&np=1&fltt=2&invt=2&fid=f3"
+               f"&fs=m:90+t:2&fields=f2,f3,f4,f12,f14&_={ts}")
+        
+        raw = http_get(url)
+        if not raw:
+            break
         try:
-            df = ak.stock_sector_spot()
-            if df is not None and not df.empty:
-                df = df.sort_values(by="涨跌幅", ascending=False)
-                for _, row in df.head(32).iterrows():
-                    name = safe_str(row.get("板块") or row.get("名称") or "")
-                    if not name:
-                        continue
-                    pct = safe_float(row.get("涨跌幅") or row.get("涨幅") or 0)
-                    limit_count = board_limit_up_count.get(name, 0)
-                    sectors.append({
-                        "name": name,
-                        "score": 30,
-                        "pct": round(pct, 2),
-                        "main_net": 0.0,
-                        "limit_up_count": limit_count,
-                        "phase": "",
-                        "max_continuous": 0,
-                    })
-                    if limit_count > 0:
-                        matched_boards.add(name)
+            d = json.loads(raw)
+            diff = d.get("data", {}).get("diff", [])
+            if not diff:
+                break
+            for item in diff:
+                name = safe_str(item.get("f14", ""))
+                pct = safe_float(item.get("f3", 0)) / 100
+                if not name:
+                    continue
+                limit_count = board_limit_up_count.get(name, 0)
+                sectors.append({
+                    "name": name,
+                    "score": 30,
+                    "pct": round(pct, 2),
+                    "main_net": 0.0,
+                    "limit_up_count": limit_count,
+                    "phase": "",
+                    "max_continuous": 0,
+                })
+                if limit_count > 0:
+                    matched_boards.add(name)
+            if len(diff) < 50:
+                break
         except Exception as e:
-            print(f"  -> sector_spot FAILED: {e}")
-
+            print(f"  -> sector page {page} error: {e}")
+            break
+    
+    # 补充涨停池中有但API没有的板块
     for board_name, cnt in sorted(board_limit_up_count.items(), key=lambda x: x[1], reverse=True):
         if board_name not in matched_boards:
             stocks_in = [s for s in zt_list if s.get("board_name") == board_name]
-            total_pct = sum(s["change_pct"] for s in stocks_in)
-            avg_pct = total_pct / cnt if cnt > 0 else 0
+            avg_pct = sum(s["change_pct"] for s in stocks_in) / len(stocks_in) if stocks_in else 0
             sectors.append({
                 "name": board_name,
                 "score": 30,
@@ -448,7 +433,8 @@ def fetch_sectors(zt_list):
                 "phase": "",
                 "max_continuous": 0,
             })
-
+    
+    sectors.sort(key=lambda x: (x["limit_up_count"], x["pct"]), reverse=True)
     print(f"  -> total {len(sectors)} sectors")
     return sectors[:40]
 
@@ -456,31 +442,30 @@ def fetch_sectors(zt_list):
 def main():
     t0 = time.time()
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"\n=== Refresh v10b {now} ===")
-
-    zt_list = fetch_limit_up()
-
+    print(f"\n=== Refresh v12 {now} ===")
+    
+    stocks = fetch_all_stocks_em()
+    zt_list = build_zt_pool(stocks)
     code_board_map = {s["code"]: s["board_name"] for s in zt_list if s["code"]}
     print(f"[主] zt code->board: {len(code_board_map)} entries")
-
-    month_top = fetch_month_top_v10(code_board_map)
-
+    
+    month_top = fetch_month_top(stocks)
     sectors = fetch_sectors(zt_list)
-
+    
     data = {
         "updated_at": now,
         "month_top": month_top,
         "zt_today": zt_list,
         "sector_hot": sectors,
     }
-
+    
     out = "snapshot_v5.json"
     with open(out, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-
+    
     size = os.path.getsize(out)
     print(f"\nWritten {size} bytes -> {out}")
-    print(f"Done in {round(time.time()-t0,1)}s")
+    print(f"Done in {round(time.time()-t0, 1)}s")
     return data
 
 if __name__ == "__main__":
