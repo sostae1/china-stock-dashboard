@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-30 09:33:32",
+  "updated_at": "2026-04-30 12:05:09",
   "month_top": [
     {
       "rank": 1,
@@ -1201,9 +1201,84 @@
       "today_pct": 7.71,
       "limit_time": "09:30:00",
       "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST准油",
+      "code": "002207",
+      "change_pct": 5.05,
+      "board_name": "6.87",
+      "reason": "6.87",
+      "price": 6.87,
+      "today_pct": 5.05,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST利达",
+      "code": "603828",
+      "change_pct": 5.04,
+      "board_name": "4.79",
+      "reason": "4.79",
+      "price": 4.79,
+      "today_pct": 5.04,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST正平",
+      "code": "603843",
+      "change_pct": 5.04,
+      "board_name": "8.97",
+      "reason": "8.97",
+      "price": 8.97,
+      "today_pct": 5.04,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST高科",
+      "code": "600730",
+      "change_pct": 5.04,
+      "board_name": "8.97",
+      "reason": "8.97",
+      "price": 8.97,
+      "today_pct": 5.04,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST美芝",
+      "code": "002856",
+      "change_pct": 5.03,
+      "board_name": "13.78",
+      "reason": "13.78",
+      "price": 13.78,
+      "today_pct": 5.03,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST中迪",
+      "code": "000609",
+      "change_pct": 5.03,
+      "board_name": "14.42",
+      "reason": "14.42",
+      "price": 14.42,
+      "today_pct": 5.03,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
     }
   ],
   "sector_hot": [
+    {
+      "name": "8.97",
+      "score": 30,
+      "pct": 5.04,
+      "main_net": 0.0,
+      "limit_up_count": 2,
+      "phase": "",
+      "max_continuous": 0
+    },
     {
       "name": "59.32",
       "score": 30,
@@ -1548,15 +1623,6 @@
     },
     {
       "name": "28.33",
-      "score": 30,
-      "pct": 10.02,
-      "main_net": 0.0,
-      "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "29.21",
       "score": 30,
       "pct": 10.02,
       "main_net": 0.0,
