@@ -275,10 +275,10 @@ def fetch_month_top(stocks):
             "board": s["sector"],
             "price": s["price"],
         })
-        if len(candidates) >= 300:
+        if len(candidates) >= 500:
             break
     
-    print(f"  candidate pool: {len(candidates)} stocks")
+    print(f"  candidate pool: {len(candidates)} stocks (expanded to 500)")
     
     # 腾讯批量获取实时价格
     codes_sh = [f"sh{c['code']}" for c in candidates if c["code"].startswith("6")]
@@ -327,10 +327,7 @@ def fetch_month_top(stocks):
             "board": c["board"],
         })
         
-        if len(results) >= 150:
-            print(f"  -> processed {len(results)}, stopping at cap")
-            break
-        
+        # 移除处理上限，处理全部候选
         if (i + 1) % 50 == 0:
             print(f"  -> {i+1}/{len(candidates)}, got={len(results)}, no_kline={no_kline}")
         
