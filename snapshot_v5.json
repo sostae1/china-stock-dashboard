@@ -1,6 +1,1018 @@
 {
-  "updated_at": "2026-08-21 07:52:36",
-  "month_top": [],
-  "zt_today": [],
-  "sector_hot": []
+  "updated_at": "2026-08-24 02:47:28",
+  "month_top": [
+    {
+      "rank": 1,
+      "name": "键凯科技",
+      "code": "688356",
+      "pct": 17.85,
+      "price": 126.5,
+      "board": "128.81",
+      "reason": "128.81",
+      "today_pct": 17.85,
+      "base_price": 107.34
+    },
+    {
+      "rank": 2,
+      "name": "科兴制药",
+      "code": "688136",
+      "pct": 15.18,
+      "price": 23.67,
+      "board": "24.66",
+      "reason": "24.66",
+      "today_pct": 15.18,
+      "base_price": 20.55
+    },
+    {
+      "rank": 3,
+      "name": "耐科装备",
+      "code": "688419",
+      "pct": 14.72,
+      "price": 56.02,
+      "board": "58.60",
+      "reason": "58.60",
+      "today_pct": 14.72,
+      "base_price": 48.83
+    },
+    {
+      "rank": 4,
+      "name": "盈新发展",
+      "code": "000620",
+      "pct": 10.16,
+      "price": 3.47,
+      "board": "3.47",
+      "reason": "3.47",
+      "today_pct": 10.16,
+      "base_price": 3.15
+    },
+    {
+      "rank": 5,
+      "name": "中南文化",
+      "code": "002445",
+      "pct": 10.13,
+      "price": 3.37,
+      "board": "3.37",
+      "reason": "3.37",
+      "today_pct": 10.13,
+      "base_price": 3.06
+    },
+    {
+      "rank": 6,
+      "name": "恒星科技",
+      "code": "002132",
+      "pct": 10.06,
+      "price": 5.25,
+      "board": "5.25",
+      "reason": "5.25",
+      "today_pct": 10.06,
+      "base_price": 4.77
+    },
+    {
+      "rank": 7,
+      "name": "众合科技",
+      "code": "000925",
+      "pct": 10.06,
+      "price": 8.97,
+      "board": "8.97",
+      "reason": "8.97",
+      "today_pct": 10.06,
+      "base_price": 8.15
+    },
+    {
+      "rank": 8,
+      "name": "登海种业",
+      "code": "002041",
+      "pct": 10.04,
+      "price": 10.19,
+      "board": "10.19",
+      "reason": "10.19",
+      "today_pct": 10.04,
+      "base_price": 9.26
+    },
+    {
+      "rank": 9,
+      "name": "浙江世宝",
+      "code": "002703",
+      "pct": 10.04,
+      "price": 15.02,
+      "board": "15.02",
+      "reason": "15.02",
+      "today_pct": 10.04,
+      "base_price": 13.65
+    },
+    {
+      "rank": 10,
+      "name": "协鑫能科",
+      "code": "002015",
+      "pct": 10.04,
+      "price": 15.57,
+      "board": "15.57",
+      "reason": "15.57",
+      "today_pct": 10.04,
+      "base_price": 14.15
+    },
+    {
+      "rank": 11,
+      "name": "正裕工业",
+      "code": "603089",
+      "pct": 10.03,
+      "price": 10.53,
+      "board": "10.53",
+      "reason": "10.53",
+      "today_pct": 10.03,
+      "base_price": 9.57
+    },
+    {
+      "rank": 12,
+      "name": "天洋新材",
+      "code": "603330",
+      "pct": 10.03,
+      "price": 10.97,
+      "board": "10.97",
+      "reason": "10.97",
+      "today_pct": 10.03,
+      "base_price": 9.97
+    },
+    {
+      "rank": 13,
+      "name": "海鸥住工",
+      "code": "002084",
+      "pct": 10.03,
+      "price": 3.95,
+      "board": "3.95",
+      "reason": "3.95",
+      "today_pct": 10.03,
+      "base_price": 3.59
+    },
+    {
+      "rank": 14,
+      "name": "市北高新",
+      "code": "600604",
+      "pct": 10.02,
+      "price": 4.94,
+      "board": "4.94",
+      "reason": "4.94",
+      "today_pct": 10.02,
+      "base_price": 4.49
+    },
+    {
+      "rank": 15,
+      "name": "上海能源",
+      "code": "600508",
+      "pct": 10.02,
+      "price": 9.88,
+      "board": "9.88",
+      "reason": "9.88",
+      "today_pct": 10.02,
+      "base_price": 8.98
+    }
+  ],
+  "zt_today": [
+    {
+      "name": "键凯科技",
+      "code": "688356",
+      "change_pct": 17.85,
+      "board_name": "128.81",
+      "reason": "128.81",
+      "price": 126.5,
+      "today_pct": 17.85,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "科兴制药",
+      "code": "688136",
+      "change_pct": 15.18,
+      "board_name": "24.66",
+      "reason": "24.66",
+      "price": 23.67,
+      "today_pct": 15.18,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "耐科装备",
+      "code": "688419",
+      "change_pct": 14.72,
+      "board_name": "58.60",
+      "reason": "58.60",
+      "price": 56.02,
+      "today_pct": 14.72,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "盈新发展",
+      "code": "000620",
+      "change_pct": 10.16,
+      "board_name": "3.47",
+      "reason": "3.47",
+      "price": 3.47,
+      "today_pct": 10.16,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "中南文化",
+      "code": "002445",
+      "change_pct": 10.13,
+      "board_name": "3.37",
+      "reason": "3.37",
+      "price": 3.37,
+      "today_pct": 10.13,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "恒星科技",
+      "code": "002132",
+      "change_pct": 10.06,
+      "board_name": "5.25",
+      "reason": "5.25",
+      "price": 5.25,
+      "today_pct": 10.06,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "众合科技",
+      "code": "000925",
+      "change_pct": 10.06,
+      "board_name": "8.97",
+      "reason": "8.97",
+      "price": 8.97,
+      "today_pct": 10.06,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "登海种业",
+      "code": "002041",
+      "change_pct": 10.04,
+      "board_name": "10.19",
+      "reason": "10.19",
+      "price": 10.19,
+      "today_pct": 10.04,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "浙江世宝",
+      "code": "002703",
+      "change_pct": 10.04,
+      "board_name": "15.02",
+      "reason": "15.02",
+      "price": 15.02,
+      "today_pct": 10.04,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "协鑫能科",
+      "code": "002015",
+      "change_pct": 10.04,
+      "board_name": "15.57",
+      "reason": "15.57",
+      "price": 15.57,
+      "today_pct": 10.04,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "正裕工业",
+      "code": "603089",
+      "change_pct": 10.03,
+      "board_name": "10.53",
+      "reason": "10.53",
+      "price": 10.53,
+      "today_pct": 10.03,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "天洋新材",
+      "code": "603330",
+      "change_pct": 10.03,
+      "board_name": "10.97",
+      "reason": "10.97",
+      "price": 10.97,
+      "today_pct": 10.03,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "海鸥住工",
+      "code": "002084",
+      "change_pct": 10.03,
+      "board_name": "3.95",
+      "reason": "3.95",
+      "price": 3.95,
+      "today_pct": 10.03,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "市北高新",
+      "code": "600604",
+      "change_pct": 10.02,
+      "board_name": "4.94",
+      "reason": "4.94",
+      "price": 4.94,
+      "today_pct": 10.02,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "上海能源",
+      "code": "600508",
+      "change_pct": 10.02,
+      "board_name": "9.88",
+      "reason": "9.88",
+      "price": 9.88,
+      "today_pct": 10.02,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "中 关 村",
+      "code": "000931",
+      "change_pct": 10.02,
+      "board_name": "5.60",
+      "reason": "5.60",
+      "price": 5.6,
+      "today_pct": 10.02,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "白银有色",
+      "code": "601212",
+      "change_pct": 10.02,
+      "board_name": "6.70",
+      "reason": "6.70",
+      "price": 6.7,
+      "today_pct": 10.02,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "华阳集团",
+      "code": "002906",
+      "change_pct": 10.02,
+      "board_name": "28.23",
+      "reason": "28.23",
+      "price": 28.23,
+      "today_pct": 10.02,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "德新科技",
+      "code": "603032",
+      "change_pct": 10.01,
+      "board_name": "20.22",
+      "reason": "20.22",
+      "price": 20.22,
+      "today_pct": 10.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "汉森制药",
+      "code": "002412",
+      "change_pct": 10.01,
+      "board_name": "11.21",
+      "reason": "11.21",
+      "price": 11.21,
+      "today_pct": 10.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "上海洗霸",
+      "code": "603200",
+      "change_pct": 10.01,
+      "board_name": "39.13",
+      "reason": "39.13",
+      "price": 39.13,
+      "today_pct": 10.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "中谷物流",
+      "code": "603565",
+      "change_pct": 10.01,
+      "board_name": "13.52",
+      "reason": "13.52",
+      "price": 13.52,
+      "today_pct": 10.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "楚天龙",
+      "code": "003040",
+      "change_pct": 10.01,
+      "board_name": "14.07",
+      "reason": "14.07",
+      "price": 14.07,
+      "today_pct": 10.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "红星发展",
+      "code": "600367",
+      "change_pct": 10.01,
+      "board_name": "38.15",
+      "reason": "38.15",
+      "price": 38.15,
+      "today_pct": 10.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "博杰股份",
+      "code": "002975",
+      "change_pct": 10.0,
+      "board_name": "110.61",
+      "reason": "110.61",
+      "price": 110.61,
+      "today_pct": 10.0,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "安德利",
+      "code": "605198",
+      "change_pct": 10.0,
+      "board_name": "64.79",
+      "reason": "64.79",
+      "price": 64.79,
+      "today_pct": 10.0,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "神奇制药",
+      "code": "600613",
+      "change_pct": 10.0,
+      "board_name": "9.90",
+      "reason": "9.90",
+      "price": 9.9,
+      "today_pct": 10.0,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "金龙羽",
+      "code": "002882",
+      "change_pct": 10.0,
+      "board_name": "23.76",
+      "reason": "23.76",
+      "price": 23.76,
+      "today_pct": 10.0,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "融捷股份",
+      "code": "002192",
+      "change_pct": 10.0,
+      "board_name": "79.76",
+      "reason": "79.76",
+      "price": 79.76,
+      "today_pct": 10.0,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "同力天启",
+      "code": "605286",
+      "change_pct": 9.99,
+      "board_name": "27.41",
+      "reason": "27.41",
+      "price": 27.41,
+      "today_pct": 9.99,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "深中华A",
+      "code": "000017",
+      "change_pct": 9.99,
+      "board_name": "7.82",
+      "reason": "7.82",
+      "price": 7.82,
+      "today_pct": 9.99,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "风范股份",
+      "code": "601700",
+      "change_pct": 9.99,
+      "board_name": "7.71",
+      "reason": "7.71",
+      "price": 7.71,
+      "today_pct": 9.99,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "南网能源",
+      "code": "003035",
+      "change_pct": 9.98,
+      "board_name": "5.73",
+      "reason": "5.73",
+      "price": 5.73,
+      "today_pct": 9.98,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "东信和平",
+      "code": "002017",
+      "change_pct": 9.98,
+      "board_name": "15.98",
+      "reason": "15.98",
+      "price": 15.98,
+      "today_pct": 9.98,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "圣阳股份",
+      "code": "002580",
+      "change_pct": 9.98,
+      "board_name": "21.05",
+      "reason": "21.05",
+      "price": 21.05,
+      "today_pct": 9.98,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "利君股份",
+      "code": "002651",
+      "change_pct": 9.96,
+      "board_name": "8.61",
+      "reason": "8.61",
+      "price": 8.61,
+      "today_pct": 9.96,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "新华百货",
+      "code": "600785",
+      "change_pct": 9.96,
+      "board_name": "10.71",
+      "reason": "10.71",
+      "price": 10.71,
+      "today_pct": 9.96,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "益佰制药",
+      "code": "600594",
+      "change_pct": 9.95,
+      "board_name": "4.09",
+      "reason": "4.09",
+      "price": 4.09,
+      "today_pct": 9.95,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "芯能科技",
+      "code": "603105",
+      "change_pct": 9.94,
+      "board_name": "7.74",
+      "reason": "7.74",
+      "price": 7.74,
+      "today_pct": 9.94,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "澳洋健康",
+      "code": "002172",
+      "change_pct": 9.9,
+      "board_name": "4.44",
+      "reason": "4.44",
+      "price": 4.44,
+      "today_pct": 9.9,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST英飞",
+      "code": "002528",
+      "change_pct": 7.46,
+      "board_name": "6.19",
+      "reason": "6.19",
+      "price": 6.05,
+      "today_pct": 7.46,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST卓然",
+      "code": "688121",
+      "change_pct": 6.32,
+      "board_name": "2.09",
+      "reason": "2.09",
+      "price": 1.85,
+      "today_pct": 6.32,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST发展",
+      "code": "000838",
+      "change_pct": 5.34,
+      "board_name": "3.09",
+      "reason": "3.09",
+      "price": 2.96,
+      "today_pct": 5.34,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST瑞和",
+      "code": "002620",
+      "change_pct": 5.2,
+      "board_name": "5.71",
+      "reason": "5.71",
+      "price": 5.46,
+      "today_pct": 5.2,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    }
+  ],
+  "sector_hot": [
+    {
+      "name": "128.81",
+      "score": 30,
+      "pct": 17.85,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "24.66",
+      "score": 30,
+      "pct": 15.18,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "58.60",
+      "score": 30,
+      "pct": 14.72,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "3.47",
+      "score": 30,
+      "pct": 10.16,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "3.37",
+      "score": 30,
+      "pct": 10.13,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "5.25",
+      "score": 30,
+      "pct": 10.06,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "8.97",
+      "score": 30,
+      "pct": 10.06,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "10.19",
+      "score": 30,
+      "pct": 10.04,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "15.02",
+      "score": 30,
+      "pct": 10.04,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "15.57",
+      "score": 30,
+      "pct": 10.04,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "10.53",
+      "score": 30,
+      "pct": 10.03,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "10.97",
+      "score": 30,
+      "pct": 10.03,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "3.95",
+      "score": 30,
+      "pct": 10.03,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "4.94",
+      "score": 30,
+      "pct": 10.02,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "9.88",
+      "score": 30,
+      "pct": 10.02,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "5.60",
+      "score": 30,
+      "pct": 10.02,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "6.70",
+      "score": 30,
+      "pct": 10.02,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "28.23",
+      "score": 30,
+      "pct": 10.02,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "20.22",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "11.21",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "39.13",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "13.52",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "14.07",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "38.15",
+      "score": 30,
+      "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "110.61",
+      "score": 30,
+      "pct": 10.0,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "64.79",
+      "score": 30,
+      "pct": 10.0,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "9.90",
+      "score": 30,
+      "pct": 10.0,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "23.76",
+      "score": 30,
+      "pct": 10.0,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "79.76",
+      "score": 30,
+      "pct": 10.0,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "27.41",
+      "score": 30,
+      "pct": 9.99,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "7.82",
+      "score": 30,
+      "pct": 9.99,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "7.71",
+      "score": 30,
+      "pct": 9.99,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "5.73",
+      "score": 30,
+      "pct": 9.98,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "15.98",
+      "score": 30,
+      "pct": 9.98,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "21.05",
+      "score": 30,
+      "pct": 9.98,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "8.61",
+      "score": 30,
+      "pct": 9.96,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "10.71",
+      "score": 30,
+      "pct": 9.96,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "4.09",
+      "score": 30,
+      "pct": 9.95,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "7.74",
+      "score": 30,
+      "pct": 9.94,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "4.44",
+      "score": 30,
+      "pct": 9.9,
+      "main_net": 0.0,
+      "limit_up_count": 1,
+      "phase": "",
+      "max_continuous": 0
+    }
+  ]
 }
