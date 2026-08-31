@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-31 07:26:05",
+  "updated_at": "2026-08-31 15:02:13",
   "month_top": [
     {
       "rank": 1,
@@ -1146,9 +1146,40 @@
       "today_pct": 9.17,
       "limit_time": "09:30:00",
       "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST联翔",
+      "code": "603272",
+      "change_pct": 7.26,
+      "board_name": "16.52",
+      "reason": "16.52",
+      "price": 16.11,
+      "today_pct": 7.26,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "ST金鸿顺",
+      "code": "603922",
+      "change_pct": 7.17,
+      "board_name": "15.33",
+      "reason": "15.33",
+      "price": 14.94,
+      "today_pct": 7.17,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
     }
   ],
   "sector_hot": [
+    {
+      "name": "16.52",
+      "score": 30,
+      "pct": 8.62,
+      "main_net": 0.0,
+      "limit_up_count": 2,
+      "phase": "",
+      "max_continuous": 0
+    },
     {
       "name": "65.64",
       "score": 30,
@@ -1493,15 +1524,6 @@
     },
     {
       "name": "41.58",
-      "score": 30,
-      "pct": 10.0,
-      "main_net": 0.0,
-      "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "31.46",
       "score": 30,
       "pct": 10.0,
       "main_net": 0.0,
