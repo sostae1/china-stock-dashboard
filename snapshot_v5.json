@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29 07:22:20",
+  "updated_at": "2026-09-29 14:00:08",
   "month_top": [
     {
       "rank": 1,
@@ -717,6 +717,105 @@
       "today_pct": 9.98,
       "limit_time": "09:30:00",
       "continuous_limit_up_count": 1
+    },
+    {
+      "name": "万  科Ａ",
+      "code": "000002",
+      "change_pct": 9.97,
+      "board_name": "4.08",
+      "reason": "4.08",
+      "price": 4.08,
+      "today_pct": 9.97,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "九阳股份",
+      "code": "002242",
+      "change_pct": 9.97,
+      "board_name": "11.36",
+      "reason": "11.36",
+      "price": 11.36,
+      "today_pct": 9.97,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "浙江新能",
+      "code": "600032",
+      "change_pct": 9.96,
+      "board_name": "8.17",
+      "reason": "8.17",
+      "price": 8.17,
+      "today_pct": 9.96,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "吉华集团",
+      "code": "603980",
+      "change_pct": 9.95,
+      "board_name": "8.84",
+      "reason": "8.84",
+      "price": 8.84,
+      "today_pct": 9.95,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "时代万恒",
+      "code": "600241",
+      "change_pct": 9.95,
+      "board_name": "8.84",
+      "reason": "8.84",
+      "price": 8.84,
+      "today_pct": 9.95,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "华控赛格",
+      "code": "000068",
+      "change_pct": 9.94,
+      "board_name": "3.54",
+      "reason": "3.54",
+      "price": 3.54,
+      "today_pct": 9.94,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "华联控股",
+      "code": "000036",
+      "change_pct": 9.92,
+      "board_name": "4.21",
+      "reason": "4.21",
+      "price": 4.21,
+      "today_pct": 9.92,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "华斯股份",
+      "code": "002494",
+      "change_pct": 9.92,
+      "board_name": "5.32",
+      "reason": "5.32",
+      "price": 5.32,
+      "today_pct": 9.92,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST华幸",
+      "code": "600340",
+      "change_pct": 6.2,
+      "board_name": "1.42",
+      "reason": "1.42",
+      "price": 1.37,
+      "today_pct": 6.2,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
     }
   ],
   "sector_hot": [
@@ -724,6 +823,15 @@
       "name": "9.01",
       "score": 30,
       "pct": 10.01,
+      "main_net": 0.0,
+      "limit_up_count": 2,
+      "phase": "",
+      "max_continuous": 0
+    },
+    {
+      "name": "8.84",
+      "score": 30,
+      "pct": 9.95,
       "main_net": 0.0,
       "limit_up_count": 2,
       "phase": "",
@@ -1064,15 +1172,6 @@
     },
     {
       "name": "91.08",
-      "score": 30,
-      "pct": 10.0,
-      "main_net": 0.0,
-      "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "11.88",
       "score": 30,
       "pct": 10.0,
       "main_net": 0.0,
