@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-05 08:19:47",
+  "updated_at": "2026-11-05 15:23:54",
   "month_top": [
     {
       "rank": 1,
@@ -1265,6 +1265,50 @@
       "reason": "5.97",
       "price": 5.85,
       "today_pct": 7.73,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST瑞和",
+      "code": "002620",
+      "change_pct": 6.45,
+      "board_name": "5.63",
+      "reason": "5.63",
+      "price": 5.45,
+      "today_pct": 6.45,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST亚士",
+      "code": "603378",
+      "change_pct": 6.01,
+      "board_name": "4.03",
+      "reason": "4.03",
+      "price": 3.88,
+      "today_pct": 6.01,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "*ST湘邮",
+      "code": "600476",
+      "change_pct": 5.69,
+      "board_name": "11.02",
+      "reason": "11.02",
+      "price": 10.59,
+      "today_pct": 5.69,
+      "limit_time": "09:30:00",
+      "continuous_limit_up_count": 1
+    },
+    {
+      "name": "ST交昂",
+      "code": "600530",
+      "change_pct": 4.99,
+      "board_name": "4.19",
+      "reason": "4.19",
+      "price": 4.0,
+      "today_pct": 4.99,
       "limit_time": "09:30:00",
       "continuous_limit_up_count": 1
     }
