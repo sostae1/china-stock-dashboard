@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-06 08:22:42",
+  "updated_at": "2026-11-06 14:57:34",
   "month_top": [
     {
       "rank": 1,
@@ -847,60 +847,6 @@
       "pct": 5.5,
       "main_net": 0.0,
       "limit_up_count": 1,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "视频媒体",
-      "score": 30,
-      "pct": 0.06,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "种子",
-      "score": 30,
-      "pct": 0.05,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "卫浴电器",
-      "score": 30,
-      "pct": 0.03,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "其他养殖",
-      "score": 30,
-      "pct": 0.03,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "电信运营商",
-      "score": 30,
-      "pct": 0.03,
-      "main_net": 0.0,
-      "limit_up_count": 0,
-      "phase": "",
-      "max_continuous": 0
-    },
-    {
-      "name": "种植业",
-      "score": 30,
-      "pct": 0.03,
-      "main_net": 0.0,
-      "limit_up_count": 0,
       "phase": "",
       "max_continuous": 0
     }
