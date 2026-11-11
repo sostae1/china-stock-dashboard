@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11 08:09:53",
+  "updated_at": "2026-11-11 15:05:26",
   "month_top": [
     {
       "rank": 1,
@@ -1089,39 +1089,6 @@
       "reason": "2.22",
       "price": 2.22,
       "today_pct": 9.9,
-      "limit_time": "09:30:00",
-      "continuous_limit_up_count": 1
-    },
-    {
-      "name": "ST交昂",
-      "code": "600530",
-      "change_pct": 6.32,
-      "board_name": "4.87",
-      "reason": "4.87",
-      "price": 4.71,
-      "today_pct": 6.32,
-      "limit_time": "09:30:00",
-      "continuous_limit_up_count": 1
-    },
-    {
-      "name": "*ST集友",
-      "code": "603429",
-      "change_pct": 5.69,
-      "board_name": "7.55",
-      "reason": "7.55",
-      "price": 7.25,
-      "today_pct": 5.69,
-      "limit_time": "09:30:00",
-      "continuous_limit_up_count": 1
-    },
-    {
-      "name": "*ST顾地",
-      "code": "002694",
-      "change_pct": 5.44,
-      "board_name": "3.23",
-      "reason": "3.23",
-      "price": 3.1,
-      "today_pct": 5.44,
       "limit_time": "09:30:00",
       "continuous_limit_up_count": 1
     }
